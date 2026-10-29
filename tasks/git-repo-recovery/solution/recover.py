@@ -41,6 +41,13 @@ def log(msg):
     print(f"[recover] {msg}", flush=True)
 
 
+def remove_tree(path):
+    """rmtree that copes with the read-only files git writes."""
+    for p in Path(path).rglob("*"):
+        p.chmod(p.stat().st_mode | stat.S_IWUSR)
+    shutil.rmtree(path)
+
+
 def sha1(data):
     return hashlib.sha1(data).hexdigest()
 
@@ -462,7 +469,7 @@ class Recovery:
             for name, text in patches:
                 previous = self.apply_patch(name, text, work, previous)
         finally:
-            shutil.rmtree(work, ignore_errors=True)
+            remove_tree(work)
         self.resolve_deferred()
 
     def apply_patch(self, name, text, work, previous):
@@ -486,9 +493,8 @@ class Recovery:
         if not candidates:
             raise RuntimeError(f"{name}: no intact commit holds the pre-image blobs")
         for parent in candidates:
-            scratch = work / "objects"
-            shutil.rmtree(scratch, ignore_errors=True)
-            scratch.mkdir()
+            # candidate objects land in a fresh scratch directory, never in the repository
+            scratch = Path(tempfile.mkdtemp(prefix="objects-", dir=work))
             index = work / "index"
             if index.exists():
                 index.unlink()
@@ -496,15 +502,14 @@ class Recovery:
                    "GIT_ALTERNATE_OBJECT_DIRECTORIES": str(self.repo / "objects")}
             try:
                 self.git.run("read-tree", parse_commit(self.store.get(parent)[1])["tree"], env=env)
+                self.git.run("apply", "--cached", str(patch_file), env=env)
+                tree = self.git.run("write-tree", env=env).strip()
+                commit = self.git.run("commit-tree", tree, "-p", parent, env=dict(env, **ident), input=message).strip()
             except RuntimeError:
+                remove_tree(scratch)
                 continue
-            if subprocess.run(["git", "apply", "--cached", str(patch_file)], env=dict(os.environ, GIT_DIR=str(self.repo), **env), capture_output=True).returncode:
-                continue
-            tree = self.git.run("write-tree", env=env).strip()
-            commit = self.git.run("commit-tree", tree, "-p", parent, env=dict(env, **ident), input=message).strip()
-            if from_id and commit != from_id:
-                continue
-            if commit not in self.missing:
+            if (from_id and commit != from_id) or commit not in self.missing:
+                remove_tree(scratch)
                 continue
             for path in scratch.rglob("*"):
                 if path.is_file():
@@ -513,6 +518,7 @@ class Recovery:
                     self.write_loose(oid, kind, content)
                     self.store.objects[oid] = (kind, content)
                     self.loose_valid.add(oid)
+            remove_tree(scratch)
             self.missing = {oid: t for oid, t in self.missing.items() if oid not in self.store}
             log(f"{name}: rebuilt commit {commit[:12]} on {parent[:12]}")
             return commit
@@ -591,7 +597,7 @@ class Recovery:
             subprocess.run([sys.executable, str(tool)], cwd=work, check=True, capture_output=True)
             content = (work / path).read_bytes()
         finally:
-            shutil.rmtree(work, ignore_errors=True)
+            remove_tree(work)
         if object_id("blob", content) != blob:
             return False
         self.write_loose(blob, "blob", content)
@@ -679,7 +685,7 @@ class Recovery:
                 parent = line[i + 1] if i + 1 < len(line) else None
                 if versions[oid] == tag and (parent is None or versions[parent] != tag):
                     subject = parse_commit(self.store.get(oid)[1])["message"].split("\n", 1)[0]
-                    if subject == f"Release {tag}":
+                    if subject == f"Release {tag}" and self.introduces_heading(oid, parent, f"## {tag} - "):
                         hits.append(oid)
             if len(hits) != 1:
                 log(f"{tag}: {len(hits)} candidate release commits, not restoring")
@@ -697,6 +703,15 @@ class Recovery:
         return restored
 
     # -- driver --------------------------------------------------------------
+    def introduces_heading(self, commit, parent, heading):
+        """True when the commit's CHANGELOG.md gains the heading its first parent lacks."""
+        def changelog(oid):
+            if oid is None:
+                return ""
+            blob = self.tree_lookup(parse_commit(self.store.get(oid)[1])["tree"], "CHANGELOG.md")
+            return self.store.get(blob)[1].decode("utf-8", "replace") if blob else ""
+        return heading in changelog(commit) and heading not in changelog(parent)
+
     def run(self):
         if not (self.repo / "objects").is_dir() or not (self.repo / "HEAD").exists():
             raise RuntimeError(f"{self.repo} is not a bare git repository")
@@ -713,7 +728,6 @@ class Recovery:
             if oid not in self.loose_valid and not any(oid in p.offset_of for p in self.packs):
                 self.write_loose(oid, kind, content)
         self.restore_refs()
-        self.git.run("update-server-info")
         out = subprocess.run(["git", "fsck", "--full", "--strict", "--no-dangling"], env=dict(os.environ, GIT_DIR=str(self.repo)), capture_output=True, text=True)
         report = (out.stdout + out.stderr).strip()
         log("git fsck --full --strict --no-dangling: " + (report or "clean"))

@@ -538,44 +538,54 @@
    "type": "blob"
   },
   {
-   "altered_byte": 194,
+   "altered_byte": 83,
    "class": "D3",
-   "object": "bb29996ade001ad7ef99a19dcd75d506dc002132",
-   "offset": 91,
-   "original_byte": 152,
+   "object": "aef3e022037917637248671a8d936d6710f61da6",
+   "offset": 90,
+   "original_byte": 9,
    "path": "",
    "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
    "type": "commit"
   },
   {
-   "altered_byte": 107,
+   "altered_byte": 204,
    "class": "D3",
-   "object": "7f168c1b2fb5577fd92841ebf048fe0bcbd216e1",
-   "offset": 103,
-   "original_byte": 49,
+   "object": "6a291a82188b43228b75bb71b25399592fec2010",
+   "offset": 88,
+   "original_byte": 150,
    "path": "",
    "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
    "type": "commit"
   },
   {
-   "altered_byte": 223,
+   "altered_byte": 3,
    "class": "D3",
-   "object": "af0f73d3bb272f9284cf0859543690e014dd295a",
-   "offset": 186,
-   "original_byte": 133,
-   "path": "",
+   "object": "b10242c6f02a2ad627f772aa0a930370863f5bf8",
+   "offset": 250,
+   "original_byte": 89,
+   "path": "orbit",
    "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
    "type": "tree"
   },
   {
-   "altered_byte": 126,
+   "altered_byte": 171,
    "class": "D3",
-   "object": "19b56e507be5cdcfa638e098e38de31fbb0ad105",
-   "offset": 187,
-   "original_byte": 36,
-   "path": "",
+   "object": "1581703b7fa63a8c459216ddfdbf7d553642e813",
+   "offset": 165,
+   "original_byte": 241,
+   "path": "tests",
    "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
    "type": "tree"
+  },
+  {
+   "altered_byte": 142,
+   "class": "D3",
+   "object": "249050286553f369868a4dcc1ea152086c8d9ddb",
+   "offset": 18,
+   "original_byte": 212,
+   "path": "VERSION",
+   "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
+   "type": "blob"
   },
   {
    "altered_byte": 155,
@@ -588,29 +598,19 @@
    "type": "blob"
   },
   {
-   "altered_byte": 88,
-   "class": "D3",
-   "object": "484b4b97230a00acb0873bb582d80fe9b780e271",
-   "offset": 185,
-   "original_byte": 2,
-   "path": "orbit/retry.py",
-   "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
-   "type": "blob"
-  },
-  {
    "class": "D6",
    "file": "objects/pack/pack-dc1a3d5e56cdb2c83174659a7deaaca10d01e520.idx",
    "recovery": "git index-pack recreates it from the intact pack"
   },
   {
    "class": "R1",
-   "expected": "fe5dc4cdabbc0386e55017fef7927a3e9a699949",
+   "expected": "6a1c42a2adb5cb6991cf51c848b58793e404ab29",
    "recovery": "last entry of logs/refs/heads/develop",
    "ref": "refs/heads/develop"
   },
   {
    "class": "R1",
-   "expected": "f3035413c3a080334fc6a12de93f7e4c648e201d",
+   "expected": "fc1b7e8984ec70b6ee8ab78deceda6116e970f43",
    "recovery": "last entry of logs/refs/heads/feature/cache-warmup",
    "ref": "refs/heads/feature/cache-warmup"
   },
@@ -634,6 +634,50 @@
   },
   {
    "class": "R3",
+   "discriminators": {
+    "candidates_with_version": [
+     "c68ced9de14117fbec5322618559ed90243556bb",
+     "9ede4e0d205305a34efa6588668a1b1a9ef7858f",
+     "43b85f3057459e6407714c6488448e713c1ef340",
+     "b52b146621e5ac95a599f0c137cca96a69f29061",
+     "8d1466ebec95c0b6443aee56b2fc7fda7976d4a5",
+     "e7829fa366d2890f566ae3402fdce392a87d01c4",
+     "0af46845f319092446c8325427883c07d599ac07",
+     "3ba6faf783f8bb335dd937e3b6817c047621aa63",
+     "f1a290eb51399680feebcdf831444684102158a6",
+     "fce245f6f526f178349b414bea64a881bb80252e",
+     "fbecd721b2978234be7db8e10734190b45b85fab",
+     "01cb7b94c18f9a6ef606bf97073112f286138176",
+     "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67"
+    ],
+    "changelog_heading": "## v1.2.1 -",
+    "describe": [
+     {
+      "commit": "af4e4cd4deff009ddf4a7bb1e8ce4b954eecfa82",
+      "counts": {
+       "01cb7b94c18f9a6ef606bf97073112f286138176": 3,
+       "0af46845f319092446c8325427883c07d599ac07": 1,
+       "3ba6faf783f8bb335dd937e3b6817c047621aa63": 1,
+       "43b85f3057459e6407714c6488448e713c1ef340": 1,
+       "8d1466ebec95c0b6443aee56b2fc7fda7976d4a5": 1,
+       "9ede4e0d205305a34efa6588668a1b1a9ef7858f": 1,
+       "b52b146621e5ac95a599f0c137cca96a69f29061": 1,
+       "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67": 5,
+       "c68ced9de14117fbec5322618559ed90243556bb": 1,
+       "e7829fa366d2890f566ae3402fdce392a87d01c4": 1,
+       "f1a290eb51399680feebcdf831444684102158a6": 0,
+       "fbecd721b2978234be7db8e10734190b45b85fab": 2,
+       "fce245f6f526f178349b414bea64a881bb80252e": 1
+      },
+      "described": "f1a290eb51399680feebcdf831444684102158a6",
+      "n": 5,
+      "version": "v1.2.1-5-gf1a290e"
+     }
+    ],
+    "first_parent_hits": [
+     "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67"
+    ]
+   },
    "expected": "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67",
    "kind": "lightweight",
    "recovery": "release commit on main's first-parent line whose VERSION is exactly the tag, confirmed by later describe strings and the CHANGELOG date",
@@ -641,6 +685,28 @@
   },
   {
    "class": "R3",
+   "discriminators": {
+    "candidates_with_version": [
+     "e2e5e720516f652120ddc8dce745438eba10bc75",
+     "35e60b11842b491b815e3e98c835e7b23596609a"
+    ],
+    "changelog_heading": "## v1.3.1 -",
+    "describe": [
+     {
+      "commit": "148c15071f76a8de6d7b8eb496202345e41ac9bf",
+      "counts": {
+       "35e60b11842b491b815e3e98c835e7b23596609a": 1,
+       "e2e5e720516f652120ddc8dce745438eba10bc75": 0
+      },
+      "described": "e2e5e720516f652120ddc8dce745438eba10bc75",
+      "n": 1,
+      "version": "v1.3.1-1-ge2e5e72"
+     }
+    ],
+    "first_parent_hits": [
+     "35e60b11842b491b815e3e98c835e7b23596609a"
+    ]
+   },
    "expected": "35e60b11842b491b815e3e98c835e7b23596609a",
    "kind": "lightweight",
    "recovery": "release commit on main's first-parent line whose VERSION is exactly the tag, confirmed by later describe strings and the CHANGELOG date",

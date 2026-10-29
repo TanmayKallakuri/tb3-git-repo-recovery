@@ -299,18 +299,39 @@ def main():
         sha = refs[f"refs/tags/{tag}"]
         check(types_b[sha] == "tag" and sha not in protected, f"{tag} is an annotated tag whose tag object {sha[:12]} stays intact in pack-B")
         items.append({"class": "R3", "ref": f"refs/tags/{tag}", "expected": sha, "recovery": "dangling tag object names the tag and its target"})
+    first_parent = git(original, "rev-list", "--first-parent", "main").split()
+    on_main = git(original, "rev-list", "main").split()
+    version_of = {c: git(original, "show", f"{c}:VERSION").strip() for c in on_main}
     for tag in ("v1.2.1", "v1.3.1"):
         sha = refs[f"refs/tags/{tag}"]
-        version = git(original, "show", f"{sha}:VERSION").strip()
-        subject = git(original, "log", "-1", "--format=%s", sha).strip()
-        parent_version = git(original, "show", f"{sha}^:VERSION").strip()
-        on_main = sha in git(original, "rev-list", "--first-parent", "main").split()
-        check(version == tag and subject == f"Release {tag}" and parent_version != tag and on_main,
-              f"{tag} -> {sha[:12]}: on main's first-parent line, VERSION is exactly {tag}, parent's is {parent_version}, subject {subject!r}")
-        describes = [v for c in git(original, "rev-list", "--first-parent", "main").split()
-                     for v in [git(original, "show", f"{c}:VERSION").strip()] if v.startswith(tag + "-")]
-        check(describes, f"later VERSION strings confirm {tag}: {sorted(set(describes))}")
+        heading = f"## {tag} - "
+        hits = []
+        for i, c in enumerate(first_parent):
+            if version_of[c] != tag:
+                continue
+            parent = first_parent[i + 1] if i + 1 < len(first_parent) else None
+            subject = git(original, "log", "-1", "--format=%s", c).strip()
+            changelog = git(original, "show", f"{c}:CHANGELOG.md")
+            parent_changelog = git(original, "show", f"{parent}:CHANGELOG.md") if parent else ""
+            if subject == f"Release {tag}" and heading in changelog and heading not in parent_changelog:
+                hits.append(c)
+        check(hits == [sha], f"{tag}: exactly one first-parent commit has VERSION == {tag}, subject 'Release {tag}' and introduces the CHANGELOG entry: {sha[:12]}")
+        candidates = [c for c in on_main if version_of[c] == tag]
+        describes = []
+        for i, c in enumerate(first_parent):
+            m = re.fullmatch(re.escape(tag) + r"-(\d+)-g([0-9a-f]+)", version_of[c])
+            if not m or i + 1 >= len(first_parent) or version_of[first_parent[i + 1]] == version_of[c]:
+                continue
+            described, n = first_parent[i + 1], int(m.group(1))
+            check(described.startswith(m.group(2)), f"{tag}: {version_of[c]} written at {c[:12]} abbreviates its parent {described[:12]}")
+            counts = {t: int(git(original, "rev-list", "--count", f"{t}..{described}").strip()) for t in candidates}
+            matching = [t for t, k in counts.items() if k == n]
+            check(matching == [sha], f"{tag}: rev-list --count <candidate>..{described[:12]} == {n} holds for {sha[:12]} only, among {len(candidates)} commits on main with VERSION == {tag}")
+            describes.append({"commit": c, "version": version_of[c], "described": described, "n": n, "counts": counts})
+        check(describes, f"{tag}: at least one later commit carries a {tag}-N-g<abbrev> VERSION")
         items.append({"class": "R3", "ref": f"refs/tags/{tag}", "expected": sha, "kind": "lightweight",
+                      "discriminators": {"first_parent_hits": hits, "changelog_heading": heading.rstrip(),
+                                         "candidates_with_version": candidates, "describe": describes},
                       "recovery": "release commit on main's first-parent line whose VERSION is exactly the tag, confirmed by later describe strings and the CHANGELOG date"})
     name = "refs/heads/hotfix/1.2.1"
     check((repo / name).is_file() and last_reflog(name) == refs[name], f"{name} loose, reflog's last entry equals the tip {refs[name][:12]}")
@@ -319,6 +340,14 @@ def main():
 
     for sample in (repo / "hooks").glob("*.sample"):
         sample.unlink()
+    # update-server-info output would hand over every lost ref and its id
+    for name in ("info/refs", "objects/info/packs"):
+        check((repo / name).is_file(), f"{name} present before removal (stale update-server-info output)")
+        (repo / name).unlink()
+    for d in sorted((p for p in (repo / "refs" / "heads").rglob("*") if p.is_dir()), reverse=True):
+        if not any(d.iterdir()):
+            d.rmdir()
+    print("  removed info/refs, objects/info/packs and empty ref directories")
 
     summary = defaultdict(int)
     for item in items:

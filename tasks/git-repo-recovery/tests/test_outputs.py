@@ -95,9 +95,16 @@ def check_no_rewrite(details: dict) -> tuple[bool, str]:
     refs = details["refs"]
     if refs is None:
         return False, NOT_STAGED
+    problems = []
+    problem = _run_problem(refs["all_refs_run"])
+    if problem:
+        problems.append(problem)
     if refs["extra_names"]:
-        return False, f"refs that did not exist before the failure:\n{_listing(refs['extra_names'], len(refs['extra_names']))}"
-    return True, ""
+        problems.append(f"refs that did not exist before the failure:\n{_listing(refs['extra_names'], len(refs['extra_names']))}")
+    if refs["other_namespaces"]:
+        problems.append(f"refs outside refs/heads, refs/tags and refs/remotes:\n"
+                        f"{_listing(refs['other_namespaces'], len(refs['other_namespaces']))}")
+    return not problems, "\n".join(problems)
 
 
 CHECKS = (
@@ -138,7 +145,9 @@ def _assert_check(graded: dict, name: str) -> None:
 
 def test_artifact_staged(graded):
     """The submitted /app/repo.git is a bare repository: HEAD, objects/ and refs/ present and git calls it bare."""
-    print(f"staged: {graded['stage']}")
+    stage = graded["stage"] or {}
+    print(f"staged: {stage}")
+    print(f"neutralised before grading: {(stage.get('cleaned') or {}).get('removed')}")
     _assert_check(graded, "test_artifact_staged")
 
 

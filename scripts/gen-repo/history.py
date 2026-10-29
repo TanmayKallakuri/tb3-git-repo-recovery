@@ -1333,12 +1333,12 @@ def test_unknown_command_maps_to_none():
     R(LENA, "1.3.1", light=True),
     PACK("B"),
     # trailing work, left loose
-    M("develop", "main", DEV, "Merge branch 'main' into develop"),
     C("feature/cache-warmup", LENA, "Warm the cache in a background thread",
       edit("orbit/cache.py", "import shutil\n", "import shutil\nimport threading\n"),
       edit("orbit/cache.py", "    def resolved(self, job):", "    def warm_async(self, jobs):\n        \"\"\"Resolve in a daemon thread; the result lands in `paths`.\"\"\"\n        thread = threading.Thread(target=self.warm, args=(jobs,), daemon=True)\n        thread.start()\n        return thread\n\n    def resolved(self, job):")),
     C("main", MIRA, "Fix the usage line in the README", edit("README.md", "    orbit version\n", "    orbit --config orbit.toml list\n")),
     REFRESH("main", MIRA, "Refresh VERSION for the dist tarball"),
+    M("develop", "main", DEV, "Merge branch 'main' into develop"),
     C("develop", DEV, "Add a test for warmup ordering", append("tests/test_cache.py", '''
 
 def test_last_warm_wins():
