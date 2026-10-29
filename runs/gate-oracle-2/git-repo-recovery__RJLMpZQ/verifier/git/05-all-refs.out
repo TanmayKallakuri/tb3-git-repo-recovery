@@ -1,0 +1,15 @@
+refs/heads/develop
+refs/heads/feature/cache-warmup
+refs/heads/feature/retry-policy
+refs/heads/hotfix/1.2.1
+refs/heads/main
+refs/remotes/mirror/develop
+refs/remotes/mirror/feature/retry-policy
+refs/remotes/mirror/main
+refs/tags/v0.9.0-rc1
+refs/tags/v1.0.0
+refs/tags/v1.1.0
+refs/tags/v1.2.0
+refs/tags/v1.2.1
+refs/tags/v1.3.0
+refs/tags/v1.3.1

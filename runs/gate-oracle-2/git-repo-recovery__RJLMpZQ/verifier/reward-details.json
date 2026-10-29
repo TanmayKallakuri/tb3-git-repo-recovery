@@ -1,0 +1,548 @@
+{
+ "artifact": "/app/repo.git",
+ "stage_error": null,
+ "stage": {
+  "files": 210,
+  "dirs": 155,
+  "bytes": 148675,
+  "skipped": [],
+  "skipped_count": 0,
+  "cleaned": {
+   "removed": [
+    "hooks"
+   ],
+   "config_before": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = true\n\tlogAllRefUpdates = true\n[remote \"mirror\"]\n\turl = git@mirror.example:orbit/orbit.git\n\tfetch = +refs/heads/*:refs/remotes/mirror/*\n",
+   "config_replaced": true
+  },
+  "present": {
+   "HEAD": true,
+   "objects": true,
+   "refs": true
+  }
+ },
+ "original": {
+  "reachable": 579,
+  "run": {
+   "label": "rev-list-original",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/original-2kv4__k2/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "2b777f6ff2bfa4437a5576904761d0621d5fd43a",
+    "35e60b11842b491b815e3e98c835e7b23596609a",
+    "45628f3693a2a93bbe3570e21b871bf91d0b6acf",
+    "493c34b0aa4c65d0a21d81db383cf35bb56f6ee0",
+    "518aac585f9a5f3220b0b504cb5df30edee0e99f",
+    "69305d3a6d68e96388e91dcdde3447ea7042944f",
+    "6a1c42a2adb5cb6991cf51c848b58793e404ab29",
+    "769013b9f4a84795d101ca52157a07dbea36ea7b",
+    "808da7c33e7ae9c4a01418296aedbe08c62e274e",
+    "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67",
+    "d13c784d66243541536833780676efba0d86042a",
+    "fc1b7e8984ec70b6ee8ab78deceda6116e970f43",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.1,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  }
+ },
+ "bare": {
+  "run": {
+   "label": "is-bare",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-parse",
+    "--is-bare-repository"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.03,
+   "stdout_tail": "true\n",
+   "stderr_tail": ""
+  },
+  "is_bare": true
+ },
+ "fsck": {
+  "run": {
+   "label": "fsck",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "fsck",
+    "--full",
+    "--strict",
+    "--no-dangling"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "",
+   "stderr_tail": ""
+  },
+  "output": "",
+  "flagged": [],
+  "flagged_count": 0
+ },
+ "refs": {
+  "run": {
+   "label": "for-each-ref",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "for-each-ref",
+    "--format=%(objectname) %(objecttype) %(refname) %(*objectname)",
+    "refs/heads",
+    "refs/tags"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.02,
+   "stdout_tail": "6a1c42a2adb5cb6991cf51c848b58793e404ab29 commit refs/heads/develop \nfc1b7e8984ec70b6ee8ab78deceda6116e970f43 commit refs/heads/feature/cache-warmup \nd13c784d66243541536833780676efba0d86042a commit refs/heads/feature/retry-policy \n69305d3a6d68e96388e91dcdde3447ea7042944f commit refs/heads/hotfix/1.2.1 \n2b777f6ff2bfa4437a5576904761d0621d5fd43a commit refs/heads/main \n518aac585f9a5f3220b0b504cb5df30edee0e99f commit refs/tags/v0.9.0-rc1 \n769013b9f4a84795d101ca52157a07dbea36ea7b tag refs/tags/v1.0.0 1fbcf50531d91c00e33bae40dd0b1f4ec3494e65\n808da7c33e7ae9c4a01418296aedbe08c62e274e tag refs/tags/v1.1.0 9099f204096190b4e3cbd96891387f65db44e675\n45628f3693a2a93bbe3570e21b871bf91d0b6acf tag refs/tags/v1.2.0 c256b5c79663b545147eb748961436ae09201284\nbb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 commit refs/tags/v1.2.1 \n493c34b0aa4c65d0a21d81db383cf35bb56f6ee0 tag refs/tags/v1.3.0 ebcc265012e322e29e4bb97e4afdae1ba2c87492\n35e60b11842b491b815e3e98c835e7b23596609a commit refs/tags/v1.3.1 \n",
+   "stderr_tail": ""
+  },
+  "all_refs_run": {
+   "label": "all-refs",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "for-each-ref",
+    "--format=%(refname)"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.02,
+   "stdout_tail": "refs/heads/develop\nrefs/heads/feature/cache-warmup\nrefs/heads/feature/retry-policy\nrefs/heads/hotfix/1.2.1\nrefs/heads/main\nrefs/remotes/mirror/develop\nrefs/remotes/mirror/feature/retry-policy\nrefs/remotes/mirror/main\nrefs/tags/v0.9.0-rc1\nrefs/tags/v1.0.0\nrefs/tags/v1.1.0\nrefs/tags/v1.2.0\nrefs/tags/v1.2.1\nrefs/tags/v1.3.0\nrefs/tags/v1.3.1\n",
+   "stderr_tail": ""
+  },
+  "expected_count": 12,
+  "actual_count": 12,
+  "missing": [],
+  "extra": [],
+  "extra_names": [],
+  "other_namespaces": [],
+  "head": "ref: refs/heads/main",
+  "expected_head": "ref: refs/heads/main"
+ },
+ "objects": {
+  "ref_ids": 12,
+  "rev_list_failures": {},
+  "cat_file_run": {
+   "label": "cat-file",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "cat-file",
+    "--batch-check=%(objectname) %(objecttype)"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.18,
+   "stdout_tail": "dac5fa1297af3dd07952804b373d390047cf tree\nebcc265012e322e29e4bb97e4afdae1ba2c87492 commit\ned21a0eaabd3335bee70504d7110bd458339be0a commit\ned601c8cea2c3a3f66f565ce7c662f2d2ece68f4 tree\neda6dde51f8f2597725a73002f865fe71207ca2c blob\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 tree\nedc0acc1cc8cef653801e0727121c851fb3baba0 commit\nedf08b01f32f11c563acf0a3bf92c9bd32be2af6 tree\nef6ef8ebee0b873726f1068be10807b3f2dc3ace tree\nefdeae95e38cd0ed0319e9e9e45aacb85a928eb9 tree\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 tree\nf0b014a2cf84b7c99a4920965b63ba0658bc567f tree\nf1751ac813282c10b90ba362c20c30d927eefe9b tree\nf1a290eb51399680feebcdf831444684102158a6 commit\nf29f93c83945afc9b317b522c5dde8f8352a153f commit\nf2ca734572f4645134585d64561fde928c648f1c blob\nf34487d2a92c729ec1c615c6d1524e6626a4cebe tree\nf412347e01766ab0a927d3f6da1f0e192c205f35 commit\nf46321cf9098771aa156b14dec794db0db4fa463 tree\nf632bbff241bf816bf389b087e55329aba6df53d blob\nf7d9c041a939367f3e12911698b17aa7d5f63204 tree\nf861892b48a53a8fc9bb5ca02a6adb53a4276a78 tree\nf872d06a65cffdff19a88816a7f1aa96ec08ba50 tree\nf8ec3f516c7c576baa76877a6450b8b50bb3069f tree\nf9d04f9007843a85682153bca2d7ec0a00a0f3a4 blob\nfa82f043bd7435f0fcf4dd0ac3ddc0dda239d567 blob\nfa957b32088277d3724d5235fbc61ca9b46ee7dd tree\nfac3107be9d463e1026262b7be7ca76b4b41b7bd commit\nfb053504962e624a083b6af539a21f24c737da11 tree\nfbab992a7136e5526789ec7f430284cac281a44a tree\nfbecd721b2978234be7db8e10734190b45b85fab commit\nfc1b7e8984ec70b6ee8ab78deceda6116e970f43 commit\nfc71214c3c0a73a7039adb4a7c0ad0f3c7c2a3dc blob\nfce245f6f526f178349b414bea64a881bb80252e commit\nfd07803dd475923ec306ca86dfe9ca3b914dc42b tree\nfe28c25e25d0bf94a17ebaf867952a1e81e71245 blob\nfe37aa82d2025199eeaa23dc88ba7808ed2034f5 commit\nfe3c1b2495aaad66e045b641141f3f9f0419133b commit\nfe4843945081dccbadeee077c04adcf06915dc8d blob\nfe968d970edc3c0ba746872280534e6ae0c8ec0c commit\nfeb076d11ae1343cce35ccdba18afb792a8f13e4 blob\nff055424ab5c62ec8c047ac8e59240bcfab7cf61 blob\nffb3ea9013c8a2166463e446a147b4a001d871db tree\n",
+   "stderr_tail": ""
+  },
+  "artifact_reachable": 579,
+  "original_reachable": 579,
+  "unreadable": [],
+  "unreadable_count": 0,
+  "missing": [],
+  "missing_count": 0,
+  "extra": [],
+  "extra_count": 0
+ },
+ "git": [
+  {
+   "label": "rev-list-original",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/original-2kv4__k2/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "2b777f6ff2bfa4437a5576904761d0621d5fd43a",
+    "35e60b11842b491b815e3e98c835e7b23596609a",
+    "45628f3693a2a93bbe3570e21b871bf91d0b6acf",
+    "493c34b0aa4c65d0a21d81db383cf35bb56f6ee0",
+    "518aac585f9a5f3220b0b504cb5df30edee0e99f",
+    "69305d3a6d68e96388e91dcdde3447ea7042944f",
+    "6a1c42a2adb5cb6991cf51c848b58793e404ab29",
+    "769013b9f4a84795d101ca52157a07dbea36ea7b",
+    "808da7c33e7ae9c4a01418296aedbe08c62e274e",
+    "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67",
+    "d13c784d66243541536833780676efba0d86042a",
+    "fc1b7e8984ec70b6ee8ab78deceda6116e970f43",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.1,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "is-bare",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-parse",
+    "--is-bare-repository"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.03,
+   "stdout_tail": "true\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "fsck",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "fsck",
+    "--full",
+    "--strict",
+    "--no-dangling"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "",
+   "stderr_tail": ""
+  },
+  {
+   "label": "for-each-ref",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "for-each-ref",
+    "--format=%(objectname) %(objecttype) %(refname) %(*objectname)",
+    "refs/heads",
+    "refs/tags"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.02,
+   "stdout_tail": "6a1c42a2adb5cb6991cf51c848b58793e404ab29 commit refs/heads/develop \nfc1b7e8984ec70b6ee8ab78deceda6116e970f43 commit refs/heads/feature/cache-warmup \nd13c784d66243541536833780676efba0d86042a commit refs/heads/feature/retry-policy \n69305d3a6d68e96388e91dcdde3447ea7042944f commit refs/heads/hotfix/1.2.1 \n2b777f6ff2bfa4437a5576904761d0621d5fd43a commit refs/heads/main \n518aac585f9a5f3220b0b504cb5df30edee0e99f commit refs/tags/v0.9.0-rc1 \n769013b9f4a84795d101ca52157a07dbea36ea7b tag refs/tags/v1.0.0 1fbcf50531d91c00e33bae40dd0b1f4ec3494e65\n808da7c33e7ae9c4a01418296aedbe08c62e274e tag refs/tags/v1.1.0 9099f204096190b4e3cbd96891387f65db44e675\n45628f3693a2a93bbe3570e21b871bf91d0b6acf tag refs/tags/v1.2.0 c256b5c79663b545147eb748961436ae09201284\nbb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 commit refs/tags/v1.2.1 \n493c34b0aa4c65d0a21d81db383cf35bb56f6ee0 tag refs/tags/v1.3.0 ebcc265012e322e29e4bb97e4afdae1ba2c87492\n35e60b11842b491b815e3e98c835e7b23596609a commit refs/tags/v1.3.1 \n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "all-refs",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "for-each-ref",
+    "--format=%(refname)"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.02,
+   "stdout_tail": "refs/heads/develop\nrefs/heads/feature/cache-warmup\nrefs/heads/feature/retry-policy\nrefs/heads/hotfix/1.2.1\nrefs/heads/main\nrefs/remotes/mirror/develop\nrefs/remotes/mirror/feature/retry-policy\nrefs/remotes/mirror/main\nrefs/tags/v0.9.0-rc1\nrefs/tags/v1.0.0\nrefs/tags/v1.1.0\nrefs/tags/v1.2.0\nrefs/tags/v1.2.1\nrefs/tags/v1.3.0\nrefs/tags/v1.3.1\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/heads/main",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "2b777f6ff2bfa4437a5576904761d0621d5fd43a",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/tags/v1.3.1",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "35e60b11842b491b815e3e98c835e7b23596609a",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/tags/v1.2.0",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "45628f3693a2a93bbe3570e21b871bf91d0b6acf",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/tags/v1.3.0",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "493c34b0aa4c65d0a21d81db383cf35bb56f6ee0",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/tags/v0.9.0-rc1",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "518aac585f9a5f3220b0b504cb5df30edee0e99f",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.03,
+   "stdout_tail": "326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n549e28f2ec627f15af2f9a74bf4707778438164b orbit/__main__.py\n37a3d4d64c1c6bf14e3e3e5d6d22272b2556a142 orbit/cli.py\n2babcbff95b056cf47234c6bc8e25021e2ea390a orbit/clock.py\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nd6a815367bc98898cad10cac9668a0476164ae2c orbit/job.py\nf9d04f9007843a85682153bca2d7ec0a00a0f3a4 orbit/runner.py\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n6164940047f5e520c69337a4837674f968cae4dd pyproject.toml\n78bf5cfd1939e27377967843f2ca672506c6d4a7 tests\n45ad207f08400b0bd7f5746473ef33afc0c6dc4e tests/test_cron.py\n9b05c7e6534623a2f6deb8fcf7d59e433202f437 tools\ne7b99a2542effc63a36043616bf8075300c69c77 tools/gen_api_docs.py\n9378be2673818c8ff773e99b326b11f9bfee97c6 tools/release.sh\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/heads/hotfix/1.2.1",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "69305d3a6d68e96388e91dcdde3447ea7042944f",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/heads/develop",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "6a1c42a2adb5cb6991cf51c848b58793e404ab29",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/tags/v1.0.0",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "769013b9f4a84795d101ca52157a07dbea36ea7b",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.03,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/tags/v1.1.0",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "808da7c33e7ae9c4a01418296aedbe08c62e274e",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.03,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/tags/v1.2.1",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/heads/feature/retry-policy",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "d13c784d66243541536833780676efba0d86042a",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "rev-list-refs/heads/feature/cache-warmup",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "rev-list",
+    "--objects",
+    "fc1b7e8984ec70b6ee8ab78deceda6116e970f43",
+    "--"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.05,
+   "stdout_tail": "orbit\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 \n6c896bb75d78335bb201edd0ba809e38927ff786 orbit\n368136d62f1e2ac2d5d74ae0909560cddf8fc455 orbit/scheduler.py\n01804338bd5b6c900c063f26d6cf1d5bda9d8708 \n6118402ff047d57627be0b750125245323254320 orbit\n94fa8816a3f398c5ffc834e06f9b5424b57f3361 \n91a23375286d0a344e810f2b0544686e2efad98b orbit\n46e038d0737c7741bef6280b94c9374193e431eb orbit/scheduler.py\n4a545f2555c0f3b5bec461acf08c5ceea666eac9 \n474f333a94b6d946260794ef8f0cdb0f535720d5 orbit\n748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05 orbit/cron.py\n7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc \n121ed16b8927d48e9dd0695b597b6593bf56716e orbit\n4e86dcd6a840b8cad898ec7536d7203b38192916 orbit/cron.py\nfb053504962e624a083b6af539a21f24c737da11 \n203326ce49fc927bdb9b6b605c72dc121fe40102 orbit\n60c17135f587308cac19598b6beacbcccd36e27d orbit/__init__.py\n87ccb27f23640185b19ba5827072a5e55d718128 \n3ec1e295fac13a6ea805a4be32673011259f9ba7 CHANGELOG.md\nae39fab35ff1fba80a199b1cc6446be4933d9c39 VERSION\na6418d8884699787d70ff0f3e18406fa1d54d59f \n936c27fe1ea17b79a16560b0f9da425b5091c04d docs\n00b8e676fd7460059ef92d91449e0f3a9179db31 \n047f2ef66ed787728853036a173568c3b70425ac docs\n1bbaed1329a146f6b21e7c143dd7f07387642758 \na48f09ece41458d42ade8a1e21328e3d2124f303 \n379883ac3333b439422a13b72110d2bc6bd133a4 tools\n70afa2d4fa4fdeae992ff1ed2180928b660aba66 \ncf144ac9f154dc4dc16196b10beea974a0d5b018 \nd67a5a7b85e411150d5559c9851500fddbaf6590 \n69d4463d27450aa21633756b1527c1c6b14787e9 \n973373e0c0c9d3b50e444dd5ea809ec517ab595b orbit\n64b21aea344a05925bfdf01f72190d582a5c0407 orbit/__init__.py\n168d596ae92a771ef416da8f23fd95e50cbce7a5 \n950bf0dd573b21810a1d17bdf0e3c76db8bc20be orbit\nba198171899ea2fea32f29e668d1868d059e18d7 \n4f6927c05af93ea3afcb3944f541dd70d9b35fbb orbit\n51ba72ff44606b08f3070b75c226697af7baf5a0 \nfbab992a7136e5526789ec7f430284cac281a44a orbit\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 \nb297665421bb554ab7baba04a211ea0ec3d62c7d orbit\ne6fcb386db57dca77d7fe2d9b74ed1f96013c7aa \n3db5506a6185e2571f3a7b2fb3f350daa48a0396 orbit\n",
+   "stderr_tail": ""
+  },
+  {
+   "label": "cat-file",
+   "argv": [
+    "git",
+    "--git-dir=/run/verifier/repo",
+    "-c",
+    "safe.directory=*",
+    "cat-file",
+    "--batch-check=%(objectname) %(objecttype)"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "truncated": false,
+   "seconds": 0.18,
+   "stdout_tail": "dac5fa1297af3dd07952804b373d390047cf tree\nebcc265012e322e29e4bb97e4afdae1ba2c87492 commit\ned21a0eaabd3335bee70504d7110bd458339be0a commit\ned601c8cea2c3a3f66f565ce7c662f2d2ece68f4 tree\neda6dde51f8f2597725a73002f865fe71207ca2c blob\nedb0ff42826dae2b08c1e5f2c01c7aa7d4add829 tree\nedc0acc1cc8cef653801e0727121c851fb3baba0 commit\nedf08b01f32f11c563acf0a3bf92c9bd32be2af6 tree\nef6ef8ebee0b873726f1068be10807b3f2dc3ace tree\nefdeae95e38cd0ed0319e9e9e45aacb85a928eb9 tree\nf053ea8c8c294b8f1b8462fae4f52d18e1a14ea1 tree\nf0b014a2cf84b7c99a4920965b63ba0658bc567f tree\nf1751ac813282c10b90ba362c20c30d927eefe9b tree\nf1a290eb51399680feebcdf831444684102158a6 commit\nf29f93c83945afc9b317b522c5dde8f8352a153f commit\nf2ca734572f4645134585d64561fde928c648f1c blob\nf34487d2a92c729ec1c615c6d1524e6626a4cebe tree\nf412347e01766ab0a927d3f6da1f0e192c205f35 commit\nf46321cf9098771aa156b14dec794db0db4fa463 tree\nf632bbff241bf816bf389b087e55329aba6df53d blob\nf7d9c041a939367f3e12911698b17aa7d5f63204 tree\nf861892b48a53a8fc9bb5ca02a6adb53a4276a78 tree\nf872d06a65cffdff19a88816a7f1aa96ec08ba50 tree\nf8ec3f516c7c576baa76877a6450b8b50bb3069f tree\nf9d04f9007843a85682153bca2d7ec0a00a0f3a4 blob\nfa82f043bd7435f0fcf4dd0ac3ddc0dda239d567 blob\nfa957b32088277d3724d5235fbc61ca9b46ee7dd tree\nfac3107be9d463e1026262b7be7ca76b4b41b7bd commit\nfb053504962e624a083b6af539a21f24c737da11 tree\nfbab992a7136e5526789ec7f430284cac281a44a tree\nfbecd721b2978234be7db8e10734190b45b85fab commit\nfc1b7e8984ec70b6ee8ab78deceda6116e970f43 commit\nfc71214c3c0a73a7039adb4a7c0ad0f3c7c2a3dc blob\nfce245f6f526f178349b414bea64a881bb80252e commit\nfd07803dd475923ec306ca86dfe9ca3b914dc42b tree\nfe28c25e25d0bf94a17ebaf867952a1e81e71245 blob\nfe37aa82d2025199eeaa23dc88ba7808ed2034f5 commit\nfe3c1b2495aaad66e045b641141f3f9f0419133b commit\nfe4843945081dccbadeee077c04adcf06915dc8d blob\nfe968d970edc3c0ba746872280534e6ae0c8ec0c commit\nfeb076d11ae1343cce35ccdba18afb792a8f13e4 blob\nff055424ab5c62ec8c047ac8e59240bcfab7cf61 blob\nffb3ea9013c8a2166463e446a147b4a001d871db tree\n",
+   "stderr_tail": ""
+  }
+ ],
+ "total_seconds": 1.2,
+ "checks": {
+  "test_artifact_staged": {
+   "ok": true,
+   "message": ""
+  },
+  "test_fsck_clean": {
+   "ok": true,
+   "message": ""
+  },
+  "test_refs_restored": {
+   "ok": true,
+   "message": ""
+  },
+  "test_history_intact": {
+   "ok": true,
+   "message": ""
+  },
+  "test_no_history_rewrite": {
+   "ok": true,
+   "message": ""
+  }
+ },
+ "failed_checks": []
+}

@@ -1,0 +1,25 @@
+[recover] pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack: 547 entries, 41 unreadable, 15 with no copy elsewhere, checksum BAD
+[recover] pack-dc1a3d5e56cdb2c83174659a7deaaca10d01e520.pack: 397 entries, 0 unreadable, 0 with no copy elsewhere, checksum ok
+[recover] loose tree 1581703b7fa6: repaired byte 165
+[recover] loose blob 249050286553: repaired byte 18
+[recover] loose blob 288a9e8fa5c0: repaired byte 247
+[recover] loose commit 6a291a82188b: repaired byte 88
+[recover] loose commit aef3e0220379: repaired byte 90
+[recover] loose tree b10242c6f02a: repaired byte 250
+[recover] removed corrupt pack pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack; its readable objects are loose now
+[recover] recreated pack-dc1a3d5e56cdb2c83174659a7deaaca10d01e520.idx
+[recover] wrote 135 loose objects
+[recover] 0001-Add-a-retry-policy-with-exponential-backoff.patch: rebuilt commit cac0888c0224 on 881cb3036f76
+[recover] 0002-Use-the-retry-policy-from-the-runner.patch: rebuilt commit 11546642caef on cac0888c0224
+[recover] 0003-Add-tests-for-the-retry-policy.patch: rebuilt commit c30cfac86f61 on 11546642caef
+[recover] regenerated docs/API.md of commit ebcc265012e3 -> blob 0f21f2abd320
+[recover] ref refs/tags/v1.2.0 <- tag object
+[recover] ref refs/tags/v1.3.0 <- tag object
+[recover] ref refs/heads/develop <- reflog
+[recover] ref refs/heads/feature/cache-warmup <- reflog
+[recover] ref refs/heads/hotfix/1.2.1 <- reflog
+[recover] ref refs/heads/feature/retry-policy <- refs/remotes/mirror/feature/retry-policy
+[recover] ref refs/tags/v1.2.1 <- release commit bb11f51d295d (VERSION, CHANGELOG 2026-08-04)
+[recover] ref refs/tags/v1.3.1 <- release commit 35e60b11842b (VERSION, CHANGELOG 2026-09-08)
+[recover] git fsck --full --strict --no-dangling: clean
+[recover] done

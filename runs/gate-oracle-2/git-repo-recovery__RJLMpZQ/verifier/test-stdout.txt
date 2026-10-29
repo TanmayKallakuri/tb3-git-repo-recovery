@@ -1,0 +1,31 @@
+preflight: ok, git version 2.39.5, original passes fsck as checker, 12 expected refs
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /tests
+configfile: pyproject.toml
+plugins: json-ctrf-0.5.2
+collected 5 items
+
+test_outputs.py .....                                                    [100%]
+
+==================================== PASSES ====================================
+_____________________________ test_artifact_staged _____________________________
+----------------------------- Captured stdout call -----------------------------
+staged: {'files': 210, 'dirs': 155, 'bytes': 148675, 'skipped': [], 'skipped_count': 0, 'cleaned': {'removed': ['hooks'], 'config_before': '[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = true\n\tlogAllRefUpdates = true\n[remote "mirror"]\n\turl = git@mirror.example:orbit/orbit.git\n\tfetch = +refs/heads/*:refs/remotes/mirror/*\n', 'config_replaced': True}, 'present': {'HEAD': True, 'objects': True, 'refs': True}}
+neutralised before grading: ['hooks']
+_______________________________ test_fsck_clean ________________________________
+----------------------------- Captured stdout call -----------------------------
+fsck: {'label': 'fsck', 'argv': ['git', '--git-dir=/run/verifier/repo', '-c', 'safe.directory=*', 'fsck', '--full', '--strict', '--no-dangling'], 'returncode': 0, 'timed_out': False, 'truncated': False, 'seconds': 0.05, 'stdout_tail': '', 'stderr_tail': ''}
+______________________________ test_refs_restored ______________________________
+----------------------------- Captured stdout call -----------------------------
+refs: expected 12, found 12, HEAD 'ref: refs/heads/main'
+_____________________________ test_history_intact ______________________________
+----------------------------- Captured stdout call -----------------------------
+objects: reachable 579, original 579
+=========================== short test summary info ============================
+PASSED test_outputs.py::test_artifact_staged
+PASSED test_outputs.py::test_fsck_clean
+PASSED test_outputs.py::test_refs_restored
+PASSED test_outputs.py::test_history_intact
+PASSED test_outputs.py::test_no_history_rewrite
+============================== 5 passed in 1.25s ===============================
