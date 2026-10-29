@@ -1,0 +1,672 @@
+{
+ "items": [
+  {
+   "class": "D4",
+   "object": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "pack_b_entry": {
+    "offset": 7951,
+    "storage": "commit",
+    "zeroed_from": 7953,
+    "zeroed_to": 8230
+   },
+   "parent": "881cb3036f76b7bf5055b2fe511ee9bc515252f8",
+   "patch": "docs/patches/0001-Add-a-retry-policy-with-exponential-backoff.patch",
+   "patch_commit": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "path": "",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "commit"
+  },
+  {
+   "class": "D4",
+   "object": "26b365efd3049431a7bf5033d91c680cf177d604",
+   "pack_b_entry": {
+    "offset": 29664,
+    "storage": "ofs_delta",
+    "zeroed_from": 29667,
+    "zeroed_to": 29708
+   },
+   "parent": "881cb3036f76b7bf5055b2fe511ee9bc515252f8",
+   "patch": "docs/patches/0001-Add-a-retry-policy-with-exponential-backoff.patch",
+   "patch_commit": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "path": "",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "tree"
+  },
+  {
+   "class": "D4",
+   "object": "f7d9c041a939367f3e12911698b17aa7d5f63204",
+   "pack_b_entry": {
+    "offset": 29708,
+    "storage": "ofs_delta",
+    "zeroed_from": 29712,
+    "zeroed_to": 29753
+   },
+   "parent": "881cb3036f76b7bf5055b2fe511ee9bc515252f8",
+   "patch": "docs/patches/0001-Add-a-retry-policy-with-exponential-backoff.patch",
+   "patch_commit": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "path": "orbit",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "tree"
+  },
+  {
+   "class": "D4",
+   "object": "b31372d6e56a840828f7a0a31276d3ba2cbe7ba6",
+   "pack_b_entry": {
+    "offset": 41482,
+    "storage": "ofs_delta",
+    "zeroed_from": 41485,
+    "zeroed_to": 41504
+   },
+   "parent": "881cb3036f76b7bf5055b2fe511ee9bc515252f8",
+   "patch": "docs/patches/0001-Add-a-retry-policy-with-exponential-backoff.patch",
+   "patch_commit": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "path": "orbit/__init__.py",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "blob"
+  },
+  {
+   "class": "D4",
+   "object": "4357b8ed3dd4d6e24c1d695ef93ffa5312f32f05",
+   "pack_b_entry": {
+    "offset": 47418,
+    "storage": "ofs_delta",
+    "zeroed_from": 47421,
+    "zeroed_to": 47445
+   },
+   "parent": "881cb3036f76b7bf5055b2fe511ee9bc515252f8",
+   "patch": "docs/patches/0001-Add-a-retry-policy-with-exponential-backoff.patch",
+   "patch_commit": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "path": "orbit/retry.py",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "blob"
+  },
+  {
+   "class": "D4",
+   "object": "11546642caef9b8f524df49a139bb6862b747dc8",
+   "pack_b_entry": {
+    "offset": 7780,
+    "storage": "commit",
+    "zeroed_from": 7782,
+    "zeroed_to": 7951
+   },
+   "parent": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "patch": "docs/patches/0002-Use-the-retry-policy-from-the-runner.patch",
+   "patch_commit": "11546642caef9b8f524df49a139bb6862b747dc8",
+   "path": "",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "commit"
+  },
+  {
+   "class": "D4",
+   "object": "89727e43a784441b1ef8f792c2a7377a9435163f",
+   "pack_b_entry": {
+    "offset": 29592,
+    "storage": "ofs_delta",
+    "zeroed_from": 29596,
+    "zeroed_to": 29664
+   },
+   "parent": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "patch": "docs/patches/0002-Use-the-retry-policy-from-the-runner.patch",
+   "patch_commit": "11546642caef9b8f524df49a139bb6862b747dc8",
+   "path": "",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "tree"
+  },
+  {
+   "class": "D4",
+   "object": "88d8473dbbe152e91a26acec7b9aa56c917eb913",
+   "pack_b_entry": {
+    "offset": 29546,
+    "storage": "ofs_delta",
+    "zeroed_from": 29549,
+    "zeroed_to": 29592
+   },
+   "parent": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "patch": "docs/patches/0002-Use-the-retry-policy-from-the-runner.patch",
+   "patch_commit": "11546642caef9b8f524df49a139bb6862b747dc8",
+   "path": "orbit",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "tree"
+  },
+  {
+   "class": "D4",
+   "object": "2831e784e676c303433667812211487ce363f115",
+   "pack_b_entry": {
+    "offset": 48146,
+    "storage": "ofs_delta",
+    "zeroed_from": 48150,
+    "zeroed_to": 48176
+   },
+   "parent": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+   "patch": "docs/patches/0002-Use-the-retry-policy-from-the-runner.patch",
+   "patch_commit": "11546642caef9b8f524df49a139bb6862b747dc8",
+   "path": "orbit/runner.py",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "blob"
+  },
+  {
+   "class": "D4",
+   "object": "c30cfac86f61d9e3f5782f272924333776ecd662",
+   "pack_b_entry": {
+    "offset": 7556,
+    "storage": "commit",
+    "zeroed_from": 7558,
+    "zeroed_to": 7780
+   },
+   "parent": "11546642caef9b8f524df49a139bb6862b747dc8",
+   "patch": "docs/patches/0003-Add-tests-for-the-retry-policy.patch",
+   "patch_commit": "c30cfac86f61d9e3f5782f272924333776ecd662",
+   "path": "",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "commit"
+  },
+  {
+   "class": "D4",
+   "object": "8943aea7d10b0ad320dd488c1b01786ca8c031b5",
+   "pack_b_entry": {
+    "offset": 29501,
+    "storage": "ofs_delta",
+    "zeroed_from": 29505,
+    "zeroed_to": 29546
+   },
+   "parent": "11546642caef9b8f524df49a139bb6862b747dc8",
+   "patch": "docs/patches/0003-Add-tests-for-the-retry-policy.patch",
+   "patch_commit": "c30cfac86f61d9e3f5782f272924333776ecd662",
+   "path": "",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "tree"
+  },
+  {
+   "class": "D4",
+   "object": "7d33f4dadc548a87cbe997c130d557800b812772",
+   "pack_b_entry": {
+    "offset": 28110,
+    "storage": "ofs_delta",
+    "zeroed_from": 28114,
+    "zeroed_to": 28154
+   },
+   "parent": "11546642caef9b8f524df49a139bb6862b747dc8",
+   "patch": "docs/patches/0003-Add-tests-for-the-retry-policy.patch",
+   "patch_commit": "c30cfac86f61d9e3f5782f272924333776ecd662",
+   "path": "tests",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "tree"
+  },
+  {
+   "class": "D4",
+   "object": "9ee0482da23721f2cdd9f71f776d7267fb7b9967",
+   "pack_b_entry": {
+    "offset": 52252,
+    "storage": "ofs_delta",
+    "zeroed_from": 52255,
+    "zeroed_to": 52270
+   },
+   "parent": "11546642caef9b8f524df49a139bb6862b747dc8",
+   "patch": "docs/patches/0003-Add-tests-for-the-retry-policy.patch",
+   "patch_commit": "c30cfac86f61d9e3f5782f272924333776ecd662",
+   "path": "tests/test_retry.py",
+   "recovery": "apply the patch to the parent's tree with git apply; commit-tree with author=committer and the date from the patch header; ids must equal the From line and the next commit's parent",
+   "type": "blob"
+  },
+  {
+   "class": "D5",
+   "commit": "ebcc265012e322e29e4bb97e4afdae1ba2c87492",
+   "dependents_in_pack_b": [
+    "5fab911abddbe711c096bc95e2c4701bb86dc73b"
+   ],
+   "object": "0f21f2abd320bc7a3e95791a7f6b334c59b2557a",
+   "pack_b_entry": {
+    "offset": 34306,
+    "storage": "blob",
+    "zeroed_from": 34309,
+    "zeroed_to": 36112
+   },
+   "path": "docs/API.md",
+   "recovery": "run tools/gen_api_docs.py from the v1.3.0 tree (reached through the dangling tag object); hash must equal the tree entry",
+   "release": "v1.3.0",
+   "type": "blob"
+  },
+  {
+   "class": "D2",
+   "dependents": [
+    "b8d05fdcedace0c7f32eaa1dae2e0f66df0017f5",
+    "8f7c9082ea8310bd5ae083928fecd0fc78b23be6",
+    "51019d9e85f434d5e0a668d4212cb49771878d57"
+   ],
+   "object": "ba63cdcd9f6998337c9ad80a24a31b765bbac041",
+   "pack_b_entry": {
+    "offset": 37162,
+    "storage": "blob",
+    "zeroed_from": 37165,
+    "zeroed_to": 38432
+   },
+   "path": "docs/index.md",
+   "recovery": "read the base from pack-A, apply each dependent's OFS_DELTA from pack-B",
+   "type": "blob"
+  },
+  {
+   "class": "D2",
+   "dependents": [
+    "522765bd2fa819d234155e9acf2c12a03ef568d3",
+    "e9d04110e300bb3c014a328ce545dbd23988311d"
+   ],
+   "object": "0c19bc3ab2f662ef920074b49a871ed46c37c04b",
+   "pack_b_entry": {
+    "offset": 36277,
+    "storage": "blob",
+    "zeroed_from": 36279,
+    "zeroed_to": 36815
+   },
+   "path": "docs/ROADMAP.md",
+   "recovery": "read the base from pack-A, apply each dependent's OFS_DELTA from pack-B",
+   "type": "blob"
+  },
+  {
+   "class": "D2",
+   "dependents": [
+    "58a83864285f7a506d9b85afa48282a5678ef412"
+   ],
+   "object": "3f38f02e6a3635da28f7ebe73a21380096d58194",
+   "pack_b_entry": {
+    "offset": 44357,
+    "storage": "blob",
+    "zeroed_from": 44360,
+    "zeroed_to": 45371
+   },
+   "path": "orbit/cron.py",
+   "recovery": "read the base from pack-A, apply each dependent's OFS_DELTA from pack-B",
+   "type": "blob"
+  },
+  {
+   "class": "D1",
+   "object": "6ed47e8c3cfccc7fe7080c6dfaabf7d59e05326f",
+   "pack_b_entry": {
+    "offset": 14590,
+    "storage": "commit",
+    "zeroed_from": 14592,
+    "zeroed_to": 14760
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "commit"
+  },
+  {
+   "class": "D1",
+   "object": "8f7fce3df3a5382c7dbd33f4308f6a5baa26578d",
+   "pack_b_entry": {
+    "offset": 15604,
+    "storage": "commit",
+    "zeroed_from": 15606,
+    "zeroed_to": 15778
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "commit"
+  },
+  {
+   "class": "D1",
+   "object": "f29f93c83945afc9b317b522c5dde8f8352a153f",
+   "pack_b_entry": {
+    "offset": 20832,
+    "storage": "commit",
+    "zeroed_from": 20834,
+    "zeroed_to": 20992
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "commit"
+  },
+  {
+   "class": "D1",
+   "object": "5c32ac075f74e19b9b84fc7bdeb71710ef93412a",
+   "pack_b_entry": {
+    "offset": 22504,
+    "storage": "commit",
+    "zeroed_from": 22506,
+    "zeroed_to": 22666
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "commit"
+  },
+  {
+   "class": "D1",
+   "object": "db2ce41b1462cfd2f10fbe04994c6334fcbc98b7",
+   "pack_b_entry": {
+    "offset": 18112,
+    "storage": "commit",
+    "zeroed_from": 18114,
+    "zeroed_to": 18308
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "commit"
+  },
+  {
+   "class": "D1",
+   "object": "84ad79fab280a9927ed7b37fe89368f1a16e94a3",
+   "pack_b_entry": {
+    "offset": 12111,
+    "storage": "commit",
+    "zeroed_from": 12113,
+    "zeroed_to": 12279
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "commit"
+  },
+  {
+   "class": "D1",
+   "object": "42a0ce88a3f877fbd4850a231f94e57c8f069370",
+   "pack_b_entry": {
+    "offset": 19183,
+    "storage": "commit",
+    "zeroed_from": 19185,
+    "zeroed_to": 19342
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "commit"
+  },
+  {
+   "class": "D1",
+   "object": "96cd2f5387becaf109a8e00ed1843ad75b0d5dfd",
+   "pack_b_entry": {
+    "offset": 59915,
+    "storage": "ofs_delta",
+    "zeroed_from": 59918,
+    "zeroed_to": 59961
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "tree"
+  },
+  {
+   "class": "D1",
+   "object": "587c316f34a523cf797cccec2b54f65acaa7bbf3",
+   "pack_b_entry": {
+    "offset": 60274,
+    "storage": "ofs_delta",
+    "zeroed_from": 60277,
+    "zeroed_to": 60320
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "tree"
+  },
+  {
+   "class": "D1",
+   "object": "b9b3f63316f799a87f3fcb4cee79b8ccd4f80be5",
+   "pack_b_entry": {
+    "offset": 57286,
+    "storage": "ofs_delta",
+    "zeroed_from": 57289,
+    "zeroed_to": 57330
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "tree"
+  },
+  {
+   "class": "D1",
+   "object": "85d20afa58d03c1853c30ba3ba951107b6692fc7",
+   "pack_b_entry": {
+    "offset": 55168,
+    "storage": "ofs_delta",
+    "zeroed_from": 55171,
+    "zeroed_to": 55213
+   },
+   "path": "orbit",
+   "recovery": "intact copy in pack-A",
+   "type": "tree"
+  },
+  {
+   "class": "D1",
+   "object": "9f8f4c5fc1f9adc27c8bb80ae239a88b629a7483",
+   "pack_b_entry": {
+    "offset": 60364,
+    "storage": "ofs_delta",
+    "zeroed_from": 60368,
+    "zeroed_to": 60409
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "tree"
+  },
+  {
+   "class": "D1",
+   "object": "16fa421a0afca6f249db4423aca2bb03174746a2",
+   "pack_b_entry": {
+    "offset": 61314,
+    "storage": "ofs_delta",
+    "zeroed_from": 61317,
+    "zeroed_to": 61358
+   },
+   "path": "",
+   "recovery": "intact copy in pack-A",
+   "type": "tree"
+  },
+  {
+   "class": "D1",
+   "object": "ea958ee2bfca6a3c0c90838e3a75f2aef3bcb75a",
+   "pack_b_entry": {
+    "offset": 36239,
+    "storage": "ofs_delta",
+    "zeroed_from": 36242,
+    "zeroed_to": 36277
+   },
+   "path": "docs/API.md",
+   "recovery": "intact copy in pack-A",
+   "type": "blob"
+  },
+  {
+   "class": "D1",
+   "object": "04fdf5317278eeea6ff23e3c31f7fc03d56113a3",
+   "pack_b_entry": {
+    "offset": 38652,
+    "storage": "ofs_delta",
+    "zeroed_from": 38654,
+    "zeroed_to": 38669
+   },
+   "path": "docs/index.md",
+   "recovery": "intact copy in pack-A",
+   "type": "blob"
+  },
+  {
+   "class": "D1",
+   "object": "849a932f413c4c9b6e2ad82dbe3585fca8e58afe",
+   "pack_b_entry": {
+    "offset": 50905,
+    "storage": "ofs_delta",
+    "zeroed_from": 50908,
+    "zeroed_to": 50923
+   },
+   "path": "tests/test_cli.py",
+   "recovery": "intact copy in pack-A",
+   "type": "blob"
+  },
+  {
+   "class": "D1",
+   "object": "ff055424ab5c62ec8c047ac8e59240bcfab7cf61",
+   "pack_b_entry": {
+    "offset": 49807,
+    "storage": "ofs_delta",
+    "zeroed_from": 49809,
+    "zeroed_to": 49829
+   },
+   "path": "orbit/storage.py",
+   "recovery": "intact copy in pack-A",
+   "type": "blob"
+  },
+  {
+   "class": "D1",
+   "object": "b7a0e06e2b46d193088822593cab3b23510c6d9e",
+   "pack_b_entry": {
+    "offset": 38691,
+    "storage": "ofs_delta",
+    "zeroed_from": 38693,
+    "zeroed_to": 38708
+   },
+   "path": "docs/index.md",
+   "recovery": "intact copy in pack-A",
+   "type": "blob"
+  },
+  {
+   "class": "D1",
+   "object": "cba589d707ae031afbd383457e073fb7fa965cd0",
+   "pack_b_entry": {
+    "offset": 45711,
+    "storage": "ofs_delta",
+    "zeroed_from": 45713,
+    "zeroed_to": 45733
+   },
+   "path": "orbit/cron.py",
+   "recovery": "intact copy in pack-A",
+   "type": "blob"
+  },
+  {
+   "class": "D1",
+   "object": "c3647992fea485b8209d2a07e05aeaf3a1cea053",
+   "pack_b_entry": {
+    "offset": 59302,
+    "storage": "blob",
+    "zeroed_from": 59304,
+    "zeroed_to": 59383
+   },
+   "path": "TODO.md",
+   "recovery": "intact copy in pack-A",
+   "type": "blob"
+  },
+  {
+   "altered_byte": 194,
+   "class": "D3",
+   "object": "bb29996ade001ad7ef99a19dcd75d506dc002132",
+   "offset": 91,
+   "original_byte": 152,
+   "path": "",
+   "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
+   "type": "commit"
+  },
+  {
+   "altered_byte": 107,
+   "class": "D3",
+   "object": "7f168c1b2fb5577fd92841ebf048fe0bcbd216e1",
+   "offset": 103,
+   "original_byte": 49,
+   "path": "",
+   "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
+   "type": "commit"
+  },
+  {
+   "altered_byte": 223,
+   "class": "D3",
+   "object": "af0f73d3bb272f9284cf0859543690e014dd295a",
+   "offset": 186,
+   "original_byte": 133,
+   "path": "",
+   "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
+   "type": "tree"
+  },
+  {
+   "altered_byte": 126,
+   "class": "D3",
+   "object": "19b56e507be5cdcfa638e098e38de31fbb0ad105",
+   "offset": 187,
+   "original_byte": 36,
+   "path": "",
+   "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
+   "type": "tree"
+  },
+  {
+   "altered_byte": 155,
+   "class": "D3",
+   "object": "288a9e8fa5c067c97f629f34fdab02d2951480f4",
+   "offset": 247,
+   "original_byte": 193,
+   "path": "docs/ROADMAP.md",
+   "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
+   "type": "blob"
+  },
+  {
+   "altered_byte": 88,
+   "class": "D3",
+   "object": "484b4b97230a00acb0873bb582d80fe9b780e271",
+   "offset": 185,
+   "original_byte": 2,
+   "path": "orbit/retry.py",
+   "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
+   "type": "blob"
+  },
+  {
+   "class": "D6",
+   "file": "objects/pack/pack-dc1a3d5e56cdb2c83174659a7deaaca10d01e520.idx",
+   "recovery": "git index-pack recreates it from the intact pack"
+  },
+  {
+   "class": "R1",
+   "expected": "fe5dc4cdabbc0386e55017fef7927a3e9a699949",
+   "recovery": "last entry of logs/refs/heads/develop",
+   "ref": "refs/heads/develop"
+  },
+  {
+   "class": "R1",
+   "expected": "f3035413c3a080334fc6a12de93f7e4c648e201d",
+   "recovery": "last entry of logs/refs/heads/feature/cache-warmup",
+   "ref": "refs/heads/feature/cache-warmup"
+  },
+  {
+   "class": "R2",
+   "expected": "d13c784d66243541536833780676efba0d86042a",
+   "recovery": "refs/remotes/mirror/feature/retry-policy (reflog deleted too)",
+   "ref": "refs/heads/feature/retry-policy"
+  },
+  {
+   "class": "R3",
+   "expected": "45628f3693a2a93bbe3570e21b871bf91d0b6acf",
+   "recovery": "dangling tag object names the tag and its target",
+   "ref": "refs/tags/v1.2.0"
+  },
+  {
+   "class": "R3",
+   "expected": "493c34b0aa4c65d0a21d81db383cf35bb56f6ee0",
+   "recovery": "dangling tag object names the tag and its target",
+   "ref": "refs/tags/v1.3.0"
+  },
+  {
+   "class": "R3",
+   "expected": "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67",
+   "kind": "lightweight",
+   "recovery": "release commit on main's first-parent line whose VERSION is exactly the tag, confirmed by later describe strings and the CHANGELOG date",
+   "ref": "refs/tags/v1.2.1"
+  },
+  {
+   "class": "R3",
+   "expected": "35e60b11842b491b815e3e98c835e7b23596609a",
+   "kind": "lightweight",
+   "recovery": "release commit on main's first-parent line whose VERSION is exactly the tag, confirmed by later describe strings and the CHANGELOG date",
+   "ref": "refs/tags/v1.3.1"
+  },
+  {
+   "class": "R3",
+   "expected": "69305d3a6d68e96388e91dcdde3447ea7042944f",
+   "recovery": "last entry of logs/refs/heads/hotfix/1.2.1",
+   "ref": "refs/heads/hotfix/1.2.1"
+  }
+ ],
+ "packs": {
+  "A": "pack-dc1a3d5e56cdb2c83174659a7deaaca10d01e520.pack",
+  "B": "pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack"
+ },
+ "seed": 20260929,
+ "summary": {
+  "D1": 20,
+  "D2": 3,
+  "D3": 6,
+  "D4": 13,
+  "D5": 1,
+  "D6": 1,
+  "R1": 2,
+  "R2": 1,
+  "R3": 5
+ }
+}
