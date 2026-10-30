@@ -158,3 +158,41 @@ verifier image digest changed because `tests/original/` is part of it.
 
 19 cases, 0 not as expected, exit 0. The observed failed sets are the same
 as in the first run, case for case.
+
+## Run of 2026-10-30 12:20 UTC on the final verifier
+
+The same 19 cases, graded once more after `f29cadf` added the preflight
+check of the damage manifest against the original, so the table below
+is for the verifier exactly as shipped.
+
+| item | value |
+|---|---|
+| verifier image | `grr-verifier-fixtures` `sha256:22ba9fb2e88694bd3160fc696a7bf527be2c5c3dea1f2ef8cff971d170bb6d49` |
+| base image | `python:3.12-slim-bookworm@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e` |
+| git in the image | 2.39.5 |
+| verifier commit | `f29cadf` |
+
+| case                   | expected | observed | status   | must fail                | failed checks (observed) |
+|------------------------|----------|----------|----------|--------------------------|--------------------------|
+| unchanged              | 1        | 1        | PASS     | -                        | - |
+| repack                 | 1        | 1        | PASS     | -                        | - |
+| branch-moved           | 0        | 0        | PASS     | test_refs_restored       | test_refs_restored |
+| tag-deleted            | 0        | 0        | PASS     | test_refs_restored       | test_refs_restored |
+| remote-ref-added       | 0        | 0        | PASS     | test_no_history_rewrite  | test_no_history_rewrite |
+| replace-ref-added      | 0        | 0        | PASS     | test_no_history_rewrite  | test_no_history_rewrite |
+| notes-ref-added        | 0        | 0        | PASS     | test_no_history_rewrite  | test_no_history_rewrite |
+| loose-object-deleted   | 0        | 0        | PASS     | test_fsck_clean          | test_fsck_clean,test_refs_restored,test_history_intact |
+| blob-rewritten         | 0        | 0        | PASS     | test_fsck_clean          | test_fsck_clean |
+| config-invalid         | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| config-hookspath       | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| config-extensions      | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| alternates             | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| symlink                | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged,test_fsck_clean,test_refs_restored,test_history_intact,test_no_history_rewrite |
+| grafts                 | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| shallow                | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| promisor               | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| config-bare-false      | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| head-moved             | 0        | 0        | PASS     | test_refs_restored       | test_refs_restored |
+
+19 cases, 0 not as expected, exit 0. The observed failed sets are the same
+as in the two earlier runs, case for case.

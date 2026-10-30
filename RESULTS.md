@@ -85,11 +85,12 @@ shallow, a promisor marker, HEAD moved) must score 0 on the named check.
 |---|---|---|
 | 2026-10-30 08:44 UTC | 1.0.0 | 19 of 19 as expected; the committed 1.0.0 verifier (`a972b72`) graded on the same cases accepted 11 of the 17 mutations |
 | 2026-10-30 09:15 UTC | 1.1.0 (regenerated original) | 19 of 19 as expected, exit 0 |
+| 2026-10-30 12:20 UTC | 1.1.0, final verifier (`f29cadf`, with the manifest preflight) | 19 of 19 as expected, exit 0 |
 
-Both tables, with the verifier image digests, are in
-`analysis/verifier-fixtures.md`. Both runs predate `f29cadf` (section 5),
-which adds a preflight of the damage manifest against the original before
-grading; the fixtures were not rerun after it.
+All three tables, with the verifier image digests, are in
+`analysis/verifier-fixtures.md`. The third run is on the verifier as
+shipped, after `f29cadf` (section 5) added the preflight of the damage
+manifest against the original.
 
 ## 4. Ground truth and the damage, version 1.1.0
 
