@@ -45,8 +45,8 @@ TAIL_SEED = 20260920
 # the last day's steps share one cron window, so nothing of that day reaches the mirror
 LAST_DAY_START = datetime.datetime(2026, 10, 15, 8, 0, tzinfo=UTC)
 LAST_DAY_END = datetime.datetime(2026, 10, 15, 18, 0, tzinfo=UTC)
-LAST_DAY_STEPS = 4
-TAIL_COUNT = 12
+LAST_DAY_STEPS = 3
+TAIL_COUNT = 13
 CRON_HOUR = 2
 MIRROR_URL = "git@mirror.example:orbit/orbit.git"
 TIMED_KINDS = {"commit", "merge", "tag", "release", "refresh", "patches", "archive"}
@@ -252,7 +252,10 @@ class Generator:
     def step_release(self, author, version, light):
         self.checkout("main")
         when = self.next_time()
-        env = dict(BASE_ENV, **self.ident_env(author, when), SOURCE_DATE_EPOCH=str(when))
+        env = dict(BASE_ENV, **self.ident_env(author, when))
+        # v1 of the script dates the changelog from SOURCE_DATE_EPOCH only; v2 and v3 derive their own default from the commit
+        if "SOURCE_DATE_EPOCH=$(git log" not in (self.src / "tools" / "release.sh").read_text():
+            env["SOURCE_DATE_EPOCH"] = str(when)
         args = ["tools/release.sh", version] + (["-l"] if light else [])
         subprocess.run(args, cwd=self.src, env=env, check=True, capture_output=True)
         self.commits += 1
@@ -273,11 +276,13 @@ class Generator:
         self.commit(author, when, message)
         self.push(author, when, branch)
 
-    def step_archive(self, branch, author, name, series_branch, message):
+    def step_archive(self, branch, author, name, series_branch):
+        """The script runs as `author`: it rebases series_branch onto HEAD, force-pushes it, writes and commits the archive."""
         self.checkout(branch)
-        subprocess.run(["tools/archive-series.sh", name, series_branch], cwd=self.src, env=BASE_ENV, check=True, capture_output=True)
         when = self.next_time()
-        self.commit(author, when, message)
+        env = dict(BASE_ENV, **self.ident_env(author, when))
+        subprocess.run(["tools/archive-series.sh", name, series_branch], cwd=self.src, env=env, check=True, capture_output=True)
+        self.commits += 1 + int(self.git("rev-list", "--count", f"{branch}^..{series_branch}").strip())
         self.push(author, when, branch)
 
     def step_nightly(self):

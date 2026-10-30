@@ -17,14 +17,18 @@ Steps, each derived from the repository alone (no hardcoded object ids):
   5. Refs come back from dangling tag objects, reflogs, the release data
      (VERSION / CHANGELOG / describe strings) in the history, the archived
      patch series (a listed patch that matches no commit is rebuilt on the
-     commit before it; its tree must already exist), the mirror's tracking
-     refs, and finally a replay of the project's release script as of each
+     commit before it, its tree must already exist; a series whose archive
+     script rebased the branch before exporting is rebased the same way onto
+     the archive commit's parent and kept only when format-patch of the
+     result equals the archive byte for byte), the mirror's tracking refs,
+     and finally a replay of the project's release script as of each
      untagged release commit, kept only when it reproduces that commit.
   6. git fsck --full --strict must be clean.
 
 Usage: recover.py /path/to/repo.git
 """
 
+import datetime
 import email.utils
 import hashlib
 import os
@@ -55,6 +59,14 @@ def remove_tree(path):
 
 def sha1(data):
     return hashlib.sha1(data).hexdigest()
+
+
+def run_in(env, cwd, *args, check=True):
+    """A command in a scratch directory with its own environment; stdin closed so nothing can prompt."""
+    proc = subprocess.run(list(args), cwd=cwd, env=env, stdin=subprocess.DEVNULL, capture_output=True)
+    if check and proc.returncode:
+        raise RuntimeError(f"{' '.join(args)} failed:\n{proc.stdout.decode('utf-8', 'replace')}{proc.stderr.decode('utf-8', 'replace')}")
+    return proc
 
 
 def object_id(kind, content):
@@ -734,7 +746,7 @@ class Recovery:
         if changelog_oid is None:
             return found
         changelog = self.store.get(changelog_oid)[1].decode("utf-8", "replace")
-        releases = re.findall(r"^## (v\d+\.\d+\.\d+\S*) - (\d{4}-\d{2}-\d{2})\s*$", changelog, re.M)
+        releases = re.findall(r"^## (v\d+\.\d+\.\d+\S*) - (\d{4}-\d{2}-\d{2}(?: \d{2}:\d{2}:\d{2} [+-]\d{4})?)\s*$", changelog, re.M)
         line = self.git.run("rev-list", "--first-parent", branch).split()
         versions = {}
         for oid in line:
@@ -795,10 +807,27 @@ class Recovery:
                     found.append((name, entries))
         return found
 
+    def series_commit(self, path, blob):
+        """The commit that introduced the series file: it holds the path and none of its parents does. The newest one
+        whose copy equals HEAD's wins."""
+        hits = []
+        for oid, fields in self.store.commits():
+            found = self.tree_lookup(fields["tree"], path)
+            if found is None:
+                continue
+            parents = [parse_commit(self.store.get(p)[1])["tree"] for p in fields["parent"] if p in self.store]
+            if any(self.tree_lookup(t, path) is not None for t in parents):
+                continue
+            hits.append((found == blob, fields["time"], oid))
+        return max(hits)[2] if hits else None
+
     def restore_from_series(self):
-        """A patch listed in a series file that matches no commit (author, date, subject) is rebuilt on the commit the
-        previous patch matched; its tree must already exist in the repository. The branch the series was exported from
-        is created at, or advanced to, the last rebuilt commit."""
+        """Each listed patch is matched to a commit by author, author date and subject, chained by parent. A patch that
+        matches nothing is rebuilt on the chain with committer == author and kept when its tree already exists. When
+        every patch matches but tools/archive-series.sh as of the archive commit rebased the branch before exporting,
+        the matched chain is rebased the same way onto the archive commit's parent and kept only when format-patch of
+        the result is byte-identical to the archive. The branch the series was exported from is created at, or advanced
+        to, the resulting tip."""
         restored = []
         for dir_name, entries in self.series_files():
             text = self.store.get(entries["series"])[1].decode("utf-8", "replace")
@@ -807,51 +836,144 @@ class Recovery:
             if not match or not listed:
                 log(f"docs/patches/{dir_name}/series: no branch name or no patches; skipped")
                 continue
+            if any(name not in entries or entries[name] not in self.store for name in listed):
+                log(f"docs/patches/{dir_name}/series: a listed patch is not in the tree; skipped")
+                continue
             branch = match.group(1) if match.group(1).startswith("refs/") else "refs/heads/" + match.group(1)
             tip = self.git.run("rev-parse", branch).strip() if self.git.ref_exists(branch) else None
+            patches = [(name, self.store.get(entries[name])[1]) for name in listed]
+            archive = self.series_commit(f"docs/patches/{dir_name}/series", entries["series"])
+            script = self.tree_lookup(parse_commit(self.store.get(archive)[1])["tree"], "tools/archive-series.sh") if archive else None
+            script = self.store.get(script)[1] if script else b""
             work = Path(tempfile.mkdtemp(prefix="recover-"))
             try:
-                chain, built = [], 0
-                for name in listed:
-                    if name not in entries or entries[name] not in self.store:
-                        log(f"docs/patches/{dir_name}/{name}: listed but not in the tree; series stopped")
-                        break
-                    patch = self.store.get(entries[name])[1]
-                    headers = mail_headers(self.git, work, patch)
-                    base = chain[-1] if chain else None
-                    matches = self.commits_matching(headers, base)
-                    if len(matches) == 1:
-                        chain.append(matches[0])
+                headers = [mail_headers(self.git, work, patch) for _, patch in patches]
+                chains = self.match_chains(headers)
+                complete = [c for c in chains if len(c) == len(listed)]
+                if tip is not None and any(tip == c[-1] for c in complete):
+                    log(f"{branch} already sits at the tip of the archived series {dir_name}; nothing to do")
+                    continue
+                if b"git rebase" in script:
+                    if not complete:
+                        log(f"docs/patches/{dir_name}: the archive was rebased but no complete chain of its patches exists; series stopped")
                         continue
-                    if matches or base is None:
-                        log(f"docs/patches/{dir_name}/{name}: {len(matches)} matching commits and no base; series stopped")
-                        break
-                    result = self.build_from_patch(name, patch, headers, base, work)
-                    if result is None:
-                        log(f"docs/patches/{dir_name}/{name}: does not apply on {base[:12]}; series stopped")
-                        break
-                    tree, commit, scratch = result
-                    if tree not in self.store:
-                        remove_tree(scratch)
-                        log(f"docs/patches/{dir_name}/{name}: its tree {tree[:12]} is not in the repository; not rebuilt")
-                        break
-                    self.adopt_scratch(scratch)
-                    chain.append(commit)
-                    built += 1
-                    log(f"docs/patches/{dir_name}/{name}: rebuilt commit {commit[:12]} on {base[:12]}, tree {tree[:12]} was present")
+                    target, how = self.rebase_series(dir_name, patches, complete, archive, script, work)
+                elif len(chains) == 1 and not complete:
+                    target, how = self.rebuild_series(dir_name, patches, headers, chains[0], work)
+                else:
+                    log(f"docs/patches/{dir_name}: {len(chains)} chains match patch 1, {len(complete)} complete, and the archive's script does not rebase; left to other routes")
+                    continue
             finally:
                 remove_tree(work)
-            if not built:
+            if target is None:
                 continue
             if tip is None:
-                self.git.run("update-ref", "-m", f"recovered from docs/patches/{dir_name}", branch, chain[-1])
-                restored.append(f"{branch} <- docs/patches/{dir_name} ({built} rebuilt, created at {chain[-1][:12]})")
-            elif tip in chain:
-                self.git.run("update-ref", "-m", f"recovered from docs/patches/{dir_name}", branch, chain[-1], tip)
-                restored.append(f"{branch} <- docs/patches/{dir_name} ({built} rebuilt, {tip[:12]} advanced to {chain[-1][:12]})")
+                self.git.run("update-ref", "-m", f"recovered from docs/patches/{dir_name}", branch, target)
+                restored.append(f"{branch} <- docs/patches/{dir_name} ({how}, created at {target[:12]})")
+            elif any(tip in c for c in chains):
+                self.git.run("update-ref", "-m", f"recovered from docs/patches/{dir_name}", branch, target, tip)
+                restored.append(f"{branch} <- docs/patches/{dir_name} ({how}, {tip[:12]} advanced to {target[:12]})")
             else:
                 log(f"{branch} at {tip[:12]} is not on the series; left alone")
         return restored
+
+    def match_chains(self, headers):
+        """Every chain of existing commits matching the patches in order: patch 1 matches anywhere, each later patch
+        must match exactly one child of the previous match; a chain stops where that fails."""
+        chains = [[c] for c in self.commits_matching(headers[0], None)]
+        for i, h in enumerate(headers[1:], 1):
+            for chain in chains:
+                if len(chain) == i:
+                    matches = self.commits_matching(h, chain[-1])
+                    if len(matches) == 1:
+                        chain.append(matches[0])
+        return chains
+
+    def rebuild_series(self, dir_name, patches, headers, chain, work):
+        """Patches past the matched chain are rebuilt on it with committer == author; each tree must already exist."""
+        chain, built = list(chain), 0
+        for (name, patch), h in list(zip(patches, headers))[len(chain):]:
+            base = chain[-1]
+            if self.commits_matching(h, base):
+                log(f"docs/patches/{dir_name}/{name}: several commits match on {base[:12]}; series stopped")
+                break
+            result = self.build_from_patch(name, patch, h, base, work)
+            if result is None:
+                log(f"docs/patches/{dir_name}/{name}: does not apply on {base[:12]}; series stopped")
+                break
+            tree, commit, scratch = result
+            if tree not in self.store:
+                remove_tree(scratch)
+                log(f"docs/patches/{dir_name}/{name}: its tree {tree[:12]} is not in the repository; not rebuilt")
+                break
+            self.adopt_scratch(scratch)
+            chain.append(commit)
+            built += 1
+            log(f"docs/patches/{dir_name}/{name}: rebuilt commit {commit[:12]} on {base[:12]}, tree {tree[:12]} was present")
+        return (chain[-1], f"{built} rebuilt") if built else (None, "")
+
+    def rebase_series(self, dir_name, patches, chains, archive, script, work):
+        """tools/archive-series.sh as of the archive commit rebased the branch onto its HEAD, the archive commit's parent,
+        before exporting. Redo that rebase of each matched chain in a scratch clone sharing the repository's objects, as
+        the archive commit's committer, and keep the result only when format-patch with the script's flags reproduces
+        the archived patches byte for byte; the new objects then move into the repository."""
+        fields = parse_commit(self.store.get(archive)[1])
+        if len(fields["parent"]) != 1:
+            log(f"docs/patches/{dir_name}: archive commit {archive[:12]} has no single parent; series stopped")
+            return None, ""
+        onto = fields["parent"][0]
+        c_name, c_mail, _, c_date = parse_ident(fields["committer"])
+        flags = [f for f in ("--committer-date-is-author-date",) if f.encode() in script]
+        abbrev = min((len(m) for _, p in patches for m in re.findall(rb"^index ([0-9a-f]+)\.\.", p, re.M)), default=7)
+        tips = set()
+        for chain in chains:
+            base = parse_commit(self.store.get(chain[0])[1])["parent"][:1]
+            if base == [onto]:
+                tips.add(chain[-1])
+                log(f"docs/patches/{dir_name}: chain {chain[0][:12]}..{chain[-1][:12]} already sits on the archive's parent {onto[:12]}")
+                continue
+            if not base:
+                continue
+            clone = work / f"clone-{chain[0][:12]}"
+            env = self.replay_env(work)
+            env.update({"GIT_COMMITTER_NAME": c_name, "GIT_COMMITTER_EMAIL": c_mail, "GIT_COMMITTER_DATE": c_date})
+            run_in(env, work, "git", "clone", "-q", "--shared", "--no-checkout", str(self.repo), str(clone))
+            run_in(env, clone, "git", "checkout", "-q", onto)
+            run_in(env, clone, "git", "branch", "-q", "series", chain[-1])
+            proc = run_in(env, clone, "git", "rebase", "-q", *flags, "--onto", onto, base[0], "series", check=False)
+            if proc.returncode:
+                log(f"docs/patches/{dir_name}: rebase of {chain[0][:12]}..{chain[-1][:12]} onto {onto[:12]} failed "
+                    f"({proc.stderr.decode('utf-8', 'replace').strip()[:200]}); not restored")
+                continue
+            new_tip = run_in(env, clone, "git", "rev-parse", "series").stdout.decode().strip()
+            out = work / f"patches-{chain[0][:12]}"
+            run_in(env, clone, "git", "-c", f"core.abbrev={abbrev}", "format-patch", "-q", "--zero-commit", "--no-thread", "--no-signature",
+                   "-o", str(out), f"{onto}..series")
+            differing = [name for name, patch in patches if not (out / name).exists() or (out / name).read_bytes() != patch]
+            if differing:
+                log(f"docs/patches/{dir_name}: format-patch of the rebased chain differs from the archive in {differing}; not restored")
+                continue
+            self.adopt_clone_objects(clone)
+            tips.add(new_tip)
+            log(f"docs/patches/{dir_name}: rebased {chain[0][:12]}..{chain[-1][:12]} onto {onto[:12]} as {c_name} with "
+                f"{' '.join(flags) or 'no flags'}; format-patch of the result equals the archive; tip {new_tip[:12]}")
+        if len(tips) != 1:
+            log(f"docs/patches/{dir_name}: {len(tips)} distinct tips after the rebase; not restored")
+            return None, ""
+        return tips.pop(), "rebased as the archive's committer, format-patch byte-identical"
+
+    def adopt_clone_objects(self, clone):
+        """Every loose object a scratch clone wrote; its store is shared with the repository, so these are the new ones."""
+        for path in sorted((clone / ".git" / "objects").glob("??/*")):
+            oid = path.parent.name + path.name
+            if oid in self.store:
+                continue
+            obj = self.read_loose(path.read_bytes())
+            if obj is None or object_id(*obj) != oid:
+                raise RuntimeError(f"scratch clone wrote an object that does not hash to its name: {oid}")
+            self.write_loose(oid, *obj)
+            self.store.objects[oid] = obj
+            self.loose_valid.add(oid)
 
     def commits_matching(self, headers, base):
         """Commits with the patch's author, author date and subject; with a base, only its children."""
@@ -897,26 +1019,40 @@ class Recovery:
                 self.unreplayed.append(tag)
         return restored
 
+    def replay_env(self, work):
+        """Environment for scratch clones: the host's git configuration (core.autocrlf, tag.gpgSign, ...), home, locale,
+        time zone and this process's GIT_* redirections must not reach the replay."""
+        (work / "home").mkdir(exist_ok=True)
+        env = {k: v for k, v in os.environ.items()
+               if k not in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES")}
+        env.update({"GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": "/dev/null", "HOME": str(work / "home"),
+                    "LC_ALL": "C", "TZ": "UTC"})
+        return env
+
+    def heading_epoch(self, commit, tag):
+        """The time in the release's CHANGELOG heading at the release commit, when the heading carries one
+        (`## vX.Y.Z - YYYY-MM-DD HH:MM:SS +ZZZZ`); None for a date-only heading."""
+        blob = self.tree_lookup(parse_commit(self.store.get(commit)[1])["tree"], "CHANGELOG.md")
+        text = self.store.get(blob)[1].decode("utf-8", "replace") if blob else ""
+        m = re.search(r"^## " + re.escape(tag) + r" - (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{4})\s*$", text, re.M)
+        if not m:
+            return None
+        return int(datetime.datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S %z").timestamp())
+
     def replay_release(self, tag, commit, fields, script):
         work = Path(tempfile.mkdtemp(prefix="recover-"))
         clone = work / "clone"
-        (work / "home").mkdir()
-        env = {k: v for k, v in os.environ.items()
-               if k not in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES")}
+        env = self.replay_env(work)
         a_name, a_mail, _, a_date = parse_ident(fields["author"])
         c_name, c_mail, c_epoch, c_date = parse_ident(fields["committer"])
+        # a heading that carries a time was written from SOURCE_DATE_EPOCH; a date-only heading came from the commit's time
+        heading = self.heading_epoch(commit, tag)
         env.update({"GIT_AUTHOR_NAME": a_name, "GIT_AUTHOR_EMAIL": a_mail, "GIT_AUTHOR_DATE": a_date,
                     "GIT_COMMITTER_NAME": c_name, "GIT_COMMITTER_EMAIL": c_mail, "GIT_COMMITTER_DATE": c_date,
-                    "SOURCE_DATE_EPOCH": str(c_epoch)})
-        # the host's git configuration (core.autocrlf, tag.gpgSign, ...), home, locale and time zone must not reach the replay
-        env.update({"GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": "/dev/null", "HOME": str(work / "home"),
-                    "LC_ALL": "C", "TZ": "UTC"})
+                    "SOURCE_DATE_EPOCH": str(c_epoch if heading is None else heading)})
 
-        def run(*args, cwd=clone, check=True, **kw):
-            proc = subprocess.run(list(args), cwd=cwd, env=env, stdin=subprocess.DEVNULL, capture_output=True, **kw)
-            if check and proc.returncode:
-                raise RuntimeError(f"{' '.join(args)} failed:\n{proc.stdout.decode('utf-8', 'replace')}{proc.stderr.decode('utf-8', 'replace')}")
-            return proc
+        def run(*args, cwd=clone, check=True):
+            return run_in(env, cwd, *args, check=check)
 
         try:
             run("git", "clone", "-q", "--shared", "--no-checkout", str(self.repo), str(clone), cwd=work)

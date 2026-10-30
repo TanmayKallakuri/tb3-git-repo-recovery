@@ -366,8 +366,9 @@ RELEASE_SH_V2 = '''#!/bin/sh
 #   tools/release.sh 1.4.0    release: VERSION, docs/API.md, CHANGELOG.md, commit, tag
 #
 # x.y.0 releases get an annotated tag that carries the release notes; point
-# releases get a lightweight tag. SOURCE_DATE_EPOCH, when set, fixes the
-# changelog date (reproducible builds).
+# releases get a lightweight tag. SOURCE_DATE_EPOCH fixes the time written
+# into the changelog heading and the date of the tag (reproducible builds);
+# unset, it is the committer time of the commit the release is cut from.
 set -eu
 cd "$(dirname "$0")/.."
 
@@ -377,17 +378,16 @@ if [ $# -eq 0 ]; then
 fi
 
 ver="v$1"
-if [ -n "${SOURCE_DATE_EPOCH:-}" ]; then
-    today=$(date -u -d "@$SOURCE_DATE_EPOCH" +%Y-%m-%d)
-else
-    today=$(date -u +%Y-%m-%d)
+if [ -z "${SOURCE_DATE_EPOCH:-}" ]; then
+    SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
 fi
+stamp=$(date -u -d "@$SOURCE_DATE_EPOCH" '+%Y-%m-%d %H:%M:%S +0000')
 prev=$(git describe --tags --abbrev=0 2>/dev/null || true)
 
 printf '%s\\n' "$ver" > VERSION
 python3 tools/gen_api_docs.py
 {
-    printf '\\n## %s - %s\\n\\n' "$ver" "$today"
+    printf '\\n## %s - %s\\n\\n' "$ver" "$stamp"
     if [ -n "$prev" ]; then
         git log --no-merges --format='- %s' "$prev..HEAD"
     else
@@ -398,11 +398,12 @@ python3 tools/gen_api_docs.py
 git add VERSION docs/API.md CHANGELOG.md
 git commit -q -m "Release $ver"
 
-# The tag is made in the name of the release commit's committer and carries
-# the commit's date, so it matches the commit whoever runs the script.
+# The tag is made in the name of the release commit's committer and dated
+# from SOURCE_DATE_EPOCH, the time in the changelog heading, so the tag and
+# the notes agree whoever runs the script and whenever the commit is made.
 RELEASE_NAME=$(git log -1 --format=%cn)
 RELEASE_EMAIL=$(git log -1 --format=%ce)
-RELEASE_DATE=$(git log -1 --format=%cd --date=raw)
+RELEASE_DATE="@$SOURCE_DATE_EPOCH +0000"
 case "$ver" in
     *.0)
         # the notes of this release: the bullet lines of its CHANGELOG section
@@ -420,8 +421,12 @@ echo "released $ver"
 '''
 
 RELEASE_SH_V3 = RELEASE_SH_V2.replace('''# x.y.0 releases get an annotated tag that carries the release notes; point
-# releases get a lightweight tag.''', '''# x.y.0 releases get an annotated tag; point releases get a lightweight
-# tag.''')
+# releases get a lightweight tag. SOURCE_DATE_EPOCH fixes the time written
+# into the changelog heading and the date of the tag (reproducible builds);
+# unset, it is the committer time of the commit the release is cut from.''', '''# x.y.0 releases get an annotated tag; point releases get a lightweight
+# tag. SOURCE_DATE_EPOCH fixes the time written into the changelog heading
+# and the date of the tag (reproducible builds); unset, it is the committer
+# time of the commit the release is cut from.''')
 assert RELEASE_SH_V3 != RELEASE_SH_V2, "the v3 comment substring is absent from RELEASE_SH_V2"
 RELEASE_SH_V3 = RELEASE_SH_V3.replace('''        # the notes of this release: the bullet lines of its CHANGELOG section
         {
@@ -437,26 +442,40 @@ assert RELEASE_SH_V3 != RELEASE_SH_V2 and "sed -n" not in RELEASE_SH_V3
 ARCHIVE_SH = '''#!/bin/sh
 # tools/archive-series.sh: archive the patches of a branch in the tree.
 #
-#   tools/archive-series.sh NAME BRANCH    write docs/patches/NAME/ from the
-#                                          commits of BRANCH that are not in HEAD
+#   tools/archive-series.sh NAME BRANCH    rebase BRANCH onto HEAD and push it,
+#                                          write docs/patches/NAME/ from its
+#                                          commits, commit the archive
 #
-# Commit ids are omitted (the From line of every patch is all zeros): the
-# archive records content, not history positions.
+# The branch is rebased onto the current HEAD first, so that the archived
+# patches apply to the tree they are committed into. The rebase records
+# whoever runs this script as the committer of the rebased commits and keeps
+# each commit's author date, time zone included, as its committer date. The
+# rebased branch is force-pushed with a lease, so a push nobody has seen is
+# never overwritten. Commit ids are omitted from the patches (the From line
+# of every patch is all zeros): the archive records content, not history
+# positions.
 set -eu
 cd "$(dirname "$0")/.."
 
 name=$1
 branch=$2
 dir="docs/patches/$name"
-base=$(git merge-base HEAD "$branch")
+start=$(git rev-parse --abbrev-ref HEAD)
+onto=$(git rev-parse HEAD)
+
+git rebase -q --committer-date-is-author-date "$onto" "$branch"
+git checkout -q "$start"
+git push -q --force-with-lease origin "$branch"
 
 rm -rf "$dir"
 mkdir -p "$dir"
-git format-patch -q --no-thread --zero-commit --no-signature -o "$dir" "$base..$branch"
+git format-patch -q --no-thread --zero-commit --no-signature -o "$dir" "$onto..$branch"
 {
     printf '# Series %s: exported from the tip of %s; the patches in order.\\n' "$name" "$branch"
     ls "$dir" | grep '\\.patch$'
 } > "$dir/series"
+git add "$dir"
+git commit -q -m "Archive the $name series"
 echo "archived $(grep -c '\\.patch$' "$dir/series") patches of $branch in $dir"
 '''
 
@@ -628,8 +647,9 @@ def TAIL():
     return ("tail",)
 
 
-def ARCHIVE(branch, author, name, series_branch, msg):
-    return ("archive", branch, author, name, series_branch, msg)
+def ARCHIVE(branch, author, name, series_branch):
+    """tools/archive-series.sh run by `author` on `branch`: rebases, pushes and archives series_branch, commits the archive."""
+    return ("archive", branch, author, name, series_branch)
 
 
 STEPS = [
@@ -1477,23 +1497,25 @@ def test_last_warm_wins():
       edit("orbit/retry.py", '"""Retry policy for failed runs."""', '"""Retry policy for failed runs.\n\nThe runner asks the policy for the delay before each attempt; None ends\nthe retries. Delays grow by `factor` each time, plus a fixed jitter.\n"""')),
     TAIL(),
     # 1.4 cycle: release tooling, then the release
-    C("develop", MIRA, "Carry the release notes in the tag\n\nThe annotated tag of an x.y.0 release now holds the changelog section of\nthat release, in the name and at the date of the release commit. Point\nreleases keep a lightweight tag; the -l flag is gone, the version decides.",
+    C("develop", MIRA, "Carry the release notes in the tag\n\nThe annotated tag of an x.y.0 release now holds the changelog section of\nthat release, in the name of the release commit's committer and dated\nfrom the changelog heading, which now carries the time. Point releases\nkeep a lightweight tag; the -l flag is gone, the version decides.",
       add("tools/release.sh", RELEASE_SH_V2)),
-    C("develop", DEV, "Add a script to archive a branch as a patch series\n\nThe 1.2 series was archived by hand. The script writes the patches of a\nbranch into docs/patches/<name>/ next to a series file that lists them.",
+    C("develop", DEV, "Add a script to archive a branch as a patch series\n\nThe 1.2 series was archived by hand. The script rebases a branch onto the\ncurrent head, pushes it and writes its patches into docs/patches/<name>/\nnext to a series file that lists them, then commits the archive.",
       add("tools/archive-series.sh", ARCHIVE_SH)),
     C("develop", LENA, "Add an operations note", add("docs/operations.md", OPERATIONS_MD)),
     M("main", "develop", MIRA, "Merge branch 'develop'"),
     R(DEV, "1.4.0"),
     M("develop", "main", DEV, "Merge branch 'main' into develop"),
     C("develop", MIRA, "Start the 1.5 roadmap", append("docs/ROADMAP.md", "\n## 1.5\n\n- Background cache warmup\n- Retry policy from the job table\n")),
+    C("develop", LENA, "Correct a 1.4.0 release note\n\nThe entry for the operations note did not say where the note lives.",
+      edit("CHANGELOG.md", "- Add an operations note\n", "- Add an operations note, docs/operations.md\n")),
     C("develop", MIRA, "Keep the tag message to one line\n\nThe v1.4.0 tag carries the whole changelog section of the release; nobody\nreads it there and it is a second copy to keep in sync. The tag names the\nrelease, the changelog has the notes.",
       add("tools/release.sh", RELEASE_SH_V3)),
-    # the last day: nothing below reached the mirror
     C("feature/cache-warmup", LENA, "Add a cache size limit\n\nA job table with thousands of distinct commands made the warmup resolve\nevery one of them before the first tick. Stop after `limit` entries, 256\nby default; the rest stay unresolved until they are looked up.",
       edit("orbit/cache.py", "    def __init__(self):\n        self.paths = {}\n", "    def __init__(self, limit=256):\n        self.paths = {}\n        self.limit = limit\n"),
       edit("orbit/cache.py", "        for job in jobs:\n            self.paths[job.command[0]] = shutil.which(job.command[0])\n",
            "        for job in jobs:\n            if len(self.paths) >= self.limit:\n                break\n            self.paths[job.command[0]] = shutil.which(job.command[0])\n")),
-    ARCHIVE("develop", LENA, "cache-warmup", "feature/cache-warmup", "Archive the cache-warmup series"),
+    # the last day: nothing below reached the mirror; the archive rebases feature/cache-warmup and force-pushes it
+    ARCHIVE("develop", MIRA, "cache-warmup", "feature/cache-warmup"),
     C("develop", DEV, "Add a cache test for empty tables", append("tests/test_cache.py", '''
 
 def test_empty_table():

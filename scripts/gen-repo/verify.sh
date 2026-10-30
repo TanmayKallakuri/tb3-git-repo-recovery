@@ -28,9 +28,11 @@ done
 echo "first commit: $(git -C "$ORIG" log --format=%ci --reverse main | head -1)"
 echo "last commit:  $(git -C "$ORIG" log -1 --format=%ci develop)"
 echo "distinct author/committer identities: $(git -C "$ORIG" log --all --format='%an <%ae>|%cn <%ce>' | tr '|' '\n' | sort -u | tr '\n' ';')"
-DIFFERING=$(git -C "$ORIG" log --all --format='%an %ae %ad|%cn %ce %cd' | awk -F'|' '$1 != $2' | wc -l)
-echo "commits where committer != author (name, email or date): $DIFFERING"
-[ "$DIFFERING" -eq 0 ] || fail "$DIFFERING commits have a committer different from the author"
+DIFFERING=$(git -C "$ORIG" log --all --date=raw --format='%H|%an %ae %ad|%cn %ce %cd' | awk -F'|' '$2 != $3 {print $1}' | sort)
+REBASED=$(git -C "$ORIG" rev-list refs/heads/feature/cache-warmup --not refs/heads/develop | sort)
+echo "commits where committer != author (name, email or date): $(printf '%s\n' "$DIFFERING" | grep -c .)"
+[ -n "$REBASED" ] && [ "$DIFFERING" = "$REBASED" ] || fail "committer != author on commits other than the rebased pair of feature/cache-warmup: $DIFFERING"
+git -C "$ORIG" log --date=raw --format='  %h author %an %ad | committer %cn %cd | %s' refs/heads/feature/cache-warmup --not refs/heads/develop
 section "(a) original: tags"
 git -C "$ORIG" for-each-ref --format='%(refname) %(objecttype) %(objectname) -> %(*objectname)' refs/tags
 section "(a) original: patch files"
@@ -48,8 +50,13 @@ for b in main develop; do
     [ "$(git -C "$ORIG" rev-parse "refs/heads/$b")" != "$(git -C "$ORIG" rev-parse "refs/remotes/mirror/$b")" ] || fail "mirror/$b is not stale"
     echo "mirror/$b behind $b by $(git -C "$ORIG" rev-list --count "refs/remotes/mirror/$b..refs/heads/$b") commits"
 done
-[ "$(git -C "$ORIG" rev-parse refs/heads/feature/cache-warmup^)" = "$(git -C "$ORIG" rev-parse refs/remotes/mirror/feature/cache-warmup)" ] || fail "mirror/feature/cache-warmup is not the parent of the tip"
-echo "mirror/feature/cache-warmup == feature/cache-warmup^ ($(git -C "$ORIG" rev-parse --short feature/cache-warmup^)); tip $(git -C "$ORIG" rev-parse --short feature/cache-warmup) never mirrored"
+CW_TIP=$(git -C "$ORIG" rev-parse refs/heads/feature/cache-warmup)
+CW_MIRROR=$(git -C "$ORIG" rev-parse refs/remotes/mirror/feature/cache-warmup)
+ARCHIVE=$(git -C "$ORIG" log -1 --format=%H --diff-filter=A develop -- docs/patches/cache-warmup/series)
+if git -C "$ORIG" merge-base --is-ancestor "$CW_MIRROR" "$CW_TIP"; then fail "mirror/feature/cache-warmup is on the rebased branch"; fi
+[ "$(git -C "$ORIG" rev-parse "$CW_TIP~2")" = "$(git -C "$ORIG" rev-parse "$ARCHIVE^")" ] || fail "feature/cache-warmup is not the pair rebased onto the archive commit's parent"
+[ "$(git -C "$ORIG" rev-list --count "$CW_MIRROR" --not "$CW_TIP")" -eq 2 ] || fail "mirror/feature/cache-warmup is not two commits off the rebased branch"
+echo "mirror/feature/cache-warmup == pre-rebase pair tip ${CW_MIRROR:0:7}, not an ancestor of feature/cache-warmup ${CW_TIP:0:7}, the pair rebased onto $(git -C "$ORIG" rev-parse --short "$ARCHIVE^") by the archive commit ${ARCHIVE:0:7}; the force-push never mirrored"
 for f in $(find "$ORIG/logs/refs/remotes/mirror" -type f | sort); do
     last=$(tail -1 "$f" | cut -f1 | awk '{print $(NF-1)}')
     printf '%-44s %2s pushes, last %s\n' "${f#"$ORIG"/logs/}" "$(wc -l < "$f")" "$(date -u -d "@$last" '+%Y-%m-%d %H:%M:%S')"
@@ -57,7 +64,13 @@ done
 section "(a) original: the hidden tail"
 [ "$(git -C "$ORIG" cat-file -t refs/tags/v1.4.0)" = tag ] || fail "v1.4.0 is not an annotated tag"
 echo "v1.4.0 -> tag object $(git -C "$ORIG" rev-parse --short refs/tags/v1.4.0), message lines: $(git -C "$ORIG" cat-file tag refs/tags/v1.4.0 | sed '1,/^$/d' | wc -l)"
-echo "feature/cache-warmup tip: $(git -C "$ORIG" log -1 --format='%h %s' feature/cache-warmup)"
+TAGGER=$(git -C "$ORIG" cat-file tag refs/tags/v1.4.0 | sed -n 's/^tagger //p')
+COMMITTER=$(git -C "$ORIG" log -1 --date=raw --format='%cn <%ce> %cd' 'v1.4.0^{commit}')
+echo "v1.4.0 tagger:            $TAGGER"
+echo "release commit committer: $COMMITTER"
+echo "CHANGELOG heading there:  $(git -C "$ORIG" show 'v1.4.0^{commit}:CHANGELOG.md' | grep '^## v1.4.0 - ')"
+[ "$TAGGER" != "$COMMITTER" ] || fail "v1.4.0's tagger line equals the release commit's committer line"
+echo "feature/cache-warmup tip: $(git -C "$ORIG" log -1 --format='%h %s' feature/cache-warmup); mirror holds $(git -C "$ORIG" log -1 --format='%h %s' refs/remotes/mirror/feature/cache-warmup)"
 git -C "$ORIG" show main:docs/patches/cache-warmup/series
 section "(a) original: packs and reflogs"
 ls -l "$ORIG/objects/pack"
@@ -68,11 +81,14 @@ find "$ORIG" -name '*.sample' | grep . && fail "hook samples left" || echo "no h
 section "(b) damaged: fsck summary"
 set +e
 FSCK=$(git -C "$DAMAGED" fsck --full 2>&1)
-echo "fsck exit: $?"
+FSCK_EXIT=$?
+echo "fsck exit: $FSCK_EXIT"
 set -e
+# fsck must report the damage, not die on it (a corrupt ref target would make it die while parsing the ref)
+{ [ "$FSCK_EXIT" -ne 128 ] && ! grep -q '^fatal:' <<< "$FSCK"; } || fail "fsck of the damaged repository dies instead of reporting: $(grep '^fatal:' <<< "$FSCK")"
 printf 'missing lines: %s\ncorrupt/error lines: %s\n' "$(printf '%s\n' "$FSCK" | grep -c '^missing')" "$(printf '%s\n' "$FSCK" | grep -cE '^error|corrupt')"
 printf '%s\n' "$FSCK" | sed -E 's/[0-9a-f]{40}/<id>/g; s/offset [0-9]+/offset N/g' | sort | uniq -c | sort -rn | head -8
-for oid in $(python3 -c "import json,sys; print(' '.join(i['object'] for i in json.load(open(sys.argv[1]))['items'] if i['class'].startswith('L')))" "$OUT/tests/damage.json"); do
+for oid in $(python3 -c "import json,sys; print(' '.join(o for i in json.load(open(sys.argv[1]))['items'] if i['class'].startswith('L') for o in i.get('hidden', [i['object']])))" "$OUT/tests/damage.json"); do
     named=$(grep -c "${oid:0:7}" <<< "$FSCK" || true)
     [ "$named" -eq 0 ] || fail "fsck output names hidden id $oid"
     echo "fsck output does not name hidden id ${oid:0:12}"
@@ -129,7 +145,7 @@ python3 - "$SCRATCH/repo.git" "$OUT/tests/damage.json" <<'PY'
 import json, subprocess, sys
 repo, path = sys.argv[1], sys.argv[2]
 items = json.load(open(path))["items"]
-objs = [i["object"] for i in items if "object" in i]
+objs = sorted({o for i in items for o in [i.get("object")] + i.get("hidden", []) if o})
 out = subprocess.run(["git", "-C", repo, "cat-file", "--batch-check"], input="\n".join(objs) + "\n", capture_output=True, text=True).stdout
 bad = [l for l in out.splitlines() if "missing" in l]
 print(f"{len(objs)} damaged objects checked, {len(bad)} missing")
