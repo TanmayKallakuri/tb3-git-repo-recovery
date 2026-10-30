@@ -3,26 +3,30 @@
 The brief asks for three attempts per agent that genuinely fail. Version
 1.0.0 stopped neither model: every completed attempt repaired the
 repository exactly. Version 1.1.0 (two losses with no local oracle, the
-witnesses out of the instruction) stopped one of the two pilots. This file
-records both: the 1.1.0 pilot trajectories at their decision points first,
-then the 1.0.0 analysis under its own heading, unchanged except for the
-note on what 1.1.0 built from its closing list.
+witnesses out of the instruction) stopped claude-code in two of its three
+attempts and codex in none. This file records both: the 1.1.0
+trajectories at their decision points first, the two pilots in full and
+the four later attempts by what they did differently, then the 1.0.0
+analysis under its own heading, unchanged except for the note on what
+1.1.0 built from its closing list.
 
 Numbers come from the trajectories under `runs/` (`agent/trajectory.json`);
 the "active" time is the span from the first to the last trajectory step,
 which excludes CLI start-up and session copying and is therefore shorter
 than the agent-phase time in RESULTS.md.
 
-## Version 1.1.0: the pilots
+## Version 1.1.0: the six attempts
 
 | Job / trial | Agent | Active time | Tool calls | Input tokens (cached) / output | Verdict |
 |---|---|---|---|---|---|
 | `pilot-codex-h` / `m9wqtVr` | codex gpt-6-astra xhigh | 7.1 min (agent phase 7.4) | 14 | 924k (855k) / 12k | 1.0 (Harbor, 5 of 5) |
 | `pilot-claude-h` / `w2hS6QT` | claude-code fable-5-1 max | 22.8 min (agent phase 22.9) | 39 | 4.46M (4.28M) / 100k | 0.0 (Harbor, 3 of 5) |
-| `run-codex-h`, attempts 2 and 3 | codex | TBD (running) | TBD (running) | TBD (running) | TBD (running) |
-| `run-claude-h`, attempts 2 and 3 | claude-code | TBD (running) | TBD (running) | TBD (running) | TBD (running) |
+| `run-codex-h` / `FDY3d3q` | codex | 6.9 min (agent phase 7.1) | 17 | 1.08M (1.01M) / 12k | 1.0 (Harbor, 5 of 5) |
+| `run-codex-h` / `wjs6dMz` | codex | 5.4 min (agent phase 5.6) | 14 | 984k (904k) / 11k | 1.0 (Harbor, 5 of 5) |
+| `run-claude-h` / `CMQWEQW` | claude-code | 24.9 min (agent phase 25.0) | 45 | 6.43M (6.23M) / 102k | 0.0 (Harbor, 3 of 5) |
+| `run-claude-h` / `kLSoSqt` | claude-code | 24.7 min (agent phase 24.8) | 38 | 4.41M (4.21M) / 109k | 1.0 (Harbor, 5 of 5) |
 
-Both pilots did the salvage the same way the 1.0.0 attempts did (the six
+All six attempts did the salvage the same way the 1.0.0 attempts did (the six
 moves below under "The skeleton every passing trajectory followed"): own
 pack parser, index CRCs against the pack bytes, intact entries written out,
 delta dependents recombined, single-byte repair of the six corrupt loose
@@ -175,9 +179,74 @@ remote-only one), and that releases are cut by `tools/release.sh` (which
 would have led to `VERSION`, the describe strings and the 1.4.0 tag
 format). Both facts are in the tree (`docs/operations.md`, the script and
 its history) and in the mirror reflogs' `update by push` entries by
-`mirror cron`, which the agent printed in step 6. Codex read the tooling as a matter of course; claude-code
-read only the tools the fsck errors pointed at. Whether that holds across
-its other two attempts is the open question: TBD (running).
+`mirror cron`, which the agent printed in step 6. Codex read the tooling as a matter of course; in this attempt
+claude-code read only the tools the fsck errors pointed at. Its two later
+attempts, below, split: one read more and still stopped, one read the
+same things codex read and passed.
+
+### The four later attempts, by what they did differently
+
+Codex `FDY3d3q` (7.1 min, 17 calls) and `wjs6dMz` (5.6 min, 14 calls)
+followed the pilot's route without a detour: own pack parser, the loose
+objects repaired by hash, the 1.2 series and `docs/API.md` rebuilt by
+hash, then the project's tooling read, including `tools/release.sh` as of
+the 1.4.0 release commit (`git show <commit>:tools/release.sh` in both),
+the cache-warmup series replayed on the mirror's commit with `write-tree`,
+and the tag built in the v2 format with `git mktag`. Each said the same
+thing in its own words before the ref step: the cache-warmup archive
+records a commit newer than the mirror's tip, and the release script
+preserved at the 1.4.0 release shows how to rebuild the annotated tag
+with its release notes. Both hidden targets right in both; `FDY3d3q` left
+its scripts and report under `recovery/` inside the repository,
+`wjs6dMz` outside it.
+
+Claude-code `CMQWEQW` (25.0 min, 45 calls, reward 0.0) went further than
+the pilot and stopped in the same place. It read the cache-warmup series
+file and both patches and compared the first against the mirror's commit
+(step 24), extracted the v1.3.0 tree to read `tools/release.sh`, `VERSION`
+and `CHANGELOG.md` as of that release (steps 28 and 29), regenerated both
+lost `docs/API.md` versions by hash, replayed the 1.2 series with `git
+am` and matched the three ids, inspected the dangling tree and worked out
+which archived patch it corresponds to (step 33), and ran the 608-id
+census (step 34). It then wrote the same four refs the pilot wrote. Its
+final message lists, under what it deliberately did not do, the mirror's
+feature branches (no local reflog) and the point releases `v1.2.1`,
+`v1.3.1` and `v1.4.0` (no tag object or ref trace), and calls the archived
+"cache size limit" state never pushed. Same five refs missing, same 9
+objects unreachable, same two checks failed as the pilot.
+
+Claude-code `kLSoSqt` (24.8 min, 38 calls, reward 1.0) is the one passing
+claude-code attempt. The difference is where it looked between its salvage
+and its ref decisions: step 26 read the 1.2 patches, `tools/archive-series.sh`
+and the series file; step 27 read `tools/release.sh`, the generator and
+`CHANGELOG.md` at HEAD; step 28 listed every loose object's type and the
+`VERSION` blob at every release commit; step 29 read `tools/release.sh`
+as of the 1.4.0 release commit (`git show <release commit>:tools/release.sh`)
+and the diffs between the script's three versions with the commits that
+changed it; step 30 read both cache-warmup patches and the release commit
+header; step 31 ran `diff-tree` between the mirror commit's tree and the
+dangling tree to confirm the second patch is exactly the difference. Its
+first hand-built 1.2 commits hashed wrong (step 33); it then searched the
+committer timestamp for each (step 34), found every hit at offset zero,
+and took that as the convention for the one commit it could not check.
+Step 35 wrote the three verified 1.2 commits, the unverified L1 commit,
+the API blobs and the tag; steps 36 to 39 installed them, put every
+object into one new pack, wrote the nine refs (`feature/retry-policy` from
+the mirror, the lightweight tags on the release commits from the release
+script's rule and the describe strings in `VERSION`), reproduced the 1.2
+series byte for byte with `format-patch`, removed the stale `info/refs`
+and finished with a clean fsck. Its final message names the two refs that
+rest on reconstruction rather than hash verification.
+
+### Cheat trials (1.1.0)
+
+`cheat-claude-h` (`AZor9ML`): 1.2 minutes, four tool calls, all
+inventory, then the agent declined the brief in its reply.
+`cheat-codex-h` (`TBSMyN8`): 0.2 minutes, no tool call, the provider's
+safeguard rejected the turn (`AgentSafetyRefusalError` recorded; the
+verifier still ran). Both repositories byte-identical to the shipped
+damaged one, both rewards 0.0 as required; neither exercised the verifier,
+so robustness evidence remains the fixture set in `verifier-fixtures.md`.
 
 ### What a harder version would change, revisited
 
@@ -185,9 +254,9 @@ The 1.0.0 list below proposed three changes. 1.1.0 built the first in a
 stronger form (a series with zero ids whose commit also has no ref, no
 reflog and no mirror value, plus a tag whose format only the historical
 script gives), and did not build the second (two candidates for a
-lightweight tag) or the third (damaged reflogs). The pilots say the first
-change was enough to separate the two models and not enough to stop
-codex.
+lightweight tag) or the third (damaged reflogs). The six attempts say the first
+change was enough to stop claude-code twice and not enough to stop codex
+once.
 
 ## Version 1.0.0 (superseded)
 
@@ -296,7 +365,7 @@ neutralised, errors graded 0 rather than infrastructure) were reviewed by
 hand and by the rubric reviewer (SPEC.md, RESULTS.md section 11). Evidence
 from running the verifier against bypass attempts comes from the mutation
 fixtures in `scripts/verifier-fixtures.sh`, with results recorded in
-`analysis/verifier-fixtures.md`. The 1.1.0 cheat trials are TBD (running).
+`analysis/verifier-fixtures.md`. The 1.1.0 cheat trials are above.
 
 ### What a harder version would change (written against 1.0.0)
 

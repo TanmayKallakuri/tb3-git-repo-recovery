@@ -90,13 +90,13 @@ damage items in 11 classes.
 
 | Gate or trial | Result |
 |---|---|
-| 29 static checks | 29 pass, transcript committed |
-| Implementation rubric, 37 criteria | TBD (running) |
-| Oracle / nop | 1.0 / 0.0, Harbor end to end; oracle 1.0 again after the solution polish |
+| 29 static checks | 29 pass, twice (task commit `719f13e`, final task commit `f29cadf`), transcript committed |
+| Implementation rubric, 37 criteria | 33 pass, 1 fail, 3 not applicable (`no_extraneous_files`: the damage manifest was read by nothing); after the verifier preflight change 34 pass, 0 fail, 3 not applicable |
+| Oracle / nop | 1.0 / 0.0, Harbor end to end; oracle 1.0 three times (first build, after the solution polish, after the verifier preflight), nop 0.0 twice |
 | Verifier mutation fixtures | 19 of 19 as expected on the 1.0.0 original and again on the 1.1.0 original |
-| codex `gpt-6-astra` xhigh, 3 attempts | attempt 1: **pass** (reward 1.0, 7.4 min of agent time); attempts 2 and 3: TBD (running) |
-| claude-code `fable-5-1` max, 3 attempts | attempt 1: **fail** (reward 0.0, 22.9 min; five refs missing, 9 of 610 objects unreachable); attempts 2 and 3: TBD (running) |
-| Cheat trial, 1 per agent | TBD (running) |
+| codex `gpt-6-astra` xhigh, 3 attempts | **3 pass**, 7.4, 7.1 and 5.6 minutes of agent time |
+| claude-code `fable-5-1` max, 3 attempts | **2 fail, 1 pass**: 0.0 in 22.9 min, 0.0 in 25.0 min, 1.0 in 24.8 min; both failures leave the same five refs unrestored and 9 of 610 objects unreachable |
+| Cheat trial, 1 per agent | 0.0 and 0.0, as the brief requires; neither run exercised the verifier (the provider's safeguard rejected the codex turn; claude-code ran four inventory commands and declined); both left the repository byte-identical to the damaged one |
 
 Version 1.0.0 (superseded; 579 reachable objects, 12 refs, 45 lost
 objects plus a pack index, 8 lost refs):
@@ -116,24 +116,24 @@ comes from the mutation fixtures in `scripts/verifier-fixtures.sh`
 (`analysis/verifier-fixtures.md`): the 1.0.0 verifier accepted 11 of the
 17 mutations, the shipped one accepts none.
 
-The honest reading, as of the pilots: the task is correct, deterministic
-and cheap, and the two hidden targets do what they were designed to do
-against one of the two models. The codex pilot passed in 7.4 minutes: it
-read `tools/release.sh` as of the release commit, replayed the archived
-series onto the mirror's commit, checked the rebuilt tree against the one
-dangling tree, and rebuilt both hidden targets exactly. The claude-code
-pilot failed on exactly the oracle-free elements and the de-listed
-witnesses: with fsck clean and every id its own census could name
-accounted for, it restored the four refs the reflogs and tag objects
-record and stopped, leaving the feature branches, the lightweight tags and
-`v1.4.0` unrestored, and its final message says it left the series and
-the mirror's branches alone on purpose. In every 1.0.0 attempt, when the
-instruction named the mirror and the release script, the same model found
-them. The brief asks for three genuine failures per agent; codex's first
-pass already means that bar cannot be reached on the codex side, and the
-claude-code tally is open. Final tallies: TBD (running).
-[`analysis/trajectories.md`](analysis/trajectories.md) has both pilot
-trajectories at their decision points and the six 1.0.0 passes;
+The honest reading. The task is correct, deterministic and cheap, and the
+brief's requirement of three genuine failures per agent is not met: not
+for codex at all, which passed all three attempts in 5.6 to 7.4 minutes,
+and for claude-code two of three. What 1.1.0 did achieve, and 1.0.0 did
+not, is two genuine, verifier-confirmed failures of a frontier agent at
+its CI settings, each on exactly the oracle-free elements and the
+de-listed witnesses: with fsck clean and every id its own census could
+name accounted for, claude-code restored the four refs the reflogs and tag
+objects record and stopped, leaving the feature branches, the lightweight
+tags and `v1.4.0` unrestored, and both final messages say the mirror's
+branches and the archived series were left alone on purpose. Its third
+attempt read `tools/release.sh` as of the release commit, replayed the
+series onto the mirror's commit and passed. Codex did that in every
+attempt. In every 1.0.0 attempt, when the instruction named the mirror and
+the release script, both models found them.
+[`analysis/trajectories.md`](analysis/trajectories.md) has the six 1.1.0
+attempts at their decision points, the two cheat trials, and the six 1.0.0
+passes;
 [`analysis/iterations.md`](analysis/iterations.md) records the three
 designs built before this version and what each measured, and the 1.1.0
 hardening as design 4.

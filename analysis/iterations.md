@@ -136,23 +136,28 @@ anything else.
 
 | Gate or trial | Result |
 |---|---|
-| Static checks, oracle, nop | 29 of 29 (transcript committed), 1.0 (twice), 0.0 |
+| Static checks, oracle, nop | 29 of 29 twice (transcript committed), oracle 1.0 three times, nop 0.0 twice, the last pair on the final task commit `f29cadf` |
 | Verifier fixtures | 19 of 19 on the 1.0.0 original and on the 1.1.0 original |
-| Rubric | TBD (running) |
+| Rubric | 33 pass, 1 fail, 3 not applicable; after the verifier preflight change (`f29cadf`) 34 pass, 0 fail, 3 not applicable |
 | codex pilot (`pilot-codex-h`, `m9wqtVr`) | **reward 1.0** in 7.4 minutes, 14 tool calls, 924k input tokens: read `tools/release.sh` as of the release commit, replayed the archived series onto the mirror's commit with the tree checked against the dangling one, rebuilt both hidden targets exactly |
 | claude-code pilot (`pilot-claude-h`, `w2hS6QT`) | **reward 0.0** in 22.9 minutes, 39 tool calls, 4.46M input tokens: fsck clean, every id its own census could name present, four refs restored from reflogs and tag objects, five refs missing (L1, L2, the mirror route, the two describe-string tags) |
-| remaining attempts, cheat trials | TBD (running) |
+| codex attempts 2 and 3 (`run-codex-h`, `FDY3d3q`, `wjs6dMz`) | **1.0 and 1.0**, 7.1 and 5.6 minutes |
+| claude-code attempts 2 and 3 (`run-claude-h`, `CMQWEQW`, `kLSoSqt`) | **0.0 and 1.0**, 25.0 and 24.8 minutes; attempt 2 stopped the way the pilot did, with the same five refs missing; attempt 3 read the release script as of the release commit, replayed the series and passed |
+| cheat trials (`cheat-claude-h` `AZor9ML`, `cheat-codex-h` `TBSMyN8`) | **0.0 and 0.0**; four inventory commands then a refusal; no tool call and a provider safeguard rejection; neither exercised the verifier |
 
-What it taught so far: removing the local oracle for two items changed
-the outcome for one model and not the other, and the pilots inverted the
-review's per-agent expectation: codex, given the lower odds, passed;
-claude-code, given the higher, failed. Claude-code's failure is on
-exactly the elements that were changed, and its final message shows it
-saw the evidence (the series file, the zero-id patch, the dangling tree,
-the mirror's refs and reflogs) and decided against acting on it; codex
-treated the same evidence as instructions. The brief needs three failures
-per agent; codex's first pass already means the codex side cannot reach
-that bar on 1.1.0. Final tallies: TBD (running).
+What it taught: removing the local oracle for two items changed the
+outcome for one model and not the other, and the trials inverted the
+review's per-agent expectation. Codex passed all three attempts in 5.6 to
+7.4 minutes; claude-code failed two of three and passed one; both cheat
+trials scored 0. The brief's requirement of three genuine failures per
+agent is not met: not for codex at all, and for claude-code two of three.
+What 1.1.0 did achieve is two genuine, verifier-confirmed failures of a
+frontier agent on exactly the elements that were changed: both failing
+final messages show the agent saw the evidence (the series file, the
+zero-id patch, the dangling tree, the mirror's refs and reflogs, and in
+attempt 2 the release script and the point-release versions as well) and
+decided against acting on it, while codex, and claude-code on its third
+attempt, treated the same evidence as instructions.
 
 ## The rule that made the iteration affordable, applied again
 
