@@ -1,0 +1,128 @@
+{
+  "id": "a32cb985-01d3-4e17-857d-cabe94070b9b",
+  "task_name": "terminal-bench/git-repo-recovery",
+  "trial_name": "git-repo-recovery__myvwxLc",
+  "trial_uri": "file:///<home>/Downloads/tb3-git-repo-recovery/jobs/pilot-codex-120/git-repo-recovery__myvwxLc",
+  "task_id": {
+    "path": "tasks\\git-repo-recovery"
+  },
+  "source": null,
+  "task_checksum": "67506e05603210459b5c544b699579bdf116b1e7365872e7620e2f4f54a361a5",
+  "config": {
+    "task": {
+      "path": "tasks\\git-repo-recovery",
+      "git_url": null,
+      "git_commit_id": null,
+      "name": null,
+      "ref": null,
+      "overwrite": false,
+      "download_dir": null,
+      "source": null
+    },
+    "trial_name": "git-repo-recovery__myvwxLc",
+    "trials_dir": "jobs\\pilot-codex-120",
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "agent_timeout_multiplier": null,
+    "verifier_timeout_multiplier": null,
+    "agent_setup_timeout_multiplier": 3.0,
+    "environment_build_timeout_multiplier": null,
+    "agent": {
+      "name": "codex",
+      "import_path": null,
+      "model_name": "openai/gpt-6-astra",
+      "n_concurrent": null,
+      "concurrency_group": null,
+      "skills": [],
+      "override_timeout_sec": null,
+      "override_setup_timeout_sec": null,
+      "max_timeout_sec": null,
+      "resume_trajectory": false,
+      "load_trajectory": null,
+      "extra_allowed_hosts": [],
+      "kwargs": {
+        "reasoning_effort": "xhigh"
+      },
+      "mcp_servers": []
+    },
+    "user_agent": null,
+    "environment": {
+      "type": "docker",
+      "import_path": null,
+      "force_build": false,
+      "delete": true,
+      "stream": false,
+      "cpu_enforcement_policy": "auto",
+      "memory_enforcement_policy": "auto",
+      "override_cpus": null,
+      "override_memory_mb": null,
+      "override_storage_mb": null,
+      "override_gpus": null,
+      "override_tpu": null,
+      "mounts": null,
+      "extra_docker_compose": [],
+      "kwargs": {},
+      "extra_allowed_hosts": []
+    },
+    "verifier": {
+      "override_timeout_sec": null,
+      "max_timeout_sec": null,
+      "disable": false
+    },
+    "artifacts": [],
+    "extra_instruction_paths": [],
+    "extra_instructions": [],
+    "job_id": "5d1a03cb-6388-4589-9c83-e4fec146a514",
+    "source_trial": null
+  },
+  "agent_info": {
+    "name": "codex",
+    "version": "0.166.0",
+    "model_info": {
+      "name": "gpt-6-astra",
+      "provider": "openai"
+    }
+  },
+  "agent_result": {
+    "n_input_tokens": 1178879,
+    "n_cache_tokens": 1106304,
+    "n_output_tokens": 15246,
+    "cost_usd": 2.5943539999999996,
+    "model_usage": {
+      "openai/gpt-6-astra": {
+        "n_input_tokens": 1178879,
+        "n_cache_tokens": 1106304,
+        "n_output_tokens": 15246,
+        "cost_usd": 2.5943539999999996
+      }
+    },
+    "rollout_details": null,
+    "metadata": null
+  },
+  "verifier_result": {
+    "rewards": {
+      "reward": 1.0
+    }
+  },
+  "verifier_environment_mode": "separate",
+  "exception_info": null,
+  "started_at": "2026-10-30T18:03:36.398837Z",
+  "finished_at": "2026-10-30T18:12:50.240418Z",
+  "environment_setup": {
+    "started_at": "2026-10-30T18:03:36.847946Z",
+    "finished_at": "2026-10-30T18:03:46.495372Z"
+  },
+  "agent_setup": {
+    "started_at": "2026-10-30T18:03:46.495471Z",
+    "finished_at": "2026-10-30T18:05:55.637350Z"
+  },
+  "agent_execution": {
+    "started_at": "2026-10-30T18:05:55.637893Z",
+    "finished_at": "2026-10-30T18:12:10.657036Z"
+  },
+  "verifier": {
+    "started_at": "2026-10-30T18:12:29.105757Z",
+    "finished_at": "2026-10-30T18:12:50.240398Z"
+  },
+  "step_results": null
+}

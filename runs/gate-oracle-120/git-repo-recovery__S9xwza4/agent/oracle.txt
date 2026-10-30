@@ -1,0 +1,30 @@
+[recover] pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack: 547 entries, 41 unreadable, 15 with no copy elsewhere, checksum BAD
+[recover] pack-dc1a3d5e56cdb2c83174659a7deaaca10d01e520.pack: 397 entries, 0 unreadable, 0 with no copy elsewhere, checksum ok
+[recover] loose tree 34122478b3a7: repaired byte 187
+[recover] loose commit 6e51414cbc45: repaired byte 84
+[recover] loose tree b10242c6f02a: repaired byte 250
+[recover] loose blob bec25078095e: repaired byte 124
+[recover] loose commit e2e5e720516f: repaired byte 89
+[recover] loose blob e8f1d4475ab5: repaired byte 247
+[recover] removed corrupt pack pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack; its readable objects are loose now
+[recover] recreated pack-dc1a3d5e56cdb2c83174659a7deaaca10d01e520.idx
+[recover] wrote 135 loose objects
+[recover] 0001-Add-a-retry-policy-with-exponential-backoff.patch: rebuilt commit cac0888c0224 on 881cb3036f76
+[recover] 0002-Use-the-retry-policy-from-the-runner.patch: rebuilt commit 11546642caef on cac0888c0224
+[recover] 0003-Add-tests-for-the-retry-policy.patch: rebuilt commit c30cfac86f61 on 11546642caef
+[recover] regenerated docs/API.md of commit ebcc265012e3 -> blob 0f21f2abd320
+[recover] v0.9.0-rc1: 0 candidate release commits, not restoring
+[recover] v1.4.0: no later describe string pins release commit cba733c40627; left to the release replay
+[recover] docs/patches/cache-warmup: rebased aef3e0220379..03d41e4d28a0 onto 8caad076eb6b as Mira Okafor with --committer-date-is-author-date; format-patch of the result equals the archive; tip 1282507db11c
+[recover] v0.9.0-rc1: 0 candidate release commits, not restoring
+[recover] ref refs/tags/v1.2.0 <- tag object
+[recover] ref refs/tags/v1.3.0 <- tag object
+[recover] ref refs/heads/develop <- reflog
+[recover] ref refs/heads/hotfix/1.2.1 <- reflog
+[recover] ref refs/tags/v1.2.1 <- release commit bb11f51d295d (VERSION, CHANGELOG 2026-08-04, describe string)
+[recover] ref refs/tags/v1.3.1 <- release commit 35e60b11842b (VERSION, CHANGELOG 2026-09-08, describe string)
+[recover] ref refs/heads/feature/cache-warmup <- docs/patches/cache-warmup (rebased as the archive's committer, format-patch byte-identical, created at 1282507db11c)
+[recover] ref refs/heads/feature/retry-policy <- refs/remotes/mirror/feature/retry-policy
+[recover] ref refs/tags/v1.4.0 <- replay of tools/release.sh at cba733c40627 (tag 24fda256be31, CHANGELOG 2026-09-29 04:15:42 +0000)
+[recover] git fsck --full --strict --no-dangling: clean
+[recover] done

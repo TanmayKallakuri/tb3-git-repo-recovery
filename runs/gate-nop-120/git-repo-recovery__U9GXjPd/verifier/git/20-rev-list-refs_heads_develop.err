@@ -1,0 +1,3 @@
+error: inflate: data stream error (incorrect data check)
+error: corrupt loose object '6e51414cbc4506538265c702c40710e33e16a695'
+fatal: loose object 6e51414cbc4506538265c702c40710e33e16a695 (stored in /run/verifier/repo/objects/6e/51414cbc4506538265c702c40710e33e16a695) is corrupt
