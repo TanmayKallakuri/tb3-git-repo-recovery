@@ -150,7 +150,7 @@ def trim(job: str, token: str) -> None:
             raise SystemExit(f"ABORT: home path survives redaction in {path}")
         if "auth.json" in text:
             raise SystemExit(f"ABORT: auth.json survives redaction in {path}")
-        target.write_text(text, encoding="utf-8")
+        target.write_bytes(text.encode("utf-8"))  # byte-exact: write_text would turn LF into CRLF on Windows
         kept += 1
     print(f"{job}: kept {kept} files under {dst.relative_to(REPO)}")
 
