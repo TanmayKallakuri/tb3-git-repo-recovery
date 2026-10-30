@@ -318,6 +318,9 @@ class Recovery:
         self.corrupt_packs = []
         self.loose_valid = set()
         self.unreplayed = []
+        self.unrestored = []  # branch ref names the series route could not rebase; the mirror's stale value must not stand in
+        self.unrestored_reasons = {}
+        self.skipped_releases = []
         self.missing = {}  # id -> storage type name, for entries that exist nowhere
         self.written = 0
 
@@ -721,6 +724,8 @@ class Recovery:
             parts = remote_ref.split("/", 3)
             if len(parts) == 4:
                 name = "refs/heads/" + parts[3]
+                if name in self.unrestored:
+                    continue
                 if not self.git.ref_exists(name) and oid in self.store:
                     self.git.run("update-ref", "-m", f"recovered from {remote_ref}", name, oid)
                     restored.append(f"{name} <- {remote_ref}")
@@ -734,6 +739,7 @@ class Recovery:
         """tag -> (release commit, changelog date, pinned) for every CHANGELOG release of HEAD's branch; pinned when a later
         VERSION describe string `tag-N-g<abbrev>` confirms the commit, i.e. a tag of that name pointed at it."""
         found = {}
+        self.skipped_releases = []  # CHANGELOG releases with no single candidate commit
         branch = self.head_branch()
         if branch is None:
             return found
@@ -763,6 +769,7 @@ class Recovery:
                         hits.append(oid)
             if len(hits) != 1:
                 log(f"{tag}: {len(hits)} candidate release commits, not restoring")
+                self.skipped_releases.append(tag)
                 continue
             target = hits[0]
             pinned = False
@@ -850,14 +857,26 @@ class Recovery:
                 headers = [mail_headers(self.git, work, patch) for _, patch in patches]
                 chains = self.match_chains(headers)
                 complete = [c for c in chains if len(c) == len(listed)]
-                if tip is not None and any(tip == c[-1] for c in complete):
+                rebases = b"git rebase" in script
+                onto = None
+                if rebases:
+                    archive_parents = parse_commit(self.store.get(archive)[1])["parent"]
+                    onto = archive_parents[0] if len(archive_parents) == 1 else None
+                # a rebased series is done only when its chain already sits on the archive commit's parent
+                at_tip = [c for c in complete if tip is not None and tip == c[-1]]
+                if at_tip and (not rebases or any(parse_commit(self.store.get(c[0])[1])["parent"][:1] == [onto] for c in at_tip)):
                     log(f"{branch} already sits at the tip of the archived series {dir_name}; nothing to do")
                     continue
-                if b"git rebase" in script:
+                if rebases:
                     if not complete:
                         log(f"docs/patches/{dir_name}: the archive was rebased but no complete chain of its patches exists; series stopped")
+                        self.unrestored.append(branch)
+                        self.unrestored_reasons[branch] = "the archive was rebased but no complete chain of its patches exists"
                         continue
                     target, how = self.rebase_series(dir_name, patches, complete, archive, script, work)
+                    if target is None:
+                        self.unrestored.append(branch)
+                        self.unrestored_reasons[branch] = "the rebase of the archived series produced no verified tip"
                 elif len(chains) == 1 and not complete:
                     target, how = self.rebuild_series(dir_name, patches, headers, chains[0], work)
                 else:
@@ -929,8 +948,14 @@ class Recovery:
         for chain in chains:
             base = parse_commit(self.store.get(chain[0])[1])["parent"][:1]
             if base == [onto]:
+                # round-trip proof: every commit of the chain was committed by the archive commit's committer
+                idents = [parse_ident(parse_commit(self.store.get(c)[1])["committer"])[:2] for c in chain]
+                if any(i != (c_name, c_mail) for i in idents):
+                    log(f"docs/patches/{dir_name}: chain {chain[0][:12]}..{chain[-1][:12]} sits on the archive's parent {onto[:12]} "
+                        f"but was not committed by the archive's committer; not trusted")
+                    continue
                 tips.add(chain[-1])
-                log(f"docs/patches/{dir_name}: chain {chain[0][:12]}..{chain[-1][:12]} already sits on the archive's parent {onto[:12]}")
+                log(f"docs/patches/{dir_name}: chain {chain[0][:12]}..{chain[-1][:12]} already sits on the archive's parent {onto[:12]}, committed by {c_name}")
                 continue
             if not base:
                 continue
@@ -995,7 +1020,9 @@ class Recovery:
         # an annotated tag cannot be told from a lightweight one: replay only x.y.0 releases whose script annotates them.
         restored = []
         self.unreplayed = []
-        for tag, (commit, date, _) in sorted(self.release_commits().items()):
+        releases = self.release_commits()
+        self.unreplayed += [t for t in self.skipped_releases if not self.git.ref_exists(f"refs/tags/{t}")]
+        for tag, (commit, date, _) in sorted(releases.items()):
             name = f"refs/tags/{tag}"
             if self.git.ref_exists(name):
                 continue
@@ -1003,14 +1030,17 @@ class Recovery:
             script = self.tree_lookup(fields["tree"], "tools/release.sh")
             if len(fields["parent"]) != 1 or script is None:
                 log(f"{tag}: release commit {commit[:12]} has no single parent or no tools/release.sh; not restoring")
+                self.unreplayed.append(tag)
                 continue
             body = self.store.get(script)[1]
             annotates = b"git tag -a" in body and b"RELEASE_NAME=" in body
             if not tag.endswith(".0"):
                 log(f"{tag}: not an x.y.0 release, so its tag cannot be told from a lightweight one; not replaying")
+                self.unreplayed.append(tag)
                 continue
             if not annotates:
                 log(f"{tag}: tools/release.sh at {commit[:12]} does not annotate x.y.0 releases (no git tag -a / RELEASE_NAME block); not replaying")
+                self.unreplayed.append(tag)
                 continue
             kind, oid = self.replay_release(tag, commit, fields, body)
             if oid:
@@ -1020,11 +1050,10 @@ class Recovery:
         return restored
 
     def replay_env(self, work):
-        """Environment for scratch clones: the host's git configuration (core.autocrlf, tag.gpgSign, ...), home, locale,
-        time zone and this process's GIT_* redirections must not reach the replay."""
+        """Environment for scratch clones, built from a whitelist: PATH and the fixed values below. Nothing else of the host's
+        (git configuration, GIT_* variables, identity, dates, SOURCE_DATE_EPOCH, home, locale, time zone) reaches the replay."""
         (work / "home").mkdir(exist_ok=True)
-        env = {k: v for k, v in os.environ.items()
-               if k not in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES")}
+        env = {"PATH": os.environ.get("PATH", "")}
         env.update({"GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": "/dev/null", "HOME": str(work / "home"),
                     "LC_ALL": "C", "TZ": "UTC"})
         return env
@@ -1117,8 +1146,13 @@ class Recovery:
             if oid not in self.loose_valid and not any(oid in p.offset_of for p in self.packs):
                 self.write_loose(oid, kind, content)
         self.restore_refs()
-        if self.unreplayed:
-            raise RuntimeError(f"annotated release(s) {', '.join(self.unreplayed)} are still without a tag after the replay of tools/release.sh")
+        if self.unrestored or self.unreplayed:
+            parts = []
+            if self.unrestored:
+                parts.append("branch(es) not restored: " + "; ".join(f"{b} ({self.unrestored_reasons.get(b, 'no reason recorded')})" for b in self.unrestored))
+            if self.unreplayed:
+                parts.append(f"release(s) {', '.join(self.unreplayed)} still without a tag after the replay of tools/release.sh")
+            raise RuntimeError("; ".join(parts))
         out =subprocess.run(["git", "fsck", "--full", "--strict", "--no-dangling"], env=dict(os.environ, GIT_DIR=str(self.repo)), capture_output=True, text=True)
         report = (out.stdout + out.stderr).strip()
         log("git fsck --full --strict --no-dangling: " + (report or "clean"))

@@ -191,8 +191,9 @@ original minus the hidden objects reports nothing: no dangling object
 points at the loss.
 
 Sizing: 619 reachable objects in the original; 53 damage items covering
-51 damaged or lost objects (50 with an id: 44 locally checkable plus the
-6 hidden rebase objects, plus the pack-A index) and 9 lost refs. An
+51 damaged or lost objects (50 with an id: 43 locally checkable (D1 20,
+D2 3, D3 6, D4 13, D5 1) plus 7 hidden (the six rebase objects and the
+v1.4.0 tag), plus the pack-A index) and 9 lost refs. An
 expert who knows git's object model, pack format and plumbing needs
 about six hours.
 
