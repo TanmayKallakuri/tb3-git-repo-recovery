@@ -35,13 +35,15 @@ Two earlier designs were built and measured before this one. A hidden
 corpus task grew into a corner-case pile and codex attempts no longer fit
 in a ChatGPT window; a reproducible-build task was clean and cheap but
 codex solved it in 24 minutes, because an instruction that names the axes
-to vary hands the agent its own test matrix. This task removes the local
-oracle: object ids are checksums, so a candidate repair can be checked,
-but the original refs and the content of the damaged objects have to be
-derived from the repository's own data. The difficulty is inference, and
+to vary hands the agent its own test matrix. This task reduces the local
+oracle, but does not remove it: 2 of the 53 damage items have no local
+oracle, and the object id still checks the other 51. Object ids are
+checksums, so a candidate repair of those can be checked, but the original
+refs and the content of the damaged objects have to be derived from the
+repository's own data. The difficulty is inference, and
 an agent that does the obvious salvage gets most of the way and still
 scores zero. Version 1.0.0 left one oracle in place, the ids themselves:
-44 of its 45 lost objects were named by a hash the agent could compute,
+all 43 of its lost objects were named by a hash the agent could compute,
 and both models passed every attempt. Version 1.1.0 adds two losses whose
 ids are written nowhere and takes the witnesses out of the instruction.
 
@@ -57,7 +59,7 @@ RESULTS.md), Harbor `0.23.1.dev202609170426` and `dockerfile-pin` 1.5.0 on
 | 29 static checks (`static-checks.yml`) | `bash scripts/check-all.sh tasks/git-repo-recovery` (the 1.1.0 transcript is `runs/static-checks/check-all-1.1.0.log`) |
 | Implementation rubric (37 criteria) | `scripts/run-hardened.sh rubric` (stages the task as upstream's `stage_task.py` does, reviews with the CI reviewer model) |
 | Docker build, oracle and nop | `scripts/run-hardened.sh gates` (or `harbor run -p tasks/git-repo-recovery -a oracle --env docker --yes`, and the same with `-a nop`) |
-| Verifier mutation fixtures (19 cases, exact rewards and failing checks) | `scripts/verifier-fixtures.sh` |
+| Verifier mutation fixtures (19 cases, exact rewards and failing checks) | `scripts/verifier-fixtures.sh` (raw logs of three runs in `runs/verifier-fixtures/`) |
 | `/run` (3 attempts per agent, CI defaults) | `scripts/run-hardened.sh pilot-codex`, then `pilot-claude`, then `rest-codex` and `rest-claude` (one attempt per agent first, the rest only after the pilots; auth flags in the script header) |
 | `/cheat` (1 attempt per agent, hack prompt appended) | `scripts/run-hardened.sh cheats` |
 | Regenerate the repository and the damage | `bash scripts/gen-repo/run.sh` (runs in a container; deterministic, built twice byte-identically) |
@@ -93,22 +95,22 @@ damage items in 11 classes.
 | 29 static checks | 29 pass, twice (task commit `719f13e`, final task commit `f29cadf`), transcript committed |
 | Implementation rubric, 37 criteria | 33 pass, 1 fail, 3 not applicable (`no_extraneous_files`: the damage manifest was read by nothing); after the verifier preflight change 34 pass, 0 fail, 3 not applicable |
 | Oracle / nop | 1.0 / 0.0, Harbor end to end; oracle 1.0 three times (first build, after the solution polish, after the verifier preflight), nop 0.0 twice |
-| Verifier mutation fixtures | 19 of 19 as expected on the 1.0.0 original and again on the 1.1.0 original |
+| Verifier mutation fixtures | 19 of 19 as expected on the 1.0.0 original, again on the 1.1.0 original, and a third time on the final verifier (`f29cadf`) |
 | codex `gpt-6-astra` xhigh, 3 attempts | **3 pass**, 7.4, 7.1 and 5.6 minutes of agent time |
-| claude-code `fable-5-1` max, 3 attempts | **2 fail, 1 pass**: 0.0 in 22.9 min, 0.0 in 25.0 min, 1.0 in 24.8 min; both failures leave the same five refs unrestored and 9 of 610 objects unreachable |
-| Cheat trial, 1 per agent | 0.0 and 0.0, as the brief requires; neither run exercised the verifier (the provider's safeguard rejected the codex turn; claude-code ran four inventory commands and declined); both left the repository byte-identical to the damaged one |
+| claude-code `fable-5-1` max, 3 attempts | **2 fail, 1 pass**: 0.0 in 22.9 min, 0.0 in 25.0 min, 1.0 in 24.8 min; both failures leave the same five refs unrestored and 9 of 610 objects not reachable from the expected refs |
+| Cheat trial, 1 per agent | 0.0 and 0.0, as the brief requires; neither run exercised the verifier (the provider's safeguard rejected the codex turn; claude-code ran four inventory commands, was stopped by a safety classifier, and the agent then declined); both left the repository byte-identical to the damaged one |
 
-Version 1.0.0 (superseded; 579 reachable objects, 12 refs, 45 lost
+Version 1.0.0 (superseded; 579 reachable objects, 12 refs, 43 lost
 objects plus a pack index, 8 lost refs):
 
 | Gate or trial | Result |
 |---|---|
 | 29 static checks | 29 pass |
 | Implementation rubric, 37 criteria | first review 33 pass, 2 fail, 2 not applicable; after the fixes 35 pass, 0 fail, 2 not applicable |
-| Oracle / nop | 1.0 / 0.0, verified again after the Docker restart recorded in RESULTS.md |
+| Oracle / nop | 1.0 / 0.0; only the nop gate was verified again after the Docker restart recorded in RESULTS.md (`gate-nop-3`), not the oracle |
 | codex, 3 attempts | 3 pass, 6 to 9 minutes of agent time each |
 | claude-code, 3 attempts | 3 pass, 18 to 23 minutes each |
-| Cheat trial, 1 per agent | 0.0 and 0.0, as the brief requires; neither run exercised the verifier (the provider's safeguard rejected the codex turn; claude-code ran five inventory commands and declined); both left the repository byte-identical to the damaged one |
+| Cheat trial, 1 per agent | 0.0 and 0.0, as the brief requires; neither run exercised the verifier (the provider's safeguard rejected the codex turn; claude-code ran five inventory commands, was stopped by a safety classifier, and the agent then declined); both left the repository byte-identical to the damaged one |
 
 A cheat trial's zero reward is the required numerical outcome, not
 evidence of robustness. Evidence that the verifier rejects bypass attempts
@@ -134,6 +136,5 @@ the release script, both models found them.
 [`analysis/trajectories.md`](analysis/trajectories.md) has the six 1.1.0
 attempts at their decision points, the two cheat trials, and the six 1.0.0
 passes;
-[`analysis/iterations.md`](analysis/iterations.md) records the three
-designs built before this version and what each measured, and the 1.1.0
-hardening as design 4.
+[`analysis/iterations.md`](analysis/iterations.md) records the four
+designs, the fourth being this 1.1.0 hardening, and what each measured.

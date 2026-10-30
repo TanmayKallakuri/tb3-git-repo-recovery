@@ -54,8 +54,8 @@ otherwise identical.
 | head-moved | `HEAD` at `refs/heads/develop` | 0 | 0 | 0 | test_refs_restored |
 
 After: 19 cases, 0 not as expected, exit 0. Before: 11 mismatches, exit 1.
-Per-case verifier output (reward, ctrf, reward-details, git logs) is in
-`tmp/verifier-fixtures/<case>/`.
+The raw output of this run is `runs/verifier-fixtures/verifier-fixtures-1.0.0.log`
+(the three raw logs are all in `runs/verifier-fixtures/`).
 
 ## What changed in the verifier
 
@@ -132,7 +132,7 @@ verifier image digest changed because `tests/original/` is part of it.
 | verifier image | `grr-verifier-fixtures` `sha256:42e4d2d307d21ecda22b40609aa9a3f5ceebec93a18939ac87a0d86bfde1ad6e` |
 | base image | `python:3.12-slim-bookworm@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e` |
 | git in the image | 2.39.5 |
-| raw output | `tmp/verifier-fixtures-1.1.0.log` (gitignored; the table below is copied from it) |
+| raw output | `runs/verifier-fixtures/verifier-fixtures-1.1.0.log` (the table below is copied from it) |
 
 | case | expected | observed | status | must fail | failed checks (observed) |
 |---|---|---|---|---|---|
@@ -159,7 +159,7 @@ verifier image digest changed because `tests/original/` is part of it.
 19 cases, 0 not as expected, exit 0. The observed failed sets are the same
 as in the first run, case for case.
 
-## Run of 2026-10-30 12:20 UTC on the final verifier
+## Run of 2026-10-30 12:08 UTC on the final verifier
 
 The same 19 cases, graded once more after `f29cadf` added the preflight
 check of the damage manifest against the original, so the table below
@@ -171,6 +171,7 @@ is for the verifier exactly as shipped.
 | base image | `python:3.12-slim-bookworm@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e` |
 | git in the image | 2.39.5 |
 | verifier commit | `f29cadf` |
+| raw output | `runs/verifier-fixtures/verifier-fixtures-final.log` |
 
 | case                   | expected | observed | status   | must fail                | failed checks (observed) |
 |------------------------|----------|----------|----------|--------------------------|--------------------------|

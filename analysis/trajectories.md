@@ -172,15 +172,17 @@ missing.
 Reading. The failure is on exactly the elements 1.1.0 changed. The agent
 did not miss the evidence; it found the mirror refs, the series file, the
 zero-id patch and the dangling tree, and reasoned its way to leaving them
-alone. Two things the instruction no longer says would have changed that:
-that the mirror is a nightly push of the local branches (which makes a
-mirror ref without a local counterpart a lost local branch, not a
-remote-only one), and that releases are cut by `tools/release.sh` (which
-would have led to `VERSION`, the describe strings and the 1.4.0 tag
-format). Both facts are in the tree (`docs/operations.md`, the script and
-its history) and in the mirror reflogs' `update by push` entries by
-`mirror cron`, which the agent printed in step 6. Codex read the tooling as a matter of course; in this attempt
-claude-code read only the tools the fsck errors pointed at. Its two later
+alone. The instruction is complete: it states the end state, and the
+evidence that settles the open questions is in the repository, which the
+agent did not inspect. That evidence is `docs/operations.md` (the mirror
+is a nightly push of the local branches, which makes a mirror ref without
+a local counterpart a lost local branch, not a remote-only one), the
+`refs/remotes` refs and the mirror reflogs' `update by push` entries by
+`mirror cron` (which the agent printed in step 6), the `VERSION` describe
+strings, the series file, and the history of `tools/release.sh` (which
+leads to the lightweight tags and the 1.4.0 tag format). Codex read the
+tooling as a matter of course; in this attempt claude-code read only the
+tools the fsck errors pointed at. Its two later
 attempts, below, split: one read more and still stopped, one read the
 same things codex read and passed.
 
@@ -241,7 +243,9 @@ rest on reconstruction rather than hash verification.
 ### Cheat trials (1.1.0)
 
 `cheat-claude-h` (`AZor9ML`): 1.2 minutes, four tool calls, all
-inventory, then the agent declined the brief in its reply.
+inventory; the run was stopped by a safety classifier at step 6
+(stop_reason refusal), after its inventory steps, and the agent then
+declined.
 `cheat-codex-h` (`TBSMyN8`): 0.2 minutes, no tool call, the provider's
 safeguard rejected the turn (`AgentSafetyRefusalError` recorded; the
 verifier still ran). Both repositories byte-identical to the shipped
@@ -326,7 +330,7 @@ exiting 0 and a per-loss account in the final message.
 ### Where the difficulty went
 
 - **Object recovery has a perfect local oracle.** The design relied on
-  there being no oracle for the *refs*, and that holds; but 44 of the 45
+  there being no oracle for the *refs*, and that holds; but all 43 of the
   lost objects are named by a hash the agent can compute, so steps 2 to 5
   are search with instant feedback. The agents treated them that way:
   every reconstruction was checked by hash before moving on, and nothing
@@ -340,11 +344,11 @@ exiting 0 and a per-loss account in the final message.
   the version file, the changelog and the describe strings independently
   and agreed. One inference with a unique answer and several witnesses is
   within a single pass for these models.
-- **Scale.** About 650 objects and 8 refs fit in one context window with
+- **Scale.** About 579 objects and 8 refs fit in one context window with
   room to spare; codex's three runs stayed near one million input tokens
   with over 90 percent cache hits.
 
-Expert time for the task is six hours; the agents needed five to eighteen
+Expert time for the task is six hours; the agents needed 5.3 to 22.4
 minutes of active work.
 
 ### Cheat trials (1.0.0)
@@ -352,10 +356,12 @@ minutes of active work.
 Both cheat trials (`cheat-claude-1`, `cheat-codex-1`, repeated after the
 Docker restart as `cheat-claude-2`, `cheat-codex-2`) produced a repository
 byte-identical to the shipped damaged one, which grades 0 on three of the
-five checks, so both trials scored 0.0 as the brief requires. In its first run claude-code declined the brief in its reply without
-running a command; in the rerun it inventoried the repository with five
-commands (listings, ref values, object counts, `git fsck` twice), then
-stopped and declined. Codex's turn was rejected by the provider's
+five checks, so both trials scored 0.0 as the brief requires. In its first run (`P2sYSqB`) claude-code ran no command: a safety
+classifier stopped the run at step 2 (stop_reason refusal) and the agent
+then declined the brief; in the rerun (`N2vu4vc`) it inventoried the
+repository with five commands (listings, ref values, object counts, `git
+fsck` twice), was stopped by the classifier at step 7, and the agent then
+declined. Codex's turn was rejected by the provider's
 safeguard before any command ran (Harbor recorded `AgentSafetyRefusalError`),
 both times. Neither trial exercised the verifier, so the zero rewards show
 the required numerical outcome, not adversarial robustness. The verifier's

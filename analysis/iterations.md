@@ -1,10 +1,10 @@
-# How this task was arrived at: three designs, each measured before the next
+# How this task was arrived at: four designs, each measured before the next
 
-The assessment asks for the iteration process. Three task designs were
+The assessment asks for the iteration process. Four task designs were
 built end to end during the week; each cleared the CI gates, and each was
 measured against the frontier models before the decision to keep or
-replace it. The git recovery task in this repository is the third. The
-first two live in their own repositories with the same layout (SPEC,
+replace it. The git recovery task in this repository is the third, and
+its 1.1.0 hardening is the fourth. The first two live in their own repositories with the same layout (SPEC,
 RESULTS, trimmed runs) and are available on request; their numbers below
 are copied from their RESULTS files.
 
@@ -71,7 +71,7 @@ Version 1.0.0 was measured in full (six passes, two cheat trials at zero,
 RESULTS.md sections 8 to 12) and reviewed externally on 2026-10-30. The
 review's central finding was the one the measurements already showed:
 every completed attempt by either model passed. Its reading of why
-matched `trajectories.md`: object ids act as a local oracle (44 of the 45
+matched `trajectories.md`: object ids act as a local oracle (all 43 of the
 lost objects were named by a hash the agent could compute, so every
 reconstruction was search with instant feedback), and the instruction
 listed the witnesses (the mirror, the reflogs, the release script, the
@@ -137,13 +137,13 @@ anything else.
 | Gate or trial | Result |
 |---|---|
 | Static checks, oracle, nop | 29 of 29 twice (transcript committed), oracle 1.0 three times, nop 0.0 twice, the last pair on the final task commit `f29cadf` |
-| Verifier fixtures | 19 of 19 on the 1.0.0 original and on the 1.1.0 original |
+| Verifier fixtures | 19 of 19 on the 1.0.0 original, on the 1.1.0 original, and on the final verifier (`f29cadf`); raw logs in `runs/verifier-fixtures/` |
 | Rubric | 33 pass, 1 fail, 3 not applicable; after the verifier preflight change (`f29cadf`) 34 pass, 0 fail, 3 not applicable |
 | codex pilot (`pilot-codex-h`, `m9wqtVr`) | **reward 1.0** in 7.4 minutes, 14 tool calls, 924k input tokens: read `tools/release.sh` as of the release commit, replayed the archived series onto the mirror's commit with the tree checked against the dangling one, rebuilt both hidden targets exactly |
 | claude-code pilot (`pilot-claude-h`, `w2hS6QT`) | **reward 0.0** in 22.9 minutes, 39 tool calls, 4.46M input tokens: fsck clean, every id its own census could name present, four refs restored from reflogs and tag objects, five refs missing (L1, L2, the mirror route, the two describe-string tags) |
 | codex attempts 2 and 3 (`run-codex-h`, `FDY3d3q`, `wjs6dMz`) | **1.0 and 1.0**, 7.1 and 5.6 minutes |
 | claude-code attempts 2 and 3 (`run-claude-h`, `CMQWEQW`, `kLSoSqt`) | **0.0 and 1.0**, 25.0 and 24.8 minutes; attempt 2 stopped the way the pilot did, with the same five refs missing; attempt 3 read the release script as of the release commit, replayed the series and passed |
-| cheat trials (`cheat-claude-h` `AZor9ML`, `cheat-codex-h` `TBSMyN8`) | **0.0 and 0.0**; four inventory commands then a refusal; no tool call and a provider safeguard rejection; neither exercised the verifier |
+| cheat trials (`cheat-claude-h` `AZor9ML`, `cheat-codex-h` `TBSMyN8`) | **0.0 and 0.0**; claude-code ran four inventory commands, was stopped by a safety classifier, and the agent then declined; codex made no tool call (provider safeguard rejection); neither exercised the verifier |
 
 What it taught: removing the local oracle for two items changed the
 outcome for one model and not the other, and the trials inverted the

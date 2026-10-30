@@ -66,12 +66,12 @@ case "${1:-}" in
         # The hosted /review job: the task staged as upstream's stage_task.py
         # does, reviewed by claude-code with the CI reviewer model. The model
         # is named without the provider prefix because Claude Code 2.1.314
-        # inside the agent image rejects the prefixed form (RESULTS.md 4).
+        # inside the agent image rejects the prefixed form (RESULTS.md section 11).
         python3 scripts/rubric-review/stage.py "$task" tmp/rubric-review >> "$log" 2>&1 || { echo "staging failed" >&2; exit 1; }
         run rubric-review-h harbor run -p tmp/rubric-review -a claude-code -m claude-sonnet-5 "${claude_args[@]}" --job-name rubric-review-h
         ;;
     *)
-        echo "usage: $0 gates|pilot-codex|pilot-claude|rest|rubric" >&2
+        echo "usage: $0 gates|pilot-codex|pilot-claude|rest|rest-codex|rest-claude|cheats|rubric" >&2
         exit 2
         ;;
 esac

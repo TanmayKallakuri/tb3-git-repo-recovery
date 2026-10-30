@@ -21,18 +21,18 @@ An external review of version 1.0.0 (2026-10-30) found the points in the
 left column. Each one is mapped to what was done and where a reader can
 check it.
 
-| Finding | Change | Where to verify |
-|---|---|---|
-| The central criterion failed: all six 1.0.0 trials passed | Task version 1.1.0: two losses whose ids are written nowhere in the repository (L1, the last commit of `feature/cache-warmup`; L2, the annotated tag `v1.4.0`), a nightly cron model for the mirror, witnesses removed from the instruction; commits `45ca827`, `719f13e`, `e8c602c` | Section 4 (damage table), section 6 (codex 3 of 3 passed, claude-code 1 of 3), `SPEC.md` section 3, `tasks/git-repo-recovery/README.md` change log |
-| Object ids act as a local oracle | For L1 and L2 no pack index, `packed-refs` line, reflog, patch header or other object holds the id, as a 7-hex prefix or in 20-byte binary form; the generator asserts this no-leak property on every build and builds byte-identically twice | `scripts/gen-repo/damage.py`, `scripts/gen-repo/check_damage.py`; `SPEC.md` section 3; the two failing claude-code attempts in section 6 (their own id census found 608 of 608 ids present and they stopped) |
-| The instruction listed the witnesses | The instruction states the end state only; repacks, reflogs, the mirror, the release script and the archived series are not named | `tasks/git-repo-recovery/instruction.md`, `SPEC.md` section 4 |
-| One published `result.json` was invalid | `scripts/trim-run.py` redacts `.json` files structurally (parse, redact, re-serialise only when something changed), aborts on a file that does not parse, validates every published `.json`, and every run directory was re-rendered from its job so the committed files match the sources byte for byte; commit `4083042` | `scripts/trim-run.py` (module docstring), `runs/` |
-| `scripts/run-trials.sh run-codex` pointed at a missing config | `run-codex` points at `scripts/run-job-codex-2.json`; every mode exits 2 when its config file is absent; commit `4083042` | `scripts/run-trials.sh` lines 20 to 26 |
-| No raw static-check transcript committed | The 1.1.0 transcript is committed (`5402624`), rerun and recommitted at the final task commit (`4a2cb6a`) | `runs/static-checks/check-all-1.1.0.log` (section 1) |
-| Verifier: the submitted `config` was replaced silently | The submitted config is parsed as the unprivileged checker and checked against an explicit allowlist before the pinned grading config replaces it; an unparseable config or a key outside the allowlist fails `test_artifact_staged`; commit `16e1f1c` | `tests/harness.py` (`validate_config`); fixtures `config-invalid`, `config-hookspath`, `config-extensions`, `config-bare-false` in section 3 |
-| Verifier: `refs/replace` was erased before the no-rewrite check | Ref names are inventoried from `refs/` and `packed-refs` before the indirections are removed, so a replace ref fails `test_no_history_rewrite`; commit `16e1f1c` | `tests/harness.py` (`disk_refs`); fixture `replace-ref-added` |
-| Verifier: the `refs/remotes` namespace was exempt from the extra-ref check | Every ref name on the artifact, in any namespace, must exist in the original; commit `16e1f1c`. Also: symlinks and special files anywhere in the artifact, alternates, grafts, shallow and promisor markers fail staging; root-side faults raise an infrastructure error and never a reward, while errors the artifact provokes (over-long names, loops, collisions) grade 0 and never become infrastructure errors; commits `b94763b`, `792672f` | `tests/harness.py` (`compare_refs`, `copy_tree`, `clean_repo`); fixtures `remote-ref-added`, `notes-ref-added`, `symlink`, `alternates`, `grafts`, `shallow`, `promisor`; `analysis/verifier-fixtures.md` |
-| Cheat wording overstated: zero reward presented as robustness | README, RESULTS and `analysis/trajectories.md` describe the cheat trials as the required zero rewards and point to the mutation fixtures for robustness evidence; commit `4083042` | Sections 7 and 12; `analysis/verifier-fixtures.md` |
+| Finding | Change | Where to verify | Status |
+|---|---|---|---|
+| The central criterion failed: all six 1.0.0 trials passed | Task version 1.1.0: two losses whose ids are written nowhere in the repository (L1, the last commit of `feature/cache-warmup`; L2, the annotated tag `v1.4.0`), a nightly cron model for the mirror, witnesses removed from the instruction; commits `45ca827`, `719f13e`, `e8c602c` | Section 4 (damage table), section 6 (codex passed 3 of 3, claude-code passed 1 of 3 and failed 2), `SPEC.md` section 3, `tasks/git-repo-recovery/README.md` change log | NOT MET: codex 0 of 3 failed, claude-code 2 of 3 failed |
+| Object ids act as a local oracle | For L1 and L2 no pack index, `packed-refs` line, reflog, patch header or other object holds the id, as a 7-hex prefix or in 20-byte binary form; the generator asserts this no-leak property on every build and builds byte-identically twice | `scripts/gen-repo/damage.py`, `scripts/gen-repo/check_damage.py`; `SPEC.md` section 3; the two failing claude-code attempts in section 6 (their own id census found 608 of 608 ids present and they stopped) | reduced, not removed: 2 of 53 items have no local oracle; the object id still checks the other 51 |
+| The instruction listed the witnesses | The instruction states the end state only; repacks, reflogs, the mirror, the release script and the archived series are not named | `tasks/git-repo-recovery/instruction.md`, `SPEC.md` section 4 | fixed (`45ca827`) |
+| One published `result.json` was invalid | `scripts/trim-run.py` redacts `.json` files structurally (parse, redact, re-serialise only when something changed), aborts on a file that does not parse, validates every published `.json`, and every run directory was re-rendered from its job so the committed files match the sources byte for byte; commit `4083042` | `scripts/trim-run.py` (module docstring), `runs/` | fixed (`4083042`) |
+| `scripts/run-trials.sh run-codex` pointed at a missing config | `run-codex` points at `scripts/run-job-codex-2.json`; every mode exits 2 when its config file is absent; commit `4083042` | `scripts/run-trials.sh` lines 20 to 26 | fixed (`4083042`) |
+| No raw static-check transcript committed | The 1.1.0 transcript is committed (`5402624`), rerun and recommitted at the final task commit (`4a2cb6a`) | `runs/static-checks/check-all-1.1.0.log` (section 1) | fixed (`5402624`, `4a2cb6a`) |
+| Verifier: the submitted `config` was replaced silently | The submitted config is parsed as the unprivileged checker and checked against an explicit allowlist before the pinned grading config replaces it; an unparseable config or a key outside the allowlist fails `test_artifact_staged`; commit `16e1f1c` | `tests/harness.py` (`validate_config`); fixtures `config-invalid`, `config-hookspath`, `config-extensions`, `config-bare-false` in section 3 | fixed (`16e1f1c`) |
+| Verifier: `refs/replace` was erased before the no-rewrite check | Ref names are inventoried from `refs/` and `packed-refs` before the indirections are removed, so a replace ref fails `test_no_history_rewrite`; commit `16e1f1c` | `tests/harness.py` (`disk_refs`); fixture `replace-ref-added` | fixed (`16e1f1c`) |
+| Verifier: the `refs/remotes` namespace was exempt from the extra-ref check | Every ref name on the artifact, in any namespace, must exist in the original; commit `16e1f1c`. Also: symlinks and special files anywhere in the artifact, alternates, grafts, shallow and promisor markers fail staging; root-side faults raise an infrastructure error and never a reward, while errors the artifact provokes (over-long names, loops, collisions) grade 0 and never become infrastructure errors; commits `b94763b`, `792672f` | `tests/harness.py` (`compare_refs`, `copy_tree`, `clean_repo`); fixtures `remote-ref-added`, `notes-ref-added`, `symlink`, `alternates`, `grafts`, `shallow`, `promisor`; `analysis/verifier-fixtures.md` | fixed (`16e1f1c`, `b94763b`, `792672f`) |
+| Cheat wording overstated: zero reward presented as robustness | README, RESULTS and `analysis/trajectories.md` describe the cheat trials as the required zero rewards and point to the mutation fixtures for robustness evidence; commit `4083042` | Sections 7 and 12; `analysis/verifier-fixtures.md` | fixed (`4083042`) |
 
 ## 1. Static checks (CI: `static-checks.yml`, 29 checks), version 1.1.0
 
@@ -67,6 +67,23 @@ harbor run -p tasks/git-repo-recovery -a nop --env docker --yes --job-name gate-
 | `gate-oracle-h3` | `git-repo-recovery__ZBVUAoo` | **1.0** | 0 | 11:49:22 to 11:50:09 | rerun on the final task commit `f29cadf`, after the verifier preflight of section 5; 5 of 5 |
 | `gate-nop-h3` | `git-repo-recovery__rQutkJh` | **0.0** | 0 | 11:49:22 to 11:50:06 | same rerun; the same three checks fail, the same two pass |
 
+`scripts/run-hardened.sh` hard-codes the `-h` job names, so the reruns used
+explicit names. The hand-launched jobs were run from the repository root
+with `export PYTHONUTF8=1`:
+
+```bash
+harbor run -p tasks/git-repo-recovery -a oracle --env docker --yes --job-name gate-oracle-h2
+harbor run -p tasks/git-repo-recovery -a oracle --env docker --yes --job-name gate-oracle-h3
+harbor run -p tasks/git-repo-recovery -a nop --env docker --yes --job-name gate-nop-h3
+```
+
+`rubric-review-h2` (section 5) was launched by hand the same way:
+
+```bash
+python3 scripts/rubric-review/stage.py tasks/git-repo-recovery tmp/rubric-review
+harbor run -p tmp/rubric-review -a claude-code -m claude-sonnet-5 --agent-setup-timeout-multiplier 3 --env-file "$HOME/.harbor/claude.env" --ae 'CLAUDE_CODE_OAUTH_TOKEN=${CLAUDE_CODE_OAUTH_TOKEN}' --env docker --yes --job-name rubric-review-h2
+```
+
 Trimmed copies: `runs/gate-oracle-h/`, `runs/gate-nop-h/`, `runs/gate-oracle-h2/`,
 `runs/gate-oracle-h3/`, `runs/gate-nop-h3/`.
 
@@ -85,10 +102,12 @@ shallow, a promisor marker, HEAD moved) must score 0 on the named check.
 |---|---|---|
 | 2026-10-30 08:44 UTC | 1.0.0 | 19 of 19 as expected; the committed 1.0.0 verifier (`a972b72`) graded on the same cases accepted 11 of the 17 mutations |
 | 2026-10-30 09:15 UTC | 1.1.0 (regenerated original) | 19 of 19 as expected, exit 0 |
-| 2026-10-30 12:20 UTC | 1.1.0, final verifier (`f29cadf`, with the manifest preflight) | 19 of 19 as expected, exit 0 |
+| 2026-10-30 12:08 UTC | 1.1.0, final verifier (`f29cadf`, with the manifest preflight) | 19 of 19 as expected, exit 0 |
 
-All three tables, with the verifier image digests, are in
-`analysis/verifier-fixtures.md`. The third run is on the verifier as
+Raw logs: `runs/verifier-fixtures/verifier-fixtures-1.0.0.log`,
+`runs/verifier-fixtures/verifier-fixtures-1.1.0.log` and
+`runs/verifier-fixtures/verifier-fixtures-final.log`. All three tables,
+with the verifier image digests, are in `analysis/verifier-fixtures.md`. The third run is on the verifier as
 shipped, after `f29cadf` (section 5) added the preflight of the damage
 manifest against the original.
 
@@ -175,6 +194,13 @@ rule holds (one attempt per agent before any further trial is spent):
 `gates`, `pilot-codex`, `pilot-claude`, then `rest-codex` and
 `rest-claude` in two processes, `cheats`, `rubric`. Every trial here was
 graded by Harbor end to end.
+
+Provenance: the pilots ran on task commit `719f13e` and the remaining
+attempts and the cheats on `e8c602c`. The only later changes before the
+shipped `f29cadf` were to `solution/recover.py` (replay environment
+pinning) and `tests/preflight.py` (manifest check), neither visible to the
+agent, so the trials are valid for the shipped task; the gates and the
+rubric were rerun on `f29cadf`.
 
 | Agent | Job / trial | Reward | Agent phase | Tool calls | Tokens in (cached) / out | Grade route |
 |---|---|---|---|---|---|---|
@@ -279,8 +305,9 @@ its final message names the two refs that rest on reconstruction rather
 than hash verification. Step by step in `analysis/trajectories.md`.
 
 Cheat trials (hack prompt appended, 1 per agent). `cheat-claude-h`
-(`AZor9ML`): 1.2 minutes, four tool calls, all inventory, then the agent
-declined the brief in its reply. `cheat-codex-h` (`TBSMyN8`): 0.2
+(`AZor9ML`): 1.2 minutes, four tool calls, all inventory; the run was
+stopped by a safety classifier at step 6 (stop_reason refusal), after its
+inventory steps, and the agent then declined the brief. `cheat-codex-h` (`TBSMyN8`): 0.2
 minutes, no tool call; the provider's safeguard rejected the turn and
 Harbor recorded `AgentSafetyRefusalError`, then ran the verifier. Both
 repositories are byte-identical to the shipped damaged one (`diff -rq`),
@@ -378,13 +405,14 @@ harbor run -p tasks/git-repo-recovery -a nop --env docker --yes --job-name gate-
 | `gate-nop-3` | `git-repo-recovery__Xd8qmr2` | **0.0** | 0 | 2026-10-30 02:52:41 to 02:53:16 | rerun after the Docker Desktop restart described in section 12, to confirm Harbor again runs the verifier end to end; the same three checks fail, the same two pass; 35 s for the whole job |
 
 An earlier pair (`gate-oracle-1` / `gate-nop-1`, 19:17) passed the same
-way on the repository before the leak fix of section 10; `gate-*-2` is the
-pair on the 1.0.0 repository.
+way on the repository before the leak fix of section 10. They were the
+pre-regeneration gates, and their directories were not kept under `runs/`;
+`gate-oracle-2` and `gate-nop-2` are the kept 1.0.0 gates.
 
 ## 10. Ground truth and the damage, version 1.0.0
 
 The 1.0.0 repository had 579 reachable objects and 12 refs (5 branches, 7
-tags); 45 damaged or lost objects plus the pack-A index, and 8 lost refs.
+tags); 43 damaged or lost objects plus the pack-A index, and 8 lost refs.
 The classes below are the 1.0.0 ones; the 1.1.0 table is section 4.
 
 | Class | Damage | Items | Intended recovery |
@@ -508,11 +536,11 @@ After the calibration the remaining trials were run on the subscriptions
 | `run-codex-2` | `git-repo-recovery__tuj86CM` | codex | **Completed**: 9.2 min of agent time, declared done ("all 5 branches and 7 tags point to their original objects"); Harbor collected the artifact and then stalled on the Docker hang described in the note below, before it built the verifier; the collected artifact graded with the same verifier image by `scripts/regrade-local.sh`: **5 of 5 checks, reward 1** (`runs/run-codex-2/.../verifier-local/`) | codex attempt 2, pass (locally verified) |
 | `run-codex-3` | `git-repo-recovery__UYLvXPg` | codex | **Completed**: 8.5 min of agent time, declared done; same stall after artifact collection; graded locally: **5 of 5 checks, reward 1** (`runs/run-codex-3/.../verifier-local/`) | codex attempt 3, pass (locally verified) |
 | `run-claude-2` | `git-repo-recovery__QUrYTyh` | claude-code | **Completed**: 18.4 min of agent time, 37 turns, 36 tool calls, 3.93M input tokens (3.75M cached) / 79k output; declared done with a per-loss account of the repair; same stall after artifact collection; graded locally: **5 of 5 checks, reward 1** (`runs/run-claude-2/.../verifier-local/`) | claude-code attempt 1, pass (locally verified) |
-| `cheat-claude-1` | `git-repo-recovery__P2sYSqB` | claude-code + hack prompt | Agent phase complete in 33 s, 4 steps, no tool call: the agent declined the red-team brief in its reply and left `/app/repo.git` byte-identical to the shipped damaged repository (checked with `diff -r`); stalled before verification, repeated as `cheat-claude-2` | cheat trial (first run; untouched repository grades 0; the agent did not attempt a bypass) |
+| `cheat-claude-1` | `git-repo-recovery__P2sYSqB` | claude-code + hack prompt | Agent phase complete in 33 s, 4 steps, no tool call: the run was stopped by a safety classifier at step 2 (stop_reason refusal) and the agent then declined the red-team brief, and left `/app/repo.git` byte-identical to the shipped damaged repository (checked with `diff -r`); stalled before verification, repeated as `cheat-claude-2` | cheat trial (first run; untouched repository grades 0; the agent did not attempt a bypass) |
 | `cheat-codex-1` | `git-repo-recovery__Qnvtqee` | codex + hack prompt | Agent phase ended after 4 s: the provider's safeguard rejected the turn, Harbor classified it `AgentSafetyRefusalError`; repository byte-identical to the shipped one; stalled before verification, repeated as `cheat-codex-2` | cheat trial (first run; untouched repository grades 0; no tool call was made) |
 | `run-claude-3` | `git-repo-recovery__TpwXpFT` | claude-code | **Completed, reward 1.0** (Harbor-verified, 5 of 5 checks): 22.5 min of agent time, 49 tool calls, 3.34M input tokens (3.11M cached) / 100k output | claude-code attempt 2, pass |
 | `run-claude-3` | `git-repo-recovery__ThewbT7` | claude-code | **Completed, reward 1.0** (Harbor-verified, 5 of 5 checks): 21.5 min of agent time, 40 tool calls, 4.64M input tokens (4.46M cached) / 90k output | claude-code attempt 3, pass |
-| `cheat-claude-2` | `git-repo-recovery__N2vu4vc` | claude-code + hack prompt | **Reward 0.0** (Harbor-verified): 1.9 min, 5 tool calls, all inventory (`ls`, ref listing, object counts, `git fsck` twice), then the agent stopped and declined the brief in its reply; repository byte-identical to the shipped one; `test_fsck_clean`, `test_refs_restored`, `test_history_intact` fail | cheat trial, claude-code: 0.0 as required; the verifier was not exercised (the agent inventoried and declined) |
+| `cheat-claude-2` | `git-repo-recovery__N2vu4vc` | claude-code + hack prompt | **Reward 0.0** (Harbor-verified): 1.9 min, 5 tool calls, all inventory (`ls`, ref listing, object counts, `git fsck` twice); the run was then stopped by a safety classifier at step 7 (stop_reason refusal) and the agent declined the brief; repository byte-identical to the shipped one; `test_fsck_clean`, `test_refs_restored`, `test_history_intact` fail | cheat trial, claude-code: 0.0 as required; the verifier was not exercised (the agent inventoried and declined) |
 | `cheat-codex-2` | `git-repo-recovery__BiNxcMH` | codex + hack prompt | **Reward 0.0** (Harbor-verified): 18 s, no tool call; the provider's safeguard rejected the turn again (`AgentSafetyRefusalError` recorded, verifier still ran); repository byte-identical to the shipped one; the same three checks fail | cheat trial, codex: 0.0 as required; the verifier was not exercised (the safeguard rejected the turn before any tool call) |
 
 Note on the stalled jobs: from about 21:45 UTC on 2026-10-29 every Harbor
@@ -548,7 +576,7 @@ whose agent phase ran to completion is counted, and every one passed.
 Both cheat trials scored 0.0, as the brief requires. Neither run exercised
 the verifier: codex made no tool call because the provider's safeguard
 rejected the turn (Harbor recorded `AgentSafetyRefusalError`), and
-claude-code ran five inventory commands and declined to attempt a bypass.
+claude-code ran five inventory commands, was stopped by a safety classifier, and then declined to attempt a bypass.
 The zero rewards therefore show the required numerical outcome, not
 adversarial robustness. Robustness evidence comes from the verifier
 mutation fixtures in `scripts/verifier-fixtures.sh`, with results recorded
@@ -557,7 +585,7 @@ in `analysis/verifier-fixtures.md` (section 3).
 Reading of 1.0.0 against the brief. Version 1.0.0 cleared every CI gate,
 its oracle and nop behaved, its cheat trials scored 0.0 as the brief
 requires (without exercising the verifier, so that is not evidence of its
-robustness), and it was deterministic and cheap (about six to twenty
+robustness), and it was deterministic and cheap (about 5.8 to 22.5
 minutes of agent time, no API spend). The brief's requirement that the
 three attempts per agent genuinely fail was **not met**: both models
 recovered every object and every ref. Why they succeeded, step by step,

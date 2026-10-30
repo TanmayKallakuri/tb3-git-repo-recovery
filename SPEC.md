@@ -10,10 +10,12 @@ Design rules (from the TB3 rubric and the two earlier attempts):
 - Two-paragraph instruction, end state only, human voice. The instruction
   says that nothing needs to be guessed and nothing outside the repository
   is available; it does not list the damage or the recovery sources.
-- The agent cannot build a local oracle. Object ids are checksums, so a
-  candidate repair can be checked, but the original refs and the content
-  of damaged objects have to be derived from what remains. Difficulty is
-  inference across the repository's own data, not a test matrix.
+- The local oracle is reduced, not removed: 2 of the 53 damage items (L1,
+  L2) have no local oracle, and the object id still checks the other 51.
+  Object ids are checksums, so a candidate repair of those can be checked,
+  but the original refs and the content of damaged objects have to be
+  derived from what remains. Difficulty is inference across the
+  repository's own data, not a test matrix.
 - Every lost item is recoverable by construction through exactly one
   intended path (section 3). The oracle (section 5) performs those
   recoveries from the damaged repository alone; it never reads the
@@ -111,7 +113,8 @@ The generator writes the original to `tests/original/` (ground truth,
 never in the agent image) and the damaged copy to
 `environment/repo.git/`, plus `tests/expected-refs.txt` and
 `tests/damage.json` (what was damaged and the intended recovery path, for
-the write-up and the oracle's self-check; also never in the agent image).
+the write-up; its reader is the verifier's preflight, which checks it
+against the original; also never in the agent image).
 
 ## 2. The damaged repository the agent sees (`/app/repo.git`)
 
@@ -198,12 +201,33 @@ unprivileged user `checker` (uid 1700). `COPY . /tests/` with
 and `tests/expected-head.txt` (`ref: refs/heads/main`). Artifact:
 `/app/repo.git/` (declared in task.toml).
 
-Checks (pytest, one CTRF entry each, reward 1 iff all pass), all run on a
-root-made copy of the artifact owned by `checker`, with git invoked as
-`checker` with a fixed environment and `safe.directory` set:
+Staging and preflight. The verifier first makes a root-held staged copy of
+the artifact and examines it before anything is cleaned or graded:
 
-1. `test_artifact_staged`: `/app/repo.git` is a bare repository (HEAD,
-   objects/, refs/ present; `git rev-parse --is-bare-repository` true).
+- The submitted `config` is parsed as the unprivileged `checker` with
+  `git config --file <copy> --no-includes --list -z` and validated against
+  an explicit allowlist; `core.repositoryformatversion` `0` and
+  `core.bare` true are required. Only then does the pinned grading config
+  replace it. An unparseable config or a key outside the allowlist fails
+  `test_artifact_staged`.
+- Symlinks and special files anywhere in the artifact reject it.
+  Alternates, http-alternates, grafts, shallow and promisor markers reject
+  it.
+- A pure-Python ref inventory (`refs/` files and `packed-refs`, without
+  git) is taken first; then `refs/replace` and the other indirections are
+  removed from the grading copy. A name under `refs/replace/` still fails
+  `test_no_history_rewrite`.
+- A preflight checks that the original itself passes fsck and that the
+  damage manifest `tests/damage.json` agrees with it: its 81 object ids
+  exist in the original and its 9 lost refs are in `expected-refs.txt`.
+
+Checks (pytest, one CTRF entry each, reward 1 iff all five pass), run on
+the checker-owned copy, with git invoked as `checker` with a fixed
+environment and `safe.directory` set:
+
+1. `test_artifact_staged`: the copy is a bare repository (HEAD, objects/,
+   refs/ present; `git rev-parse --is-bare-repository` true) and staging
+   passed.
 2. `test_fsck_clean`: `git fsck --full --strict --no-dangling` exits 0
    and prints no `missing`, `corrupt`, `error` or `broken` lines.
 3. `test_refs_restored`: the sorted `for-each-ref` output over
@@ -213,12 +237,15 @@ root-made copy of the artifact owned by `checker`, with git invoked as
 4. `test_history_intact`: for every expected ref, `git rev-list --objects
    <id>` succeeds and every listed object passes `git cat-file -e`; the
    set of reachable object ids equals the original's reachable set.
-5. `test_no_history_rewrite`: no ref under `refs/heads` or `refs/tags`
-   that is not in the expected list (the mirror's tracking refs are not
-   checked).
+5. `test_no_history_rewrite`: no ref name in any namespace that the
+   original lacks, taken over git's listing and the on-disk inventory. A
+   remote-tracking ref the original had and the artifact lacks is not a
+   failure, because the instruction asks for branches and tags.
 
 `reward-details.json` records fsck output, the ref diff, and the missing
-or extra object ids. Verifier-side failures (git missing, copy failure)
+or extra object ids. An error the artifact provokes (over-long names,
+loops, collisions) is a graded failure with reward 0. A resource fault on
+the verifier side (git missing, copy failure) is an infrastructure error:
 exit 2 without a reward file.
 
 ### Cheat defences
@@ -226,7 +253,11 @@ exit 2 without a reward file.
 - Object ids are SHA-1 of content: a fabricated object cannot carry a
   required id, and the expected ids are only in the verifier image.
 - Refs pointing at ids whose objects are missing fail check 2 and 4.
-- Deleting history fails check 4; adding refs fails check 5.
+- Deleting history fails check 4; adding refs in any namespace fails
+  check 5.
+- The submitted config cannot carry hooks, extensions or a non-bare
+  setting past the allowlist; symlinks, special files, alternates, grafts,
+  shallow and promisor markers reject the artifact.
 - git runs unprivileged on a copy; `/tests` and `/logs/verifier` are
   root-only.
 
@@ -234,11 +265,11 @@ exit 2 without a reward file.
 
 category Software, subcategory Systems, tags ["git", "data-recovery",
 "version-control", "packfiles", "debugging"], expert_time_estimate_hours
-6, agent timeout 28800 (the TB 4.0 flat timeout), verifier timeout 600,
+6, agent timeout 28800 (the 8-hour agent timeout cap), verifier timeout 600,
 cpus 2, memory 2048, storage 10240, separate verifier, artifacts
 ["/app/repo.git/"].
 
-## 8. Gates and trials
+## 8. Run plan for 1.0.0 (superseded; see RESULTS.md for 1.1.0)
 
 Static checks (29), rubric review (sonnet, staged), oracle, nop, then ONE
 codex calibration trial. Then claude-code x3, codex x2 more, cheat x2,
