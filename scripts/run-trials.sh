@@ -4,7 +4,8 @@
 #
 #   scripts/run-trials.sh run    <job-name>   # 3 attempts per agent, scripts/run-job.json
 #   scripts/run-trials.sh cheat  <job-name>   # 1 attempt per agent with the hack prompt, scripts/cheat-job.json
-#   scripts/run-trials.sh run-claude|run-codex <job-name>   # per-agent reruns after infrastructure errors
+#   scripts/run-trials.sh run-claude|run-codex <job-name>   # per-agent reruns after infrastructure errors:
+#       run-claude uses scripts/run-job-claude.json (3 attempts), run-codex uses scripts/run-job-codex-2.json (2 attempts, one at a time)
 #
 # Auth is supplied at run time only: the Claude OAuth token comes from
 # ~/.harbor/claude.env (CLAUDE_FORCE_OAUTH=1 plus the token) and is handed to
@@ -18,10 +19,11 @@ cd "$(dirname "$0")/.."
 case "$kind" in
   run) config=scripts/run-job.json ;;
   run-claude) config=scripts/run-job-claude.json ;;   # reruns of claude-code attempts that ended in an infra error
-  run-codex) config=scripts/run-job-codex.json ;;     # reruns of codex attempts that ended in an infra error
+  run-codex) config=scripts/run-job-codex-2.json ;;   # reruns of codex attempts that ended in an infra error
   cheat) config=scripts/cheat-job.json ;;
   *) echo "unknown kind: $kind" >&2; exit 2 ;;
 esac
+if [ ! -e "$config" ]; then echo "missing config $config" >&2; exit 2; fi
 export PYTHONUTF8=1
 export CODEX_FORCE_AUTH_JSON=1
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000

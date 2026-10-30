@@ -1,43 +1,43 @@
-{
-    "id": "dbd55fde-8fa1-47a6-bf0c-82576ae2b35f",
-    "started_at": "2026-10-29T20:49:19.808216",
-    "updated_at": "2026-10-29T20:52:28.135607",
-    "finished_at": "2026-10-29T20:52:28.135607",
-    "n_total_trials": 1,
-    "stats": {
-        "n_completed_trials": 1,
-        "n_errored_trials": 1,
-        "n_running_trials": 0,
-        "n_pending_trials": 0,
-        "n_cancelled_trials": 0,
-        "n_retries": 0,
-        "evals": {
-            "codex__gpt-6-astra__adhoc": {
-                "n_trials": 1,
-                "n_errors": 1,
-                "metrics": [
-                    {
-                        "mean": 0.0
-                    }
-                ],
-                "pass_at_k": {},
-                "reward_stats": {
-                    "reward": {
-                        "0.0": [
-                            "git-repo-recovery__BiNxcMH"
-                        ]
-                    }
-                },
-                "exception_stats": {
-                    "AgentSafetyRefusalError": [
-                        "git-repo-recovery__BiNxcMH"
-                    ]
-                }
-            }
-        },
-        "n_input_tokens": null,
-        "n_cache_tokens": null,
-        "n_output_tokens": null,
-        "cost_usd": null
-    }
+{
+    "id": "dbd55fde-8fa1-47a6-bf0c-82576ae2b35f",
+    "started_at": "2026-10-29T20:49:19.808216",
+    "updated_at": "2026-10-29T20:52:28.135607",
+    "finished_at": "2026-10-29T20:52:28.135607",
+    "n_total_trials": 1,
+    "stats": {
+        "n_completed_trials": 1,
+        "n_errored_trials": 1,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "codex__gpt-6-astra__adhoc": {
+                "n_trials": 1,
+                "n_errors": 1,
+                "metrics": [
+                    {
+                        "mean": 0.0
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "git-repo-recovery__BiNxcMH"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "AgentSafetyRefusalError": [
+                        "git-repo-recovery__BiNxcMH"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null
+    }
 }

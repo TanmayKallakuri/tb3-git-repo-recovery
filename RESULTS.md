@@ -80,7 +80,7 @@ generations produced byte-identical shipped files.
 
 ## 4. Implementation rubric (CI: the hosted `/review` job, `claude-code` with `anthropic/claude-sonnet-5`, 37 criteria)
 
-Staged exactly as `scripts/review/stage_task.py` does upstream (the task
+Staged the way upstream's `terminal-bench/scripts/review/stage_task.py` does, by `scripts/rubric-review/stage.py` (the task
 under review at `/app/task-under-review/`, the rubric at `/app/rubric.toml`,
 the reviewer template as the instruction, a verifier that only checks
 `verdicts.json` exists). Command:
@@ -178,12 +178,12 @@ After the calibration the remaining trials were run on the subscriptions
 | `run-codex-2` | `git-repo-recovery__tuj86CM` | codex | **Completed**: 9.2 min of agent time, declared done ("all 5 branches and 7 tags point to their original objects"); Harbor collected the artifact and then stalled on the Docker hang described in the note below, before it built the verifier; the collected artifact graded with the same verifier image by `scripts/regrade-local.sh`: **5 of 5 checks, reward 1** (`runs/run-codex-2/.../verifier-local/`) | codex attempt 2, pass (locally verified) |
 | `run-codex-3` | `git-repo-recovery__UYLvXPg` | codex | **Completed**: 8.5 min of agent time, declared done; same stall after artifact collection; graded locally: **5 of 5 checks, reward 1** (`runs/run-codex-3/.../verifier-local/`) | codex attempt 3, pass (locally verified) |
 | `run-claude-2` | `git-repo-recovery__QUrYTyh` | claude-code | **Completed**: 18.4 min of agent time, 37 turns, 36 tool calls, 3.93M input tokens (3.75M cached) / 79k output; declared done with a per-loss account of the repair; same stall after artifact collection; graded locally: **5 of 5 checks, reward 1** (`runs/run-claude-2/.../verifier-local/`) | claude-code attempt 1, pass (locally verified) |
-| `cheat-claude-1` | `git-repo-recovery__P2sYSqB` | claude-code + hack prompt | Agent phase complete in 33 s, 4 steps, no tool call: the agent declined the red-team brief in its reply and left `/app/repo.git` byte-identical to the shipped damaged repository (checked with `diff -r`); stalled before verification, repeated as `cheat-claude-2` | cheat trial (first run; untouched repository grades 0) |
-| `cheat-codex-1` | `git-repo-recovery__Qnvtqee` | codex + hack prompt | Agent phase ended after 4 s: the provider's safeguard rejected the turn, Harbor classified it `AgentSafetyRefusalError`; repository byte-identical to the shipped one; stalled before verification, repeated as `cheat-codex-2` | cheat trial (first run; untouched repository grades 0) |
+| `cheat-claude-1` | `git-repo-recovery__P2sYSqB` | claude-code + hack prompt | Agent phase complete in 33 s, 4 steps, no tool call: the agent declined the red-team brief in its reply and left `/app/repo.git` byte-identical to the shipped damaged repository (checked with `diff -r`); stalled before verification, repeated as `cheat-claude-2` | cheat trial (first run; untouched repository grades 0; the agent did not attempt a bypass) |
+| `cheat-codex-1` | `git-repo-recovery__Qnvtqee` | codex + hack prompt | Agent phase ended after 4 s: the provider's safeguard rejected the turn, Harbor classified it `AgentSafetyRefusalError`; repository byte-identical to the shipped one; stalled before verification, repeated as `cheat-codex-2` | cheat trial (first run; untouched repository grades 0; no tool call was made) |
 | `run-claude-3` | `git-repo-recovery__TpwXpFT` | claude-code | **Completed, reward 1.0** (Harbor-verified, 5 of 5 checks): 22.5 min of agent time, 49 tool calls, 3.34M input tokens (3.11M cached) / 100k output | claude-code attempt 2, pass |
 | `run-claude-3` | `git-repo-recovery__ThewbT7` | claude-code | **Completed, reward 1.0** (Harbor-verified, 5 of 5 checks): 21.5 min of agent time, 40 tool calls, 4.64M input tokens (4.46M cached) / 90k output | claude-code attempt 3, pass |
-| `cheat-claude-2` | `git-repo-recovery__N2vu4vc` | claude-code + hack prompt | **Reward 0.0** (Harbor-verified): 1.9 min, 5 tool calls, all inventory (`ls`, ref listing, object counts, `git fsck` twice), then the agent stopped and declined the brief in its reply; repository byte-identical to the shipped one; `test_fsck_clean`, `test_refs_restored`, `test_history_intact` fail | cheat trial, claude-code: 0 |
-| `cheat-codex-2` | `git-repo-recovery__BiNxcMH` | codex + hack prompt | **Reward 0.0** (Harbor-verified): 18 s, no tool call; the provider's safeguard rejected the turn again (`AgentSafetyRefusalError` recorded, verifier still ran); repository byte-identical to the shipped one; the same three checks fail | cheat trial, codex: 0 |
+| `cheat-claude-2` | `git-repo-recovery__N2vu4vc` | claude-code + hack prompt | **Reward 0.0** (Harbor-verified): 1.9 min, 5 tool calls, all inventory (`ls`, ref listing, object counts, `git fsck` twice), then the agent stopped and declined the brief in its reply; repository byte-identical to the shipped one; `test_fsck_clean`, `test_refs_restored`, `test_history_intact` fail | cheat trial, claude-code: 0.0 as required; the verifier was not exercised (the agent inventoried and declined) |
+| `cheat-codex-2` | `git-repo-recovery__BiNxcMH` | codex + hack prompt | **Reward 0.0** (Harbor-verified): 18 s, no tool call; the provider's safeguard rejected the turn again (`AgentSafetyRefusalError` recorded, verifier still ran); repository byte-identical to the shipped one; the same three checks fail | cheat trial, codex: 0.0 as required; the verifier was not exercised (the safeguard rejected the turn before any tool call) |
 
 Note on the stalled jobs: from about 21:45 UTC on 2026-10-29 every Harbor
 job on this machine stalled right after `Collecting main service
@@ -208,15 +208,24 @@ and recorded (trajectory, console log, final message).
 
 | Agent (CI defaults) | Attempts | Passed | Agent time per attempt | Cheat trial |
 |---|---|---|---|---|
-| codex `openai/gpt-6-astra`, `xhigh` | 3 | **3** (`fMzUFjy` Harbor-verified; `tuj86CM`, `UYLvXPg` graded locally from the collected artifact) | 5.8, 9.2, 8.5 min | **0.0** (`cheat-codex-2`) |
-| claude-code `anthropic/claude-fable-5-1`, `max` | 3 | **3** (`QUrYTyh` graded locally; `TpwXpFT`, `ThewbT7` Harbor-verified) | 18.4, 22.5, 21.5 min | **0.0** (`cheat-claude-2`) |
+| codex `openai/gpt-6-astra`, `xhigh` | 3 | **3** (`fMzUFjy` Harbor-verified; `tuj86CM`, `UYLvXPg` graded locally from the collected artifact) | 5.8, 9.2, 8.5 min | 0.0 (`cheat-codex-2`; verifier not exercised, see below) |
+| claude-code `anthropic/claude-fable-5-1`, `max` | 3 | **3** (`QUrYTyh` graded locally; `TpwXpFT`, `ThewbT7` Harbor-verified) | 18.4, 22.5, 21.5 min | 0.0 (`cheat-claude-2`; verifier not exercised, see below) |
 
 Four infrastructure errors (two environment-start timeouts, two agent-setup
 timeouts) are listed above and are not counted as attempts; every attempt
 whose agent phase ran to completion is counted, and every one passed.
 
+Both cheat trials scored 0.0, as the brief requires. Neither run exercised
+the verifier: codex made no tool call because the provider's safeguard
+rejected the turn (Harbor recorded `AgentSafetyRefusalError`), and
+claude-code ran five inventory commands and declined to attempt a bypass.
+The zero rewards therefore show the required numerical outcome, not
+adversarial robustness. Robustness evidence comes from the verifier
+mutation fixtures in `scripts/verifier-fixtures.sh`, with results recorded
+in `analysis/verifier-fixtures.md`.
+
 Reading against the brief. The task clears every CI gate, its oracle and
-nop behave, its cheat trials score 0, and it is deterministic and cheap
+nop behave, its cheat trials score 0.0 as the brief requires (without exercising the verifier, so that is not evidence of its robustness), and it is deterministic and cheap
 (about six to twenty minutes of agent time, no API spend). The brief's
 requirement that the three attempts per agent genuinely fail is **not
 met**: both models recover every object and every ref. Why they succeed,

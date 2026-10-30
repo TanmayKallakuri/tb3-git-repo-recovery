@@ -16,8 +16,16 @@ account, not the trial) is replaced by a placeholder, and Claude Code's
 `rate_limit_event` records (subscription state) are dropped from the
 console logs.
 
+Files ending in .json are redacted structurally: the bytes are parsed, redact()
+is applied to every string value and dict key, and the file is written back
+unchanged if nothing changed, otherwise re-serialised (indent 2).  A .json
+file that does not parse aborts the run, and after copying every .json under
+the target directory is parsed again; a failure aborts.  Redacting the raw
+text of a JSON file can break its escaping, so it is never done.
+
     python3 scripts/trim-run.py gate-oracle gate-nop
 """
+import json
 import os
 import pathlib
 import re
@@ -107,6 +115,71 @@ def redact(text: str) -> str:
     return text
 
 
+def redact_json_value(obj):
+    if isinstance(obj, str):
+        return redact(obj)
+    if isinstance(obj, list):
+        return [redact_json_value(v) for v in obj]
+    if isinstance(obj, dict):
+        return {redact(k): redact_json_value(v) for k, v in obj.items()}
+    return obj
+
+
+def redact_json_text(path: pathlib.Path, text: str) -> str:
+    """Return the file's bytes as text, structurally redacted (original text if unchanged)."""
+    try:
+        obj = json.loads(text)
+    except ValueError as exc:
+        raise SystemExit(f"ABORT: {path} is not valid JSON before redaction: {exc}")
+    new = redact_json_value(obj)
+    if new == obj:
+        return text
+    return json.dumps(new, indent=2, ensure_ascii=False) + "\n"
+
+
+def validate_json(dst: pathlib.Path) -> None:
+    for q in sorted(dst.rglob("*.json")):
+        try:
+            json.loads(q.read_bytes().decode("utf-8"))
+        except ValueError as exc:
+            raise SystemExit(f"ABORT: published {q} does not parse: {exc}")
+
+
+def render(path: pathlib.Path, data: bytes, token: str) -> bytes:
+    """Return the bytes to publish for one kept source file (data containing a NUL byte or not decoding as UTF-8 is binary and copied exactly, unscanned and unparsed)."""
+    if b"\x00" in data:
+        return data
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError:
+        return data
+    scan(path, text, token)
+    if path.name == "claude-code.txt" and BILLING_EVENT in text:
+        text = "".join(line for line in text.splitlines(keepends=True) if BILLING_EVENT not in line)
+    if path.suffix == ".json":
+        text = redact_json_text(path, text)
+    else:
+        text = redact(text)
+    if USERNAME and re.search(r"(?i)Users(?:\\|/)+" + re.escape(USERNAME), text):
+        raise SystemExit(f"ABORT: home path survives redaction in {path}")
+    if "auth.json" in text:
+        raise SystemExit(f"ABORT: auth.json survives redaction in {path}")
+    return text.encode("utf-8")
+
+
+def keep(path: pathlib.Path, rel: pathlib.Path) -> bool:
+    """Whether the trim copies this source file."""
+    if path.name in DROP_NAMES or DROP_PATTERNS.search(path.name):
+        return False
+    if any(DROP_PATTERNS.search(part) for part in rel.parts[:-1]):
+        return False
+    if "tfproto" in rel.parts or "sessions" in rel.parts or "setup" in rel.parts:
+        return False
+    if path.suffix in (".tar", ".gz", ".zip", ".pt", ".pkl", ".bin", ".npy", ".npz", ".h5", ".keras"):
+        return False
+    return True
+
+
 def trim(job: str, token: str) -> None:
     src = JOBS / job
     dst = RUNS / job
@@ -123,35 +196,14 @@ def trim(job: str, token: str) -> None:
         if path.is_dir():
             continue
         rel = path.relative_to(src)
-        if path.name in DROP_NAMES or DROP_PATTERNS.search(path.name):
-            continue
-        if any(DROP_PATTERNS.search(part) for part in rel.parts[:-1]):
-            continue
-        if "tfproto" in rel.parts:
-            continue  # vendored protobuf modules, identical to the task's copy
-        if "sessions" in rel.parts or "setup" in rel.parts:
-            continue  # the agent CLI's own state directory and install logs (signatures, caches)
-        if path.suffix in (".tar", ".gz", ".zip", ".pt", ".pkl", ".bin", ".npy", ".npz", ".h5", ".keras"):
+        if not keep(path, rel):
             continue
         data = path.read_bytes()
         target = dst / rel
         target.parent.mkdir(parents=True, exist_ok=True)
-        try:
-            text = data.decode("utf-8")
-        except UnicodeDecodeError:
-            target.write_bytes(data)
-            kept += 1
-            continue
-        scan(path, text, token)
-        if path.name == "claude-code.txt" and BILLING_EVENT in text:
-            text = "".join(line for line in text.splitlines(keepends=True) if BILLING_EVENT not in line)
-        text = redact(text)
-        if USERNAME and re.search(r"(?i)Users(?:\\|/)+" + re.escape(USERNAME), text):
-            raise SystemExit(f"ABORT: home path survives redaction in {path}")
-        if "auth.json" in text:
-            raise SystemExit(f"ABORT: auth.json survives redaction in {path}")
-        target.write_bytes(text.encode("utf-8"))  # byte-exact: write_text would turn LF into CRLF on Windows
+        target.write_bytes(render(path, data, token))  # byte-exact: write_text would turn LF into CRLF on Windows
         kept += 1
+    validate_json(dst)
     print(f"{job}: kept {kept} files under {dst.relative_to(REPO)}")
 
 

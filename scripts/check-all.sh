@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Run every Terminal-Bench 3 static check (scripts/checks/check-*.sh from the
+# Run every Terminal-Bench 3 static check (terminal-bench/scripts/checks/check-*.sh from the
 # upstream terminal-bench clone) against one task directory, exactly the way
 # .github/workflows/static-checks.yml does, and print a PASS/WARN/FAIL table.
 #

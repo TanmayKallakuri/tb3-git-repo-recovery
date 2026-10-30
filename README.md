@@ -75,7 +75,15 @@ The trials in this repository use the CI pair; `scripts/run-job.json` and
 | Oracle / nop | 1.0 / 0.0, verified again after the Docker restart recorded in RESULTS.md |
 | codex `gpt-6-astra` xhigh, 3 attempts | 3 pass, 6 to 9 minutes of agent time each |
 | claude-code `fable-5-1` max, 3 attempts | 3 pass, 18 to 23 minutes each |
-| Cheat trial, 1 per agent | 0.0 and 0.0; both left the repository byte-identical to the shipped one |
+| Cheat trial, 1 per agent | 0.0 and 0.0, as the brief requires; neither run exercised the verifier (see below); both left the repository byte-identical to the shipped one |
+
+The two zero rewards show the required numerical outcome, not adversarial
+robustness. In the codex cheat trial the provider's safeguard rejected the
+turn, so no tool call was made and Harbor recorded `AgentSafetyRefusalError`.
+In the claude-code cheat trial the agent ran five inventory commands and
+declined to attempt a bypass. Evidence about the verifier's robustness comes
+from the verifier mutation fixtures in `scripts/verifier-fixtures.sh`; the
+results are recorded in `analysis/verifier-fixtures.md`.
 
 The honest reading: the task is correct, deterministic and cheap, and it
 is not hard enough. The brief asks for three genuine failures per agent;

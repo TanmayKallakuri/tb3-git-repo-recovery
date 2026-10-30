@@ -97,16 +97,20 @@ minutes of active work.
 Both cheat trials (`cheat-claude-1`, `cheat-codex-1`, repeated after the
 Docker restart as `cheat-claude-2`, `cheat-codex-2`) produced a repository
 byte-identical to the shipped damaged one, which grades 0 on three of the
-five checks. In its first run claude-code declined the brief in its reply without
+five checks, so both trials scored 0.0 as the brief requires. In its first run claude-code declined the brief in its reply without
 running a command; in the rerun it inventoried the repository with five
 commands (listings, ref values, object counts, `git fsck` twice), then
 stopped and declined. Codex's turn was rejected by the provider's
-safeguard before any command ran, both times. Neither trial therefore probed the
-verifier. The verifier's anti-cheat properties (ground truth only in the
-verifier image, unprivileged copy, symlink and gitfile refusal, alternates,
-grafts and replace refs neutralised, errors graded 0 rather than
-infrastructure) were reviewed by hand and by the rubric reviewer instead;
-see SPEC.md and RESULTS.md section 4.
+safeguard before any command ran (Harbor recorded `AgentSafetyRefusalError`),
+both times. Neither trial exercised the verifier, so the zero rewards show
+the required numerical outcome, not adversarial robustness. The verifier's
+anti-cheat properties (ground truth only in the verifier image, unprivileged
+copy, symlink and gitfile refusal, alternates, grafts and replace refs
+neutralised, errors graded 0 rather than infrastructure) were reviewed by
+hand and by the rubric reviewer (SPEC.md, RESULTS.md section 4). Evidence
+from running the verifier against bypass attempts comes from the mutation
+fixtures in `scripts/verifier-fixtures.sh`, with results recorded in
+`analysis/verifier-fixtures.md`.
 
 ## What a harder version would change
 

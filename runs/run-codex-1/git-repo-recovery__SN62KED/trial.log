@@ -1,9 +1,9 @@
-Skipping image OS validation for hb__0b329041b179192bcbceb041e08bfc54: docker inspect returned 1
-Running command: apt-get update && apt-get install -y curl nodejs npm ripgrep
-Command outputs captured
-Running command: set -euo pipefail; if ldd --version 2>&1 | grep -qi musl || [ -f /etc/alpine-release ]; then  npm install -g @openai/codex@latest; else  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash &&  export NVM_DIR="$HOME/.nvm" &&  \. "$NVM_DIR/nvm.sh" || true &&  command -v nvm &>/dev/null || { echo 'Error: NVM failed to load' >&2; exit 1; } &&  nvm install 22 && nvm alias default 22 && npm -v &&  npm install -g @openai/codex@latest; fi && codex --version
-Trial git-repo-recovery__SN62KED failed: Agent setup timed out after 360.0 seconds
-Collecting main service artifacts
-compose cp failed; retrying download with engine cp: Docker compose command failed for environment git-repo-recovery. Command: docker compose --project-name git-repo-recovery__sn62ked__env --project-directory <home>\Downloads\tb3-git-repo-recovery\tasks\git-repo-recovery\environment -f <temp>\tmpmogsz9ei\git-repo-recovery__SN62KED__env-docker-compose-resources.json -f <harbor-install>\Lib\site-packages\harbor\environments\docker\docker-compose-build.yaml -f <temp>\tmp4s9uf8k3\docker-compose-environment.json -f <temp>\tmpp9r46nsz\docker-compose-mounts.json cp main:/app/repo.git//. jobs\run-codex-1\git-repo-recovery__SN62KED\artifacts\app\repo.git. Return code: 1. Stdout:  git-repo-recovery__sn62ked__env-main-1 Copying git-repo-recovery__sn62ked__env-main-1:/app/repo.git//. to jobs\run-codex-1\git-repo-recovery__SN62KED\artifacts\app\repo.git
-invalid output path: directory "<home>\\Downloads\\tb3-git-repo-recovery\\tasks\\git-repo-recovery\\environment\\jobs\\run-codex-1\\git-repo-recovery__SN62KED\\artifacts\\app" does not exist
-. Stderr: None. 
+Skipping image OS validation for hb__0b329041b179192bcbceb041e08bfc54: docker inspect returned 1
+Running command: apt-get update && apt-get install -y curl nodejs npm ripgrep
+Command outputs captured
+Running command: set -euo pipefail; if ldd --version 2>&1 | grep -qi musl || [ -f /etc/alpine-release ]; then  npm install -g @openai/codex@latest; else  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash &&  export NVM_DIR="$HOME/.nvm" &&  \. "$NVM_DIR/nvm.sh" || true &&  command -v nvm &>/dev/null || { echo 'Error: NVM failed to load' >&2; exit 1; } &&  nvm install 22 && nvm alias default 22 && npm -v &&  npm install -g @openai/codex@latest; fi && codex --version
+Trial git-repo-recovery__SN62KED failed: Agent setup timed out after 360.0 seconds
+Collecting main service artifacts
+compose cp failed; retrying download with engine cp: Docker compose command failed for environment git-repo-recovery. Command: docker compose --project-name git-repo-recovery__sn62ked__env --project-directory <home>\Downloads\tb3-git-repo-recovery\tasks\git-repo-recovery\environment -f <temp>\tmpmogsz9ei\git-repo-recovery__SN62KED__env-docker-compose-resources.json -f <harbor-install>\Lib\site-packages\harbor\environments\docker\docker-compose-build.yaml -f <temp>\tmp4s9uf8k3\docker-compose-environment.json -f <temp>\tmpp9r46nsz\docker-compose-mounts.json cp main:/app/repo.git//. jobs\run-codex-1\git-repo-recovery__SN62KED\artifacts\app\repo.git. Return code: 1. Stdout:  git-repo-recovery__sn62ked__env-main-1 Copying git-repo-recovery__sn62ked__env-main-1:/app/repo.git//. to jobs\run-codex-1\git-repo-recovery__SN62KED\artifacts\app\repo.git
+invalid output path: directory "<home>\\Downloads\\tb3-git-repo-recovery\\tasks\\git-repo-recovery\\environment\\jobs\\run-codex-1\\git-repo-recovery__SN62KED\\artifacts\\app" does not exist
+. Stderr: None. 

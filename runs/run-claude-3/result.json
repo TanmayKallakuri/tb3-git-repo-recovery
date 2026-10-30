@@ -1,42 +1,42 @@
-{
-    "id": "a8797f01-0697-4505-b1e0-7e9432222ddb",
-    "started_at": "2026-10-29T19:54:07.193920",
-    "updated_at": "2026-10-29T20:44:19.222623",
-    "finished_at": "2026-10-29T20:44:19.222623",
-    "n_total_trials": 2,
-    "stats": {
-        "n_completed_trials": 2,
-        "n_errored_trials": 0,
-        "n_running_trials": 0,
-        "n_pending_trials": 0,
-        "n_cancelled_trials": 0,
-        "n_retries": 0,
-        "evals": {
-            "claude-code__claude-fable-5-1__adhoc": {
-                "n_trials": 2,
-                "n_errors": 0,
-                "metrics": [
-                    {
-                        "mean": 1.0
-                    }
-                ],
-                "pass_at_k": {
-                    "2": 1.0
-                },
-                "reward_stats": {
-                    "reward": {
-                        "1.0": [
-                            "git-repo-recovery__TpwXpFT",
-                            "git-repo-recovery__ThewbT7"
-                        ]
-                    }
-                },
-                "exception_stats": {}
-            }
-        },
-        "n_input_tokens": 7984815,
-        "n_cache_tokens": 7571039,
-        "n_output_tokens": 189859,
-        "cost_usd": 19.641349749999996
-    }
+{
+    "id": "a8797f01-0697-4505-b1e0-7e9432222ddb",
+    "started_at": "2026-10-29T19:54:07.193920",
+    "updated_at": "2026-10-29T20:44:19.222623",
+    "finished_at": "2026-10-29T20:44:19.222623",
+    "n_total_trials": 2,
+    "stats": {
+        "n_completed_trials": 2,
+        "n_errored_trials": 0,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "claude-code__claude-fable-5-1__adhoc": {
+                "n_trials": 2,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "mean": 1.0
+                    }
+                ],
+                "pass_at_k": {
+                    "2": 1.0
+                },
+                "reward_stats": {
+                    "reward": {
+                        "1.0": [
+                            "git-repo-recovery__TpwXpFT",
+                            "git-repo-recovery__ThewbT7"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        },
+        "n_input_tokens": 7984815,
+        "n_cache_tokens": 7571039,
+        "n_output_tokens": 189859,
+        "cost_usd": 19.641349749999996
+    }
 }
