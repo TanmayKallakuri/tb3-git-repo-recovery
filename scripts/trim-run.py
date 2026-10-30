@@ -9,7 +9,8 @@ state directory).  Dropped: config.json (holds the agent
 env, scrubbed or not) and anything named auth or credentials.  Every kept
 text file is scanned for the OAuth token in ~/.harbor/claude.env, for
 `sk-ant-` / `sk-` style keys and for the codex auth.json path (a hit aborts),
-and the local home directory is redacted to <home>.  In a provider
+and the local home directory is redacted to <home> (the tool, Python and
+temp directories under it to <harbor-install>, <python-install>, <temp>).  In a provider
 safeguard refusal everything after the refusal sentence (it describes the
 account, not the trial) is replaced by a placeholder, and Claude Code's
 `rate_limit_event` records (subscription state) are dropped from the
@@ -91,10 +92,18 @@ def redact(text: str) -> str:
     for form in HOME_FORMS:
         text = text.replace(form, "<home>")
     # any remaining path form of the home directory (JSON-escaped, mixed separators)
-    text = re.sub(r"(?i)[A-Za-z]:(?:\\|\|/)+Users(?:\\|\|/)+" + re.escape(USERNAME), "<home>", text)
+    text = re.sub(r"(?i)[A-Za-z]:(?:\\|/)+Users(?:\\|/)+" + re.escape(USERNAME), "<home>", text)
     text = re.sub(r"(?i)/(?:mnt/)?c/Users/" + re.escape(USERNAME), "<home>", text)
-    text = re.sub(r"(?i)Users(?:\\|\|/)+" + re.escape(USERNAME), "<home>", text)
+    text = re.sub(r"(?i)Users(?:\\|/)+" + re.escape(USERNAME), "<home>", text)
     text = text.replace("C--Users-" + USERNAME + "-", "C--Users-<user>-")  # the desktop app's session-directory form
+    # install and temp directories under the home directory (Harbor's uv tool
+    # environment, the Python runtime, Harbor's compose temp files) carry no
+    # secret but name the host's layout; any separator form, JSON-escaped too
+    sep = r"(?:\\|/)+"
+    text = re.sub(r"<home>" + sep + "AppData" + sep + "Local" + sep + "Packages" + sep + r"[^\\/\"]+" + sep + "LocalCache" + sep + "Roaming" + sep + "uv" + sep + "tools" + sep + "harbor", "<harbor-install>", text)
+    text = re.sub(r"<home>" + sep + "AppData" + sep + "Local" + sep + "Programs" + sep + "Python" + sep + r"Python\d+", "<python-install>", text)
+    text = re.sub(r"<home>" + sep + "AppData" + sep + "Local" + sep + "Temp", "<temp>", text)
+    text = re.sub(r"<home>" + sep + "AppData" + sep + r"(?:Local|Roaming)", "<appdata>", text)
     return text
 
 
@@ -137,7 +146,7 @@ def trim(job: str, token: str) -> None:
         if path.name == "claude-code.txt" and BILLING_EVENT in text:
             text = "".join(line for line in text.splitlines(keepends=True) if BILLING_EVENT not in line)
         text = redact(text)
-        if USERNAME and re.search(r"(?i)Users(?:\\|\|/)+" + re.escape(USERNAME), text):
+        if USERNAME and re.search(r"(?i)Users(?:\\|/)+" + re.escape(USERNAME), text):
             raise SystemExit(f"ABORT: home path survives redaction in {path}")
         if "auth.json" in text:
             raise SystemExit(f"ABORT: auth.json survives redaction in {path}")

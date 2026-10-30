@@ -1,0 +1,49 @@
+error: refs/heads/feature/cache-warmup: invalid reflog entry aef3e022037917637248671a8d936d6710f61da6
+error: refs/heads/feature/cache-warmup: invalid reflog entry aef3e022037917637248671a8d936d6710f61da6
+error: refs/heads/develop: invalid reflog entry 6a291a82188b43228b75bb71b25399592fec2010
+error: refs/heads/develop: invalid reflog entry 6a291a82188b43228b75bb71b25399592fec2010
+broken link from  commit 55373ed7bfdab2d9f56e3a1cbc584e12b44f99d7
+              to  commit 6a291a82188b43228b75bb71b25399592fec2010
+broken link from    tree 0706003e39eaaaa1a577a5d6a59a072bb8b11dea
+              to    blob 249050286553f369868a4dcc1ea152086c8d9ddb
+broken link from    tree 96a3b1694e5e3ae17e215722db2c911db79130d4
+              to    blob 9ee0482da23721f2cdd9f71f776d7267fb7b9967
+broken link from    tree 6dbf1bcebd908d5d988ab27315337946bd810bf0
+              to    blob 0f21f2abd320bc7a3e95791a7f6b334c59b2557a
+broken link from    tree 6dbf1bcebd908d5d988ab27315337946bd810bf0
+              to    blob 288a9e8fa5c067c97f629f34fdab02d2951480f4
+broken link from    tree 844d5fe8de3417e4f00fd2501f27892edde60630
+              to    blob 5fab911abddbe711c096bc95e2c4701bb86dc73b
+broken link from    tree 6102cdec6cd15c15a858df3ede399f3e1a5d23b7
+              to    blob b31372d6e56a840828f7a0a31276d3ba2cbe7ba6
+broken link from    tree 7ae0fbb7e769b89ccb300b661376c1b01383b025
+              to    blob 2831e784e676c303433667812211487ce363f115
+broken link from    tree b36e7d5438a1de144617f857d62d0435902da026
+              to    tree 7d33f4dadc548a87cbe997c130d557800b812772
+broken link from  commit 8356afa2f4b5ed54b0bc389a59434daaf6d09909
+              to  commit c30cfac86f61d9e3f5782f272924333776ecd662
+broken link from  commit fc1b7e8984ec70b6ee8ab78deceda6116e970f43
+              to  commit aef3e022037917637248671a8d936d6710f61da6
+broken link from    tree dd9bb53d1ca90e6e14fa61729c8a80903c01835f
+              to    tree b10242c6f02a2ad627f772aa0a930370863f5bf8
+broken link from    tree 3ac9e2f88c242e7890332f6fbd1210c783d51f35
+              to    tree 1581703b7fa63a8c459216ddfdbf7d553642e813
+missing blob 249050286553f369868a4dcc1ea152086c8d9ddb
+missing blob 9ee0482da23721f2cdd9f71f776d7267fb7b9967
+missing blob 0f21f2abd320bc7a3e95791a7f6b334c59b2557a
+missing tree 1581703b7fa63a8c459216ddfdbf7d553642e813
+missing blob 2831e784e676c303433667812211487ce363f115
+dangling tree 65c9cad16ef7d75a04518497684a2f690f77fcde
+missing commit 6a291a82188b43228b75bb71b25399592fec2010
+missing blob 288a9e8fa5c067c97f629f34fdab02d2951480f4
+dangling tag 45628f3693a2a93bbe3570e21b871bf91d0b6acf
+missing tree b10242c6f02a2ad627f772aa0a930370863f5bf8
+dangling blob 484b4b97230a00acb0873bb582d80fe9b780e271
+missing blob 5fab911abddbe711c096bc95e2c4701bb86dc73b
+missing tree 7d33f4dadc548a87cbe997c130d557800b812772
+missing commit aef3e022037917637248671a8d936d6710f61da6
+missing blob b31372d6e56a840828f7a0a31276d3ba2cbe7ba6
+dangling tag 493c34b0aa4c65d0a21d81db383cf35bb56f6ee0
+missing commit c30cfac86f61d9e3f5782f272924333776ecd662
+dangling tree 648db82791119abd223bbb566279f09eb1d14158
+dangling blob 576f4f21182ceb3e810001b16056524ab67423fe

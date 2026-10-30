@@ -1,0 +1,9 @@
+{
+  "refs/heads/main": "2b777f6ff2bfa4437a5576904761d0621d5fd43a",
+  "refs/remotes/mirror/develop": "6a1c42a2adb5cb6991cf51c848b58793e404ab29",
+  "refs/remotes/mirror/feature/retry-policy": "d13c784d66243541536833780676efba0d86042a",
+  "refs/remotes/mirror/main": "2b777f6ff2bfa4437a5576904761d0621d5fd43a",
+  "refs/tags/v0.9.0-rc1": "518aac585f9a5f3220b0b504cb5df30edee0e99f",
+  "refs/tags/v1.0.0": "769013b9f4a84795d101ca52157a07dbea36ea7b",
+  "refs/tags/v1.1.0": "808da7c33e7ae9c4a01418296aedbe08c62e274e"
+}

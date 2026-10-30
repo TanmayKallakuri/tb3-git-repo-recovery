@@ -1,0 +1,2 @@
+The fake clock records the sleeps, so the test checks the delays as well
+as the attempt count.

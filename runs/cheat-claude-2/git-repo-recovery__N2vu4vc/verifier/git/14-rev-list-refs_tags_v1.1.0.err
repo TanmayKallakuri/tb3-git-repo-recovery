@@ -1,0 +1,2 @@
+error: inflate: data stream error (unknown compression method)
+fatal: packed object 6ed47e8c3cfccc7fe7080c6dfaabf7d59e05326f (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt

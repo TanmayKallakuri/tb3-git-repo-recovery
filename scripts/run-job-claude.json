@@ -1,7 +1,7 @@
 {
   "n_attempts": 3,
   "jobs_dir": "jobs",
-  "n_concurrent_trials": 2,
+  "n_concurrent_trials": 1,
   "environment": {
     "type": "docker"
   },

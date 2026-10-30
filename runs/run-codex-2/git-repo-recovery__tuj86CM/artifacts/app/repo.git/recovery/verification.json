@@ -1,0 +1,49 @@
+{
+  "fsck_full_strict": "PASS: exit 0, no output",
+  "fsck_no_reflogs_unreachable": "PASS: exit 0, no output",
+  "original_objects": 579,
+  "restored_objects": 579,
+  "reachable_objects": 579,
+  "independently_hash_verified": 579,
+  "types": {
+    "tree": 263,
+    "commit": 150,
+    "blob": 162,
+    "tag": 4
+  },
+  "branches": 5,
+  "tags": 7,
+  "remote_tracking_refs": 3,
+  "preserved_files": [
+    "HEAD",
+    "config",
+    "info/exclude",
+    "logs/HEAD",
+    "logs/refs/heads/develop",
+    "logs/refs/heads/feature/cache-warmup",
+    "logs/refs/heads/hotfix/1.2.1",
+    "logs/refs/heads/main",
+    "logs/refs/remotes/mirror/develop",
+    "logs/refs/remotes/mirror/feature/retry-policy",
+    "logs/refs/remotes/mirror/main",
+    "packed-refs",
+    "refs/heads/main",
+    "refs/remotes/mirror/develop",
+    "refs/remotes/mirror/feature/retry-policy",
+    "refs/remotes/mirror/main"
+  ],
+  "validated_describe_versions": [
+    {
+      "commit": "148c15071f76a8de6d7b8eb496202345e41ac9bf",
+      "version": "v1.3.1-1-ge2e5e72"
+    },
+    {
+      "commit": "582b0b5e2cb698b3ed5bdffc0cd45a3902c26d21",
+      "version": "v1.1.0-1-g98bd87a"
+    },
+    {
+      "commit": "af4e4cd4deff009ddf4a7bb1e8ce4b954eecfa82",
+      "version": "v1.2.1-5-gf1a290e"
+    }
+  ]
+}

@@ -68,4 +68,22 @@ The trials in this repository use the CI pair; `scripts/run-job.json` and
 
 ## Results summary
 
-See RESULTS.md. (Filled in after the trials.)
+| Gate or trial | Result |
+|---|---|
+| 29 static checks | 29 pass |
+| Implementation rubric, 37 criteria | first review 33 pass, 2 fail, 2 not applicable; after the fixes 35 pass, 0 fail, 2 not applicable |
+| Oracle / nop | 1.0 / 0.0, verified again after the Docker restart recorded in RESULTS.md |
+| codex `gpt-6-astra` xhigh, 3 attempts | 3 pass, 6 to 9 minutes of agent time each |
+| claude-code `fable-5-1` max, 3 attempts | 3 pass, 18 to 23 minutes each |
+| Cheat trial, 1 per agent | 0.0 and 0.0; both left the repository byte-identical to the shipped one |
+
+The honest reading: the task is correct, deterministic and cheap, and it
+is not hard enough. The brief asks for three genuine failures per agent;
+both models repair everything. [`analysis/trajectories.md`](analysis/trajectories.md)
+shows the six moves every passing run made and where the intended
+difficulty went (object recovery has a perfect local oracle in the hash,
+and the archived patch series names its own commit ids), and lists the
+changes a harder version would make. [`analysis/iterations.md`](analysis/iterations.md)
+records the two designs built before this one and what each measured,
+including the one design that did defeat both models and why it was set
+aside.

@@ -1,0 +1,43 @@
+From 11546642caef9b8f524df49a139bb6862b747dc8 Mon Sep 17 00:00:00 2001
+From: Dev Patel <dev@orbit.example>
+Date: Sat, 4 Jul 2026 06:37:15 +0530
+Subject: [PATCH 2/3] Use the retry policy from the runner
+
+---
+ orbit/runner.py | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/orbit/runner.py b/orbit/runner.py
+index 07133d6..2831e78 100644
+--- a/orbit/runner.py
++++ b/orbit/runner.py
+@@ -23,11 +23,25 @@ class Result:
+ class Runner:
+     """Runs commands synchronously."""
+ 
+-    def __init__(self, timeout=300, metrics=None):
++    def __init__(self, timeout=300, metrics=None, policy=None, clock=None):
+         self.timeout = timeout
+         self.metrics = metrics
++        self.policy = policy
++        self.clock = clock
+ 
+     def run(self, job):
++        """Run the job, retrying failures according to the policy."""
++        attempt = 1
++        while True:
++            result = self.run_once(job)
++            delay = self.policy.delay(attempt) if self.policy and not result.ok else None
++            if delay is None:
++                return result
++            log.info("retry %s in %ss", job.name, delay)
++            self.clock.sleep(delay)
++            attempt += 1
++
++    def run_once(self, job):
+         log.info("start %s", job.name)
+         try:
+             proc = subprocess.run(job.command, capture_output=True, text=True, timeout=job.timeout or self.timeout)
+-- 
+2.39.5
+

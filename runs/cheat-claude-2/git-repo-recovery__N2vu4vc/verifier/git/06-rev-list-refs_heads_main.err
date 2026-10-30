@@ -1,0 +1,2 @@
+error: corrupt loose object '6a291a82188b43228b75bb71b25399592fec2010'
+fatal: loose object 6a291a82188b43228b75bb71b25399592fec2010 (stored in /run/verifier/repo/objects/6a/291a82188b43228b75bb71b25399592fec2010) is corrupt

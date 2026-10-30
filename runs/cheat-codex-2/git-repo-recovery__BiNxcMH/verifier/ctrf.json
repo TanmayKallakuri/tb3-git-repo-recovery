@@ -1,0 +1,83 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-10-30T03:52:23.199307+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 2,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1793332342256,
+            "stop": 1793332343195
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_artifact_staged",
+                "status": "passed",
+                "duration": 879,
+                "start": 1793332342278,
+                "stop": 1793332343157,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_fsck_clean",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 20,
+                "start": 1793332343158,
+                "stop": 1793332343178,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 52, 'dirs': 50, 'bytes': 158003, 'skipped': [], ...rpqnos/repo', '-c', 'safe.directory=*', 'rev-list', '--objects', ...], 'returncode': 0, 'timed_out': False, ...}}, ...}\n\n    def test_fsck_clean(graded):\n        \"\"\"git fsck --full --strict --no-dangling exits 0 and reports nothing missing, corrupt, broken or in error.\"\"\"\n        fsck = graded[\"fsck\"] or {}\n        print(f\"fsck: {fsck.get('run')}\")\n>       _assert_check(graded, \"test_fsck_clean\")\n\ntest_outputs.py:158: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ngraded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 52, 'dirs': 50, 'bytes': 158003, 'skipped': [], ...rpqnos/repo', '-c', 'safe.directory=*', 'rev-list', '--objects', ...], 'returncode': 0, 'timed_out': False, ...}}, ...}\nname = 'test_fsck_clean'\n\n    def _assert_check(graded: dict, name: str) -> None:\n        result = graded[\"checks\"][name]\n>       assert result[\"ok\"], result[\"message\"]\nE       AssertionError: fsck exited 7; stderr tail: '326f\\nerror: refs/heads/develop: invalid reflog entry 6ed47e8c3cfccc7fe7080c6dfaabf7d59e05326f\\nerror: refs/heads/develop: invalid reflog entry 84ad79fab280a9927ed7b37fe89368f1a16e94a3\\nerror: refs/heads/develop: invalid reflog entry 84ad79fab280a9927ed7b37fe89368f1a16e94a3\\nerror: refs/heads/develop: invalid reflog entry 6a291a82188b43228b75bb71b25399592fec2010\\nerror: refs/heads/develop: invalid reflog entry 6a291a82188b43228b75bb71b25399592fec2010\\nerror: HEAD: invalid reflog entry 5c32ac075f74e19b9b84fc7bdeb71710ef93412a\\nerror: HEAD: invalid reflog entry 5c32ac075f74e19b9b84fc7bdeb71710ef93412a\\n'\nE         fsck reports missing, corrupt, error or broken:\nE         broken link from    tree 2a896a6a517d6f433e5ff9af6ab1d97c9940e78a\nE         broken link from    tree 6dbf1bcebd908d5d988ab27315337946bd810bf0\nE         broken link from    tree 844d5fe8de3417e4f00fd2501f27892edde60630\nE         broken link from    tree c3d750e75b1a1b5b90fe165eab5fca95272615a8\nE         broken link from    tree b36e7d5438a1de144617f857d62d0435902da026\nE         broken link from    tree b7e3c9141d738039f66904f228ff64f86d764f11\nE         broken link from    tree 8f440f32902d13a3e266c0e51786879263b776b5\nE         broken link from    tree 8f440f32902d13a3e266c0e51786879263b776b5\nE         broken link from    tree a386ea68d4b5d0a911aef96699f4664d584c66ff\nE         broken link from  commit 881cb3036f76b7bf5055b2fe511ee9bc515252f8\nE         broken link from  commit 4226740fa90a33eef025e615941111f0c9ad4d17\nE         broken link from  commit 883ac0586a1fccfbf8f8a6afc783246b17ab3b45\nE         ... 912 in total\nE       assert False\n\ntest_outputs.py:143: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_refs_restored",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 7,
+                "start": 1793332343179,
+                "stop": 1793332343186,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 52, 'dirs': 50, 'bytes': 158003, 'skipped': [], ...rpqnos/repo', '-c', 'safe.directory=*', 'rev-list', '--objects', ...], 'returncode': 0, 'timed_out': False, ...}}, ...}\n\n    def test_refs_restored(graded):\n        \"\"\"Every branch and tag exists again with its original id and peeled id, and HEAD is what it was.\"\"\"\n        refs = graded[\"refs\"] or {}\n        print(f\"refs: expected {refs.get('expected_count')}, found {refs.get('actual_count')}, HEAD {refs.get('head')!r}\")\n>       _assert_check(graded, \"test_refs_restored\")\n\ntest_outputs.py:165: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ngraded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 52, 'dirs': 50, 'bytes': 158003, 'skipped': [], ...rpqnos/repo', '-c', 'safe.directory=*', 'rev-list', '--objects', ...], 'returncode': 0, 'timed_out': False, ...}}, ...}\nname = 'test_refs_restored'\n\n    def _assert_check(graded: dict, name: str) -> None:\n        result = graded[\"checks\"][name]\n>       assert result[\"ok\"], result[\"message\"]\nE       AssertionError: expected refs absent or pointing elsewhere:\nE         35e60b11842b491b815e3e98c835e7b23596609a commit refs/tags/v1.3.1\nE         45628f3693a2a93bbe3570e21b871bf91d0b6acf tag refs/tags/v1.2.0 c256b5c79663b545147eb748961436ae09201284\nE         493c34b0aa4c65d0a21d81db383cf35bb56f6ee0 tag refs/tags/v1.3.0 ebcc265012e322e29e4bb97e4afdae1ba2c87492\nE         69305d3a6d68e96388e91dcdde3447ea7042944f commit refs/heads/hotfix/1.2.1\nE         6a1c42a2adb5cb6991cf51c848b58793e404ab29 commit refs/heads/develop\nE         bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 commit refs/tags/v1.2.1\nE         d13c784d66243541536833780676efba0d86042a commit refs/heads/feature/retry-policy\nE         fc1b7e8984ec70b6ee8ab78deceda6116e970f43 commit refs/heads/feature/cache-warmup\nE       assert False\n\ntest_outputs.py:143: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_history_intact",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 7,
+                "start": 1793332343187,
+                "stop": 1793332343194,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 52, 'dirs': 50, 'bytes': 158003, 'skipped': [], ...rpqnos/repo', '-c', 'safe.directory=*', 'rev-list', '--objects', ...], 'returncode': 0, 'timed_out': False, ...}}, ...}\n\n    def test_history_intact(graded):\n        \"\"\"Every object reachable from an expected ref is readable and the reachable set equals the original's.\"\"\"\n        objects = graded[\"objects\"] or {}\n        print(f\"objects: reachable {objects.get('artifact_reachable')}, original {objects.get('original_reachable')}\")\n>       _assert_check(graded, \"test_history_intact\")\n\ntest_outputs.py:172: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ngraded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 52, 'dirs': 50, 'bytes': 158003, 'skipped': [], ...rpqnos/repo', '-c', 'safe.directory=*', 'rev-list', '--objects', ...], 'returncode': 0, 'timed_out': False, ...}}, ...}\nname = 'test_history_intact'\n\n    def _assert_check(graded: dict, name: str) -> None:\n        result = graded[\"checks\"][name]\n>       assert result[\"ok\"], result[\"message\"]\nE       AssertionError: rev-list --objects 2b777f6ff2bfa4437a5576904761d0621d5fd43a (refs/heads/main): rev-list-refs/heads/main exited 128; stderr tail: \"error: corrupt loose object '6a291a82188b43228b75bb71b25399592fec2010'\\nfatal: loose object 6a291a82188b43228b75bb71b25399592fec2010 (stored in /run/verifier/repo/objects/6a/291a82188b43228b75bb71b25399592fec2010) is corrupt\\n\"\nE         rev-list --objects 35e60b11842b491b815e3e98c835e7b23596609a (refs/tags/v1.3.1): rev-list-refs/tags/v1.3.1 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\\n'\nE         rev-list --objects 45628f3693a2a93bbe3570e21b871bf91d0b6acf (refs/tags/v1.2.0): rev-list-refs/tags/v1.2.0 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\\n'\nE         rev-list --objects 493c34b0aa4c65d0a21d81db383cf35bb56f6ee0 (refs/tags/v1.3.0): rev-list-refs/tags/v1.3.0 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\\n'\nE         rev-list --objects 518aac585f9a5f3220b0b504cb5df30edee0e99f (refs/tags/v0.9.0-rc1): rev-list-refs/tags/v0.9.0-rc1 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\\nfatal: packed object 5c32ac075f74e19b9b84fc7bdeb71710ef93412a (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\\n'\nE         rev-list --objects 69305d3a6d68e96388e91dcdde3447ea7042944f (refs/heads/hotfix/1.2.1): rev-list-refs/heads/hotfix/1.2.1 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\\n'\nE         rev-list --objects 6a1c42a2adb5cb6991cf51c848b58793e404ab29 (refs/heads/develop): rev-list-refs/heads/develop exited 128; stderr tail: \"error: corrupt loose object '6a291a82188b43228b75bb71b25399592fec2010'\\nfatal: loose object 6a291a82188b43228b75bb71b25399592fec2010 (stored in /run/verifier/repo/objects/6a/291a82188b43228b75bb71b25399592fec2010) is corrupt\\n\"\nE         rev-list --objects 769013b9f4a84795d101ca52157a07dbea36ea7b (refs/tags/v1.0.0): rev-list-refs/tags/v1.0.0 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\\nfatal: packed object 42a0ce88a3f877fbd4850a231f94e57c8f069370 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\\n'\nE         rev-list --objects 808da7c33e7ae9c4a01418296aedbe08c62e274e (refs/tags/v1.1.0): rev-list-refs/tags/v1.1.0 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\\nfatal: packed object 6ed47e8c3cfccc7fe7080c6dfaabf7d59e05326f (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\\n'\nE         rev-list --objects bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 (refs/tags/v1.2.1): rev-list-refs/tags/v1.2.1 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\\n'\nE         rev-list --objects d13c784d66243541536833780676efba0d86042a (refs/heads/feature/retry-policy): rev-list-refs/heads/feature/retry-policy exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\\n'\nE         rev-list --objects fc1b7e8984ec70b6ee8ab78deceda6116e970f43 (refs/heads/feature/cache-warmup): rev-list-refs/heads/feature/cache-warmup exited 128; stderr tail: \"error: inflate: data stream error (incorrect data check)\\nerror: corrupt loose object 'aef3e022037917637248671a8d936d6710f61da6'\\nfatal: loose object aef3e022037917637248671a8d936d6710f61da6 (stored in /run/verifier/repo/objects/ae/f3e022037917637248671a8d936d6710f61da6) is corrupt\\n\"\nE         579 of the original's 579 reachable objects are not reachable here:\nE         0012e2838907e3539c66cc23fefc5f3ffe850613\nE         00b8e676fd7460059ef92d91449e0f3a9179db31\nE         01804338bd5b6c900c063f26d6cf1d5bda9d8708\nE         01cb7b94c18f9a6ef606bf97073112f286138176\nE         026d7a5817041ef0fd77b27b82180eae6aa47033\nE         047f2ef66ed787728853036a173568c3b70425ac\nE         0488ed08463e0686ab10a7f2a69847c734e8c35e\nE         04b49e0135d8db6bec8b0b44824516b5352df6d9\nE         04cf09615e02cf05de39ce04475da39bfc2df18e\nE         04fdf5317278eeea6ff23e3c31f7fc03d56113a3\nE         0501cc394c78e39d3afc1f9b6295c597e8c2d56d\nE         05ed4efcbeb959106cd1136406c5c32acbfea6b4\nE         ... 579 in total\nE       assert False\n\ntest_outputs.py:143: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_no_history_rewrite",
+                "status": "passed",
+                "duration": 1,
+                "start": 1793332343194,
+                "stop": 1793332343195,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

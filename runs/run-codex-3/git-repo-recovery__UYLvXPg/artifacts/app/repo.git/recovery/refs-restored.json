@@ -1,0 +1,34 @@
+{
+  "refs/heads/develop": {
+    "evidence": "logs/refs/heads/develop: final update",
+    "oid": "6a1c42a2adb5cb6991cf51c848b58793e404ab29"
+  },
+  "refs/heads/feature/cache-warmup": {
+    "evidence": "logs/refs/heads/feature/cache-warmup: final update",
+    "oid": "fc1b7e8984ec70b6ee8ab78deceda6116e970f43"
+  },
+  "refs/heads/feature/retry-policy": {
+    "evidence": "refs/remotes/mirror/feature/retry-policy and its update-by-push reflog",
+    "oid": "d13c784d66243541536833780676efba0d86042a"
+  },
+  "refs/heads/hotfix/1.2.1": {
+    "evidence": "logs/refs/heads/hotfix/1.2.1: final update",
+    "oid": "69305d3a6d68e96388e91dcdde3447ea7042944f"
+  },
+  "refs/tags/v1.2.0": {
+    "evidence": "surviving annotated tag object 45628f3693a2a93bbe3570e21b871bf91d0b6acf",
+    "oid": "45628f3693a2a93bbe3570e21b871bf91d0b6acf"
+  },
+  "refs/tags/v1.2.1": {
+    "evidence": "point-release script, release commit and VERSION, subsequent git-describe VERSION at af4e4cd4deff009ddf4a7bb1e8ce4b954eecfa82",
+    "oid": "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67"
+  },
+  "refs/tags/v1.3.0": {
+    "evidence": "surviving annotated tag object 493c34b0aa4c65d0a21d81db383cf35bb56f6ee0",
+    "oid": "493c34b0aa4c65d0a21d81db383cf35bb56f6ee0"
+  },
+  "refs/tags/v1.3.1": {
+    "evidence": "point-release script, release commit and VERSION, subsequent git-describe VERSION at 148c15071f76a8de6d7b8eb496202345e41ac9bf",
+    "oid": "35e60b11842b491b815e3e98c835e7b23596609a"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "refs/heads/develop": {
+    "oid": "6a1c42a2adb5cb6991cf51c848b58793e404ab29",
+    "evidence": "logs/refs/heads/develop final entry"
+  },
+  "refs/heads/feature/cache-warmup": {
+    "oid": "fc1b7e8984ec70b6ee8ab78deceda6116e970f43",
+    "evidence": "logs/refs/heads/feature/cache-warmup final entry"
+  },
+  "refs/heads/feature/retry-policy": {
+    "oid": "d13c784d66243541536833780676efba0d86042a",
+    "evidence": "refs/remotes/mirror/feature/retry-policy and its update-by-push reflog"
+  },
+  "refs/heads/hotfix/1.2.1": {
+    "oid": "69305d3a6d68e96388e91dcdde3447ea7042944f",
+    "evidence": "logs/refs/heads/hotfix/1.2.1 final entry"
+  },
+  "refs/tags/v1.2.0": {
+    "oid": "45628f3693a2a93bbe3570e21b871bf91d0b6acf",
+    "evidence": "surviving annotated tag object, including original tag name and target"
+  },
+  "refs/tags/v1.2.1": {
+    "oid": "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67",
+    "evidence": "point-release commit, VERSION and CHANGELOG, release.sh lightweight-tag option, later git-describe VERSION output, and complete original object inventory with no annotated tag for this release"
+  },
+  "refs/tags/v1.3.0": {
+    "oid": "493c34b0aa4c65d0a21d81db383cf35bb56f6ee0",
+    "evidence": "surviving annotated tag object, including original tag name and target"
+  },
+  "refs/tags/v1.3.1": {
+    "oid": "35e60b11842b491b815e3e98c835e7b23596609a",
+    "evidence": "point-release commit, VERSION and CHANGELOG, release.sh lightweight-tag option, later git-describe VERSION output, and complete original object inventory with no annotated tag for this release"
+  }
+}

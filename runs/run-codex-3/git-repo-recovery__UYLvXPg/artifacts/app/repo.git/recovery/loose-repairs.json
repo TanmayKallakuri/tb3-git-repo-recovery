@@ -1,0 +1,38 @@
+[
+  {
+    "oid": "1581703b7fa63a8c459216ddfdbf7d553642e813",
+    "byte_offset": 165,
+    "before": 171,
+    "after": 241
+  },
+  {
+    "oid": "249050286553f369868a4dcc1ea152086c8d9ddb",
+    "byte_offset": 18,
+    "before": 142,
+    "after": 212
+  },
+  {
+    "oid": "288a9e8fa5c067c97f629f34fdab02d2951480f4",
+    "byte_offset": 247,
+    "before": 155,
+    "after": 193
+  },
+  {
+    "oid": "6a291a82188b43228b75bb71b25399592fec2010",
+    "byte_offset": 88,
+    "before": 204,
+    "after": 150
+  },
+  {
+    "oid": "aef3e022037917637248671a8d936d6710f61da6",
+    "byte_offset": 90,
+    "before": 83,
+    "after": 9
+  },
+  {
+    "oid": "b10242c6f02a2ad627f772aa0a930370863f5bf8",
+    "byte_offset": 250,
+    "before": 3,
+    "after": 89
+  }
+]

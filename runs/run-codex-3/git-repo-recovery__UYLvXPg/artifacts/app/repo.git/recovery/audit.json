@@ -1,0 +1,40 @@
+{
+  "repository": "/app/repo.git",
+  "fsck_command": "git fsck --full --strict",
+  "fsck_exit_status": 0,
+  "fsck_output_bytes": 0,
+  "original_object_ids": 579,
+  "verified_object_ids": 579,
+  "reachable_object_ids": 579,
+  "object_types": {
+    "tree": 263,
+    "commit": 150,
+    "blob": 162,
+    "tag": 4
+  },
+  "branches": 5,
+  "tags": 7,
+  "remote_tracking_refs": 3,
+  "restored_refs": 8,
+  "original_metadata_files_preserved": [
+    "packed-refs",
+    "config",
+    "refs/heads/main",
+    "refs/remotes/mirror/main",
+    "refs/remotes/mirror/feature/retry-policy",
+    "refs/remotes/mirror/develop",
+    "info/exclude",
+    "logs/refs/heads/hotfix/1.2.1",
+    "logs/refs/heads/main",
+    "logs/refs/heads/feature/cache-warmup",
+    "logs/refs/heads/develop",
+    "logs/refs/remotes/mirror/main",
+    "logs/refs/remotes/mirror/feature/retry-policy",
+    "logs/refs/remotes/mirror/develop",
+    "logs/HEAD",
+    "description",
+    "HEAD"
+  ],
+  "historical_dist_versions_reproduced": 3,
+  "original_archive_sha256": "316c7b03a74f41b4d72dd22691e2796b44d69c57ae1991a37a454a0c49d81c59"
+}

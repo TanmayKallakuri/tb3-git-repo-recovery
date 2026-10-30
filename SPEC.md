@@ -107,7 +107,7 @@ Sizing: about 650 objects in the original; about 45 damaged or lost
 objects and 8 lost refs. An expert who knows git's object model, pack
 format and plumbing needs about six hours.
 
-## 4. Instruction (draft; Tanmay rewrites in his voice before push)
+## 4. Instruction
 
 Paragraph 1: `/app/repo.git` is the bare repository of orbit, the team's
 job scheduler, recovered from a failing disk. `git fsck` reports missing

@@ -1,0 +1,2 @@
+fatal: Cannot open existing pack file 'recovery/older-pack.idx'
+recovery/older-pack.pack: bad

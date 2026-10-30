@@ -1,0 +1,31 @@
+---
+ tests/test_retry.py | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 tests/test_retry.py
+
+diff --git a/tests/test_retry.py b/tests/test_retry.py
+new file mode 100644
+index 0000000..9ee0482
+--- /dev/null
++++ b/tests/test_retry.py
+@@ -0,0 +1,17 @@
++from orbit.clock import FakeClock
++from orbit.job import Job
++from orbit.retry import RetryPolicy
++from orbit.runner import Runner
++
++
++def test_delays_double():
++    policy = RetryPolicy(attempts=3, base_delay=10)
++    assert [policy.delay(n) for n in (1, 2, 3, 4)] == [10, 20, 40, None]
++
++
++def test_runner_retries_until_out_of_attempts():
++    clock = FakeClock(0)
++    runner = Runner(policy=RetryPolicy(attempts=2, base_delay=5), clock=clock)
++    result = runner.run(Job("bad", "* * * * *", ["false"]))
++    assert not result.ok
++    assert clock.current == 15
+-- 
+2.39.5
+

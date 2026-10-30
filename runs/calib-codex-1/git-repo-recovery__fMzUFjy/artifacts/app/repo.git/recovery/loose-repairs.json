@@ -1,0 +1,38 @@
+[
+  {
+    "oid": "aef3e022037917637248671a8d936d6710f61da6",
+    "offset": 90,
+    "old_byte": 83,
+    "new_byte": 9
+  },
+  {
+    "oid": "b10242c6f02a2ad627f772aa0a930370863f5bf8",
+    "offset": 250,
+    "old_byte": 3,
+    "new_byte": 89
+  },
+  {
+    "oid": "288a9e8fa5c067c97f629f34fdab02d2951480f4",
+    "offset": 247,
+    "old_byte": 155,
+    "new_byte": 193
+  },
+  {
+    "oid": "6a291a82188b43228b75bb71b25399592fec2010",
+    "offset": 88,
+    "old_byte": 204,
+    "new_byte": 150
+  },
+  {
+    "oid": "249050286553f369868a4dcc1ea152086c8d9ddb",
+    "offset": 18,
+    "old_byte": 142,
+    "new_byte": 212
+  },
+  {
+    "oid": "1581703b7fa63a8c459216ddfdbf7d553642e813",
+    "offset": 165,
+    "old_byte": 171,
+    "new_byte": 241
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "oid": "1581703b7fa63a8c459216ddfdbf7d553642e813",
+    "compressed_byte": 165,
+    "original_value": 171,
+    "corrected_value": 241
+  },
+  {
+    "oid": "249050286553f369868a4dcc1ea152086c8d9ddb",
+    "compressed_byte": 18,
+    "original_value": 142,
+    "corrected_value": 212
+  },
+  {
+    "oid": "288a9e8fa5c067c97f629f34fdab02d2951480f4",
+    "compressed_byte": 247,
+    "original_value": 155,
+    "corrected_value": 193
+  },
+  {
+    "oid": "6a291a82188b43228b75bb71b25399592fec2010",
+    "compressed_byte": 88,
+    "original_value": 204,
+    "corrected_value": 150
+  },
+  {
+    "oid": "aef3e022037917637248671a8d936d6710f61da6",
+    "compressed_byte": 90,
+    "original_value": 83,
+    "corrected_value": 9
+  },
+  {
+    "oid": "b10242c6f02a2ad627f772aa0a930370863f5bf8",
+    "compressed_byte": 250,
+    "original_value": 3,
+    "corrected_value": 89
+  }
+]

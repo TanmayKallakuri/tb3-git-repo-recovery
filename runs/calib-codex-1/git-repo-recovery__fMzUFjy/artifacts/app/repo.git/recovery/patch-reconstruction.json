@@ -1,0 +1,20 @@
+[
+  {
+    "oid": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+    "tree": "26b365efd3049431a7bf5033d91c680cf177d604",
+    "parent": "881cb3036f76b7bf5055b2fe511ee9bc515252f8",
+    "patch": "0001-Add-a-retry-policy-with-exponential-backoff.patch"
+  },
+  {
+    "oid": "11546642caef9b8f524df49a139bb6862b747dc8",
+    "tree": "89727e43a784441b1ef8f792c2a7377a9435163f",
+    "parent": "cac0888c02248f2457ccc0f47aad766d41e8a37c",
+    "patch": "0002-Use-the-retry-policy-from-the-runner.patch"
+  },
+  {
+    "oid": "c30cfac86f61d9e3f5782f272924333776ecd662",
+    "tree": "8943aea7d10b0ad320dd488c1b01786ca8c031b5",
+    "parent": "11546642caef9b8f524df49a139bb6862b747dc8",
+    "patch": "0003-Add-tests-for-the-retry-policy.patch"
+  }
+]
