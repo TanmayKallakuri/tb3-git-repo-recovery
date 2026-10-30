@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Lena Fischer <lena@orbit.example>
+Date: Thu, 10 Sep 2026 20:13:51 +0100
+Subject: [PATCH 1/2] Warm the cache in a background thread
+
+---
+ orbit/cache.py | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/orbit/cache.py b/orbit/cache.py
+index 1bb88f9..a262592 100644
+--- a/orbit/cache.py
++++ b/orbit/cache.py
+@@ -1,6 +1,7 @@
+ """Resolve job commands once at start instead of on every run."""
+ 
+ import shutil
++import threading
+ 
+ 
+ class WarmupCache:
+@@ -15,5 +16,11 @@ class WarmupCache:
+             self.paths[job.command[0]] = shutil.which(job.command[0])
+         return self.paths
+ 
++    def warm_async(self, jobs):
++        """Resolve in a daemon thread; the result lands in `paths`."""
++        thread = threading.Thread(target=self.warm, args=(jobs,), daemon=True)
++        thread.start()
++        return thread
++
+     def resolved(self, job):
+         return self.paths.get(job.command[0])

@@ -1,0 +1,80 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-10-30T20:19:37.803938+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 3,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1793391576589,
+            "stop": 1793391577799
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_artifact_staged",
+                "status": "passed",
+                "duration": 1156,
+                "start": 1793391576612,
+                "stop": 1793391577768,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_fsck_clean",
+                "status": "passed",
+                "duration": 1,
+                "start": 1793391577768,
+                "stop": 1793391577769,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_refs_restored",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 19,
+                "start": 1793391577770,
+                "stop": 1793391577789,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 93, 'dirs': 79, 'bytes': 212548, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}\n\n    def test_refs_restored(graded):\n        \"\"\"Every branch and tag exists again with its original id and peeled id, and HEAD is what it was.\"\"\"\n        refs = graded[\"refs\"] or {}\n        print(f\"refs: expected {refs.get('expected_count')}, found {refs.get('actual_count')}, HEAD {refs.get('head')!r}\")\n>       _assert_check(graded, \"test_refs_restored\")\n\ntest_outputs.py:174: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ngraded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 93, 'dirs': 79, 'bytes': 212548, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}\nname = 'test_refs_restored'\n\n    def _assert_check(graded: dict, name: str) -> None:\n        result = graded[\"checks\"][name]\n>       assert result[\"ok\"], result[\"message\"]\nE       AssertionError: expected refs absent or pointing elsewhere:\nE         1282507db11c676ede8b3873227070b19cd7c7ef commit refs/heads/feature/cache-warmup\nE         24fda256be3109a82ee0d188786d72528b7630fe tag refs/tags/v1.4.0 cba733c406273a7abe5131c1259a52beba999df5\nE         35e60b11842b491b815e3e98c835e7b23596609a commit refs/tags/v1.3.1\nE         bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 commit refs/tags/v1.2.1\nE         d13c784d66243541536833780676efba0d86042a commit refs/heads/feature/retry-policy\nE       assert False\n\ntest_outputs.py:150: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_history_intact",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 8,
+                "start": 1793391577789,
+                "stop": 1793391577797,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 93, 'dirs': 79, 'bytes': 212548, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}\n\n    def test_history_intact(graded):\n        \"\"\"Every object reachable from an expected ref is readable and the reachable set equals the original's.\"\"\"\n        objects = graded[\"objects\"] or {}\n        print(f\"objects: reachable {objects.get('artifact_reachable')}, original {objects.get('original_reachable')}\")\n>       _assert_check(graded, \"test_history_intact\")\n\ntest_outputs.py:181: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ngraded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 93, 'dirs': 79, 'bytes': 212548, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}\nname = 'test_history_intact'\n\n    def _assert_check(graded: dict, name: str) -> None:\n        result = graded[\"checks\"][name]\n>       assert result[\"ok\"], result[\"message\"]\nE       AssertionError: rev-list --objects 1282507db11c676ede8b3873227070b19cd7c7ef (refs/heads/feature/cache-warmup): rev-list-refs/heads/feature/cache-warmup exited 128; stderr tail: 'fatal: bad object 1282507db11c676ede8b3873227070b19cd7c7ef\\n'\nE         rev-list --objects 24fda256be3109a82ee0d188786d72528b7630fe (refs/tags/v1.4.0): rev-list-refs/tags/v1.4.0 exited 128; stderr tail: 'fatal: bad object 24fda256be3109a82ee0d188786d72528b7630fe\\n'\nE         9 of the original's 613 reachable objects are not reachable here:\nE         1282507db11c676ede8b3873227070b19cd7c7ef\nE         24fda256be3109a82ee0d188786d72528b7630fe\nE         4196d82ff060719a27d6cff6d8da2e4b5353aa54\nE         4a5aaf2c1dc2ed67d06d247069858b3707605a77\nE         59a5cdd0ef82f967f617a3324c53381af0955a99\nE         7031106ac59759d0f8ba3e7c6bd06f254878df30\nE         a2625926593d41892484de4aabb6c59ff3da744a\nE         e682c62e2ff91fde19f17b7e335b7a80e2d465b4\nE         f79ba1a21873605e9793d4dfa962f191321c90ea\nE       assert False\n\ntest_outputs.py:150: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_no_history_rewrite",
+                "status": "passed",
+                "duration": 1,
+                "start": 1793391577797,
+                "stop": 1793391577798,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

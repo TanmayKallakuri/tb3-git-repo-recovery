@@ -1,0 +1,12 @@
+Skipping image OS validation for hb__1e42e818a093fde372c6f42a2fe095e9: docker inspect returned 1
+Running command: set -euo pipefail; if command -v apk &> /dev/null; then  npm install -g @anthropic-ai/claude-code; else  curl -fsSL https://downloads.claude.ai/claude-code-releases/bootstrap.sh | bash -s --; fi && echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && export PATH="$HOME/.local/bin:$PATH" && claude --version
+Command outputs captured
+Running command: mkdir -p $CLAUDE_CONFIG_DIR/debug $CLAUDE_CONFIG_DIR/projects/-app $CLAUDE_CONFIG_DIR/shell-snapshots $CLAUDE_CONFIG_DIR/statsig $CLAUDE_CONFIG_DIR/todos $CLAUDE_CONFIG_DIR/skills && if [ -d ~/.claude/skills ]; then cp -r ~/.claude/skills/. $CLAUDE_CONFIG_DIR/skills/ 2>/dev/null || true; fi
+Command outputs captured
+Running command: export PATH="$HOME/.local/bin:$PATH"; harbor_claude_code_instruction_7ac82cd0ec384f04833d469050c4a3eb="$HARBOR_CLAUDE_CODE_INSTRUCTION_7AC82CD0EC384F04833D469050C4A3EB"; unset HARBOR_CLAUDE_CODE_INSTRUCTION_7AC82CD0EC384F04833D469050C4A3EB; printf "%s" "$harbor_claude_code_instruction_7ac82cd0ec384f04833d469050c4a3eb" | claude --verbose --output-format=stream-json --permission-mode=bypassPermissions --print 2>&1 | tee /logs/agent/claude-code.txt
+Command outputs captured
+Wrote Claude Code trajectory to jobs\rubric-review-121\rubric-review__qFHFKeJ\agent\trajectory.json
+Collecting main service artifacts
+compose cp failed; retrying download with engine cp: Docker compose command failed for environment rubric-review. Command: docker compose --project-name rubric-review__qfhfkej__env --project-directory <home>\Downloads\tb3-git-repo-recovery\tmp\rubric-review\environment -f <temp>\tmphu9flotb\rubric-review__qFHFKeJ__env-docker-compose-resources.json -f <harbor-install>\Lib\site-packages\harbor\environments\docker\docker-compose-build.yaml -f <temp>\tmp2ac9ezng\docker-compose-environment.json -f <temp>\tmpwsz6yq8g\docker-compose-mounts.json cp main:/app/verdicts.json jobs\rubric-review-121\rubric-review__qFHFKeJ\artifacts\app\verdicts.json. Return code: 1. Stdout:  rubric-review__qfhfkej__env-main-1 Copying rubric-review__qfhfkej__env-main-1:/app/verdicts.json to jobs\rubric-review-121\rubric-review__qFHFKeJ\artifacts\app\verdicts.json
+invalid output path: directory "<home>\\Downloads\\tb3-git-repo-recovery\\tmp\\rubric-review\\environment\\jobs\\rubric-review-121\\rubric-review__qFHFKeJ\\artifacts\\app" does not exist
+. Stderr: None. 

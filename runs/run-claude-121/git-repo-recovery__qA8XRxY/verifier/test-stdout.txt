@@ -1,0 +1,93 @@
+preflight: ok, git version 2.39.5, original passes fsck as checker, 13 expected refs, damage manifest consistent: 85 object ids present in the original, 9 lost refs in the expected refs
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /tests
+configfile: pyproject.toml
+plugins: json-ctrf-0.5.2
+collected 5 items
+
+test_outputs.py ..FF.                                                    [100%]
+
+=================================== FAILURES ===================================
+______________________________ test_refs_restored ______________________________
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 93, 'dirs': 79, 'bytes': 212548, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+
+    def test_refs_restored(graded):
+        """Every branch and tag exists again with its original id and peeled id, and HEAD is what it was."""
+        refs = graded["refs"] or {}
+        print(f"refs: expected {refs.get('expected_count')}, found {refs.get('actual_count')}, HEAD {refs.get('head')!r}")
+>       _assert_check(graded, "test_refs_restored")
+
+test_outputs.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 93, 'dirs': 79, 'bytes': 212548, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+name = 'test_refs_restored'
+
+    def _assert_check(graded: dict, name: str) -> None:
+        result = graded["checks"][name]
+>       assert result["ok"], result["message"]
+E       AssertionError: expected refs absent or pointing elsewhere:
+E         1282507db11c676ede8b3873227070b19cd7c7ef commit refs/heads/feature/cache-warmup
+E         24fda256be3109a82ee0d188786d72528b7630fe tag refs/tags/v1.4.0 cba733c406273a7abe5131c1259a52beba999df5
+E         35e60b11842b491b815e3e98c835e7b23596609a commit refs/tags/v1.3.1
+E         bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 commit refs/tags/v1.2.1
+E         d13c784d66243541536833780676efba0d86042a commit refs/heads/feature/retry-policy
+E       assert False
+
+test_outputs.py:150: AssertionError
+----------------------------- Captured stdout call -----------------------------
+refs: expected 13, found 8, HEAD 'ref: refs/heads/main'
+_____________________________ test_history_intact ______________________________
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 93, 'dirs': 79, 'bytes': 212548, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+
+    def test_history_intact(graded):
+        """Every object reachable from an expected ref is readable and the reachable set equals the original's."""
+        objects = graded["objects"] or {}
+        print(f"objects: reachable {objects.get('artifact_reachable')}, original {objects.get('original_reachable')}")
+>       _assert_check(graded, "test_history_intact")
+
+test_outputs.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 93, 'dirs': 79, 'bytes': 212548, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+name = 'test_history_intact'
+
+    def _assert_check(graded: dict, name: str) -> None:
+        result = graded["checks"][name]
+>       assert result["ok"], result["message"]
+E       AssertionError: rev-list --objects 1282507db11c676ede8b3873227070b19cd7c7ef (refs/heads/feature/cache-warmup): rev-list-refs/heads/feature/cache-warmup exited 128; stderr tail: 'fatal: bad object 1282507db11c676ede8b3873227070b19cd7c7ef\n'
+E         rev-list --objects 24fda256be3109a82ee0d188786d72528b7630fe (refs/tags/v1.4.0): rev-list-refs/tags/v1.4.0 exited 128; stderr tail: 'fatal: bad object 24fda256be3109a82ee0d188786d72528b7630fe\n'
+E         9 of the original's 613 reachable objects are not reachable here:
+E         1282507db11c676ede8b3873227070b19cd7c7ef
+E         24fda256be3109a82ee0d188786d72528b7630fe
+E         4196d82ff060719a27d6cff6d8da2e4b5353aa54
+E         4a5aaf2c1dc2ed67d06d247069858b3707605a77
+E         59a5cdd0ef82f967f617a3324c53381af0955a99
+E         7031106ac59759d0f8ba3e7c6bd06f254878df30
+E         a2625926593d41892484de4aabb6c59ff3da744a
+E         e682c62e2ff91fde19f17b7e335b7a80e2d465b4
+E         f79ba1a21873605e9793d4dfa962f191321c90ea
+E       assert False
+
+test_outputs.py:150: AssertionError
+----------------------------- Captured stdout call -----------------------------
+objects: reachable 604, original 613
+==================================== PASSES ====================================
+_____________________________ test_artifact_staged _____________________________
+----------------------------- Captured stdout call -----------------------------
+staged: {'files': 93, 'dirs': 79, 'bytes': 212548, 'skipped': [], 'skipped_count': 0, 'refs_on_disk': {'loose_count': 10, 'packed_count': 3, 'packed_truncated': False, 'malformed_packed': [], 'malformed_count': 0, 'names': ['refs/heads/develop', 'refs/heads/hotfix/1.2.1', 'refs/heads/main', 'refs/remotes/mirror/develop', 'refs/remotes/mirror/feature/cache-warmup', 'refs/remotes/mirror/feature/retry-policy', 'refs/remotes/mirror/hotfix/1.2.1', 'refs/remotes/mirror/main', 'refs/tags/v0.9.0-rc1', 'refs/tags/v1.0.0', 'refs/tags/v1.1.0', 'refs/tags/v1.2.0', 'refs/tags/v1.3.0'], 'count': 13, 'unexpected': [], 'unexpected_count': 0, 'replace': [], 'replace_count': 0}, 'config': {'bytes': 196, 'run': {'label': 'config-list', 'argv': ['git', 'config', '--file', '/run/verifier/config-check/config', '--no-includes', '--list', '-z'], 'returncode': 0, 'timed_out': False, 'truncated': False, 'seconds': 0.03, 'stdout_tail': 'core.repositoryformatversion\n0\x00core.filemode\ntrue\x00core.bare\ntrue\x00core.logallrefupdates\ntrue\x00remote.mirror.url\ngit@mirror.example:orbit/orbit.git\x00remote.mirror.fetch\n+refs/heads/*:refs/remotes/mirror/*\x00', 'stderr_tail': ''}, 'keys': ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch'], 'key_count': 6, 'problems': [], 'error': None}, 'cleaned': {'removed': ['hooks'], 'forbidden': [], 'config_before': '[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = true\n\tlogAllRefUpdates = true\n[remote "mirror"]\n\turl = git@mirror.example:orbit/orbit.git\n\tfetch = +refs/heads/*:refs/remotes/mirror/*\n', 'config_replaced': True}, 'present': {'HEAD': True, 'objects': True, 'refs': True}}
+config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+neutralised before grading: ['hooks']
+_______________________________ test_fsck_clean ________________________________
+----------------------------- Captured stdout call -----------------------------
+fsck: {'label': 'fsck', 'argv': ['git', '--git-dir=/run/verifier/repo', '-c', 'safe.directory=*', 'fsck', '--full', '--strict', '--no-dangling'], 'returncode': 0, 'timed_out': False, 'truncated': False, 'seconds': 0.05, 'stdout_tail': '', 'stderr_tail': ''}
+=========================== short test summary info ============================
+PASSED test_outputs.py::test_artifact_staged
+PASSED test_outputs.py::test_fsck_clean
+PASSED test_outputs.py::test_no_history_rewrite
+FAILED test_outputs.py::test_refs_restored - AssertionError: expected refs ab...
+FAILED test_outputs.py::test_history_intact - AssertionError: rev-list --obje...
+========================= 2 failed, 3 passed in 1.21s ==========================

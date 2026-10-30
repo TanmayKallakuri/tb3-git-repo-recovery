@@ -1,0 +1,77 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-10-30T18:43:10.889231+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 4,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1793385789552,
+            "stop": 1793385790885
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_artifact_staged",
+                "status": "passed",
+                "duration": 1274,
+                "start": 1793385789574,
+                "stop": 1793385790848,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_fsck_clean",
+                "status": "passed",
+                "duration": 1,
+                "start": 1793385790849,
+                "stop": 1793385790850,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_refs_restored",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 19,
+                "start": 1793385790850,
+                "stop": 1793385790869,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 641, 'dirs': 250, 'bytes': 301867, 'skipped': []...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}\n\n    def test_refs_restored(graded):\n        \"\"\"Every branch and tag exists again with its original id and peeled id, and HEAD is what it was.\"\"\"\n        refs = graded[\"refs\"] or {}\n        print(f\"refs: expected {refs.get('expected_count')}, found {refs.get('actual_count')}, HEAD {refs.get('head')!r}\")\n>       _assert_check(graded, \"test_refs_restored\")\n\ntest_outputs.py:174: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ngraded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 641, 'dirs': 250, 'bytes': 301867, 'skipped': []...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}\nname = 'test_refs_restored'\n\n    def _assert_check(graded: dict, name: str) -> None:\n        result = graded[\"checks\"][name]\n>       assert result[\"ok\"], result[\"message\"]\nE       AssertionError: expected refs absent or pointing elsewhere:\nE         1282507db11c676ede8b3873227070b19cd7c7ef commit refs/heads/feature/cache-warmup\nE         24fda256be3109a82ee0d188786d72528b7630fe tag refs/tags/v1.4.0 cba733c406273a7abe5131c1259a52beba999df5\nE         35e60b11842b491b815e3e98c835e7b23596609a commit refs/tags/v1.3.1\nE         45628f3693a2a93bbe3570e21b871bf91d0b6acf tag refs/tags/v1.2.0 c256b5c79663b545147eb748961436ae09201284\nE         493c34b0aa4c65d0a21d81db383cf35bb56f6ee0 tag refs/tags/v1.3.0 ebcc265012e322e29e4bb97e4afdae1ba2c87492\nE         69305d3a6d68e96388e91dcdde3447ea7042944f commit refs/heads/hotfix/1.2.1\nE         bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 commit refs/tags/v1.2.1\nE         d13c784d66243541536833780676efba0d86042a commit refs/heads/feature/retry-policy\nE         fe3c1bd736a49008c896bfe91cd633a1922003ef commit refs/heads/develop\nE       assert False\n\ntest_outputs.py:150: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_history_intact",
+                "status": "passed",
+                "duration": 1,
+                "start": 1793385790869,
+                "stop": 1793385790870,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_no_history_rewrite",
+                "status": "passed",
+                "duration": 1,
+                "start": 1793385790870,
+                "stop": 1793385790871,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

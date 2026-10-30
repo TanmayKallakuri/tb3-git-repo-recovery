@@ -1,0 +1,148 @@
+preflight: ok, git version 2.39.5, original passes fsck as checker, 13 expected refs, damage manifest consistent: 85 object ids present in the original, 9 lost refs in the expected refs
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /tests
+configfile: pyproject.toml
+plugins: json-ctrf-0.5.2
+collected 5 items
+
+test_outputs.py .FFF.                                                    [100%]
+
+=================================== FAILURES ===================================
+_______________________________ test_fsck_clean ________________________________
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 88, 'dirs': 78, 'bytes': 175325, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+
+    def test_fsck_clean(graded):
+        """git fsck --full --strict --no-dangling exits 0 and reports nothing missing, corrupt, broken or in error."""
+        fsck = graded["fsck"] or {}
+        print(f"fsck: {fsck.get('run')}")
+>       _assert_check(graded, "test_fsck_clean")
+
+test_outputs.py:167: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 88, 'dirs': 78, 'bytes': 175325, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+name = 'test_fsck_clean'
+
+    def _assert_check(graded: dict, name: str) -> None:
+        result = graded["checks"][name]
+>       assert result["ok"], result["message"]
+E       AssertionError: fsck exited 7; stderr tail: 'ba10bc75\nerror: refs/remotes/mirror/main: invalid reflog entry e2e5e720516f652120ddc8dce745438eba10bc75\nerror: refs/remotes/mirror/develop: invalid reflog entry 6e51414cbc4506538265c702c40710e33e16a695\nerror: refs/remotes/mirror/develop: invalid reflog entry 6e51414cbc4506538265c702c40710e33e16a695\nerror: HEAD: invalid reflog entry 5c32ac075f74e19b9b84fc7bdeb71710ef93412a\nerror: HEAD: invalid reflog entry 5c32ac075f74e19b9b84fc7bdeb71710ef93412a\nerror: HEAD: invalid reflog entry e2e5e720516f652120ddc8dce745438eba10bc75\nerror: HEAD: invalid reflog entry e2e5e720516f652120ddc8dce745438eba10bc75\n'
+E         fsck reports missing, corrupt, error or broken:
+E         broken link from    tree 4aeea63466458c30c14b74721ef4687e5f0a0990
+E         broken link from    tree d87b585a77e5b37ec250815c6cff3b26bf366328
+E         broken link from    tree 8f440f32902d13a3e266c0e51786879263b776b5
+E         broken link from    tree 8f440f32902d13a3e266c0e51786879263b776b5
+E         broken link from    tree 8f440f32902d13a3e266c0e51786879263b776b5
+E         broken link from    tree 844d5fe8de3417e4f00fd2501f27892edde60630
+E         broken link from    tree 2a896a6a517d6f433e5ff9af6ab1d97c9940e78a
+E         broken link from    tree 0961668b91a3a570f5a49dff6044db0dd9505c1f
+E         broken link from    tree a386ea68d4b5d0a911aef96699f4664d584c66ff
+E         broken link from  commit 881cb3036f76b7bf5055b2fe511ee9bc515252f8
+E         broken link from  commit 4226740fa90a33eef025e615941111f0c9ad4d17
+E         broken link from  commit 883ac0586a1fccfbf8f8a6afc783246b17ab3b45
+E         ... 919 in total
+E       assert False
+
+test_outputs.py:150: AssertionError
+----------------------------- Captured stdout call -----------------------------
+fsck: {'label': 'fsck', 'argv': ['git', '--git-dir=/run/verifier/repo', '-c', 'safe.directory=*', 'fsck', '--full', '--strict', '--no-dangling'], 'returncode': 7, 'timed_out': False, 'truncated': False, 'seconds': 0.23, 'stdout_tail': 'ssing blob 0c19bc3ab2f662ef920074b49a871ed46c37c04b\nmissing blob 0f21f2abd320bc7a3e95791a7f6b334c59b2557a\nmissing tree 3769ca5591b27999559c7044e7dbf1ec6fde3704\nmissing blob 6ca9a9160812ba0e4f9d9627c464d04660173ba3\nmissing commit 6e51414cbc4506538265c702c40710e33e16a695\nmissing tree af81338c85d0f0b2ae0051bf4c17233b9fd3b872\nmissing blob c70153ef07d5fefec7174cccaffaa48bb872ca8f\nmissing blob e8f1d4475ab54db256d43f0f25775e1b0ee08174\nmissing tree 34122478b3a70aba0dc15d5fe871a09f40234270\nmissing tree 94b26e9700397546e05f4f2bd359f4330824e3d4\nmissing tree b10242c6f02a2ad627f772aa0a930370863f5bf8\nmissing blob bec25078095e3cede8a7ee84c40b7ec6bebe6e1b\nmissing blob 521b638a9cd1a25abd1640dc88f8b11da1a4ceed\nmissing blob 5fab911abddbe711c096bc95e2c4701bb86dc73b\nmissing tree 730bb455d96c9e01855d4ddd83617c7035aeb413\nmissing tree 7d33f4dadc548a87cbe997c130d557800b812772\nmissing tree 8ad3ecb59c4536574e4c64746126f3188815ca92\nmissing blob a71b87eb182a0fcbd8d629f280042c28220d29ce\nmissing blob ba63cdcd9f6998337c9ad80a24a31b765bbac041\nmissing tree bf3bf3bb4e2f18becd97331cc5e7757201cdb0b4\nmissing tree c48b4a6cc052496fc9b456f2a205ada298b577e4\nmissing tree eaebcc4ed4ecf6448c8475220814b889ca3f43ca\nmissing tree 798c54ec337a7aeb9046d856deb9311c34f41354\nmissing tree c4accab097f729b26170cb6b06d28d912a92ea0d\nmissing blob 5445f1777bac51ca511fa9bdaa3ec19c4e34345e\nmissing blob 748dfc1ebc8829c9fcf8e64b3b661f295e6ebe05\nmissing tree 74356d71ae6fa9c25da448dee9c57f040d384e1e\nmissing tree 86bdcf2175a687e4f3ab79108391077878a519c9\nmissing tree 94f5ca52b3056438fd892182711483d477702a6f\nmissing commit e2e5e720516f652120ddc8dce745438eba10bc75\nmissing tree 1bd6c9739816cf51a83b88c717d3372e2544d263\nmissing tree 253e48132370f24f938612e45d938eb65d6b2fbb\nmissing tree c9ced31dc02bfab1f052c50aaee245ff4686dfe2\nmissing tree dbbe65af8d5b2c78315243d4c9890c24cbe1216e\nmissing tree ccd79596b361e48d1ec4d7a286c4a45191ecec92\nmissing blob d04fa6a7aa1154accc9e62291854045ca30ab280\nmissing tree dbb701cf7c84b1404937f29b444130252293544c\n', 'stderr_tail': 'main: invalid reflog entry e2e5e720516f652120ddc8dce745438eba10bc75\nerror: refs/heads/develop: invalid reflog entry f29f93c83945afc9b317b522c5dde8f8352a153f\nerror: refs/heads/develop: invalid reflog entry f29f93c83945afc9b317b522c5dde8f8352a153f\nerror: refs/heads/develop: invalid reflog entry 42a0ce88a3f877fbd4850a231f94e57c8f069370\nerror: refs/heads/develop: invalid reflog entry 42a0ce88a3f877fbd4850a231f94e57c8f069370\nerror: refs/heads/develop: invalid reflog entry db2ce41b1462cfd2f10fbe04994c6334fcbc98b7\nerror: refs/heads/develop: invalid reflog entry db2ce41b1462cfd2f10fbe04994c6334fcbc98b7\nerror: refs/heads/develop: invalid reflog entry 8f7fce3df3a5382c7dbd33f4308f6a5baa26578d\nerror: refs/heads/develop: invalid reflog entry 8f7fce3df3a5382c7dbd33f4308f6a5baa26578d\nerror: refs/heads/develop: invalid reflog entry 6ed47e8c3cfccc7fe7080c6dfaabf7d59e05326f\nerror: refs/heads/develop: invalid reflog entry 6ed47e8c3cfccc7fe7080c6dfaabf7d59e05326f\nerror: refs/heads/develop: invalid reflog entry 84ad79fab280a9927ed7b37fe89368f1a16e94a3\nerror: refs/heads/develop: invalid reflog entry 84ad79fab280a9927ed7b37fe89368f1a16e94a3\nerror: refs/heads/develop: invalid reflog entry 6e51414cbc4506538265c702c40710e33e16a695\nerror: refs/heads/develop: invalid reflog entry 6e51414cbc4506538265c702c40710e33e16a695\nerror: refs/remotes/mirror/main: invalid reflog entry e2e5e720516f652120ddc8dce745438eba10bc75\nerror: refs/remotes/mirror/main: invalid reflog entry e2e5e720516f652120ddc8dce745438eba10bc75\nerror: refs/remotes/mirror/develop: invalid reflog entry 6e51414cbc4506538265c702c40710e33e16a695\nerror: refs/remotes/mirror/develop: invalid reflog entry 6e51414cbc4506538265c702c40710e33e16a695\nerror: HEAD: invalid reflog entry 5c32ac075f74e19b9b84fc7bdeb71710ef93412a\nerror: HEAD: invalid reflog entry 5c32ac075f74e19b9b84fc7bdeb71710ef93412a\nerror: HEAD: invalid reflog entry e2e5e720516f652120ddc8dce745438eba10bc75\nerror: HEAD: invalid reflog entry e2e5e720516f652120ddc8dce745438eba10bc75\n'}
+______________________________ test_refs_restored ______________________________
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 88, 'dirs': 78, 'bytes': 175325, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+
+    def test_refs_restored(graded):
+        """Every branch and tag exists again with its original id and peeled id, and HEAD is what it was."""
+        refs = graded["refs"] or {}
+        print(f"refs: expected {refs.get('expected_count')}, found {refs.get('actual_count')}, HEAD {refs.get('head')!r}")
+>       _assert_check(graded, "test_refs_restored")
+
+test_outputs.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 88, 'dirs': 78, 'bytes': 175325, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+name = 'test_refs_restored'
+
+    def _assert_check(graded: dict, name: str) -> None:
+        result = graded["checks"][name]
+>       assert result["ok"], result["message"]
+E       AssertionError: expected refs absent or pointing elsewhere:
+E         1282507db11c676ede8b3873227070b19cd7c7ef commit refs/heads/feature/cache-warmup
+E         24fda256be3109a82ee0d188786d72528b7630fe tag refs/tags/v1.4.0 cba733c406273a7abe5131c1259a52beba999df5
+E         35e60b11842b491b815e3e98c835e7b23596609a commit refs/tags/v1.3.1
+E         45628f3693a2a93bbe3570e21b871bf91d0b6acf tag refs/tags/v1.2.0 c256b5c79663b545147eb748961436ae09201284
+E         493c34b0aa4c65d0a21d81db383cf35bb56f6ee0 tag refs/tags/v1.3.0 ebcc265012e322e29e4bb97e4afdae1ba2c87492
+E         69305d3a6d68e96388e91dcdde3447ea7042944f commit refs/heads/hotfix/1.2.1
+E         bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 commit refs/tags/v1.2.1
+E         d13c784d66243541536833780676efba0d86042a commit refs/heads/feature/retry-policy
+E         fe3c1bd736a49008c896bfe91cd633a1922003ef commit refs/heads/develop
+E       assert False
+
+test_outputs.py:150: AssertionError
+----------------------------- Captured stdout call -----------------------------
+refs: expected 13, found 4, HEAD 'ref: refs/heads/main'
+_____________________________ test_history_intact ______________________________
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 88, 'dirs': 78, 'bytes': 175325, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+
+    def test_history_intact(graded):
+        """Every object reachable from an expected ref is readable and the reachable set equals the original's."""
+        objects = graded["objects"] or {}
+        print(f"objects: reachable {objects.get('artifact_reachable')}, original {objects.get('original_reachable')}")
+>       _assert_check(graded, "test_history_intact")
+
+test_outputs.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+graded = {'artifact': '/app/repo.git', 'stage_error': None, 'stage': {'files': 88, 'dirs': 78, 'bytes': 175325, 'skipped': [], ...po', '-c', 'safe.directory=*', 'for-each-ref', '--format=%(refname)'], 'returncode': 0, 'timed_out': False, ...}}, ...}
+name = 'test_history_intact'
+
+    def _assert_check(graded: dict, name: str) -> None:
+        result = graded["checks"][name]
+>       assert result["ok"], result["message"]
+E       AssertionError: rev-list --objects 1282507db11c676ede8b3873227070b19cd7c7ef (refs/heads/feature/cache-warmup): rev-list-refs/heads/feature/cache-warmup exited 128; stderr tail: 'fatal: bad object 1282507db11c676ede8b3873227070b19cd7c7ef\n'
+E         rev-list --objects 24fda256be3109a82ee0d188786d72528b7630fe (refs/tags/v1.4.0): rev-list-refs/tags/v1.4.0 exited 128; stderr tail: 'fatal: bad object 24fda256be3109a82ee0d188786d72528b7630fe\n'
+E         rev-list --objects 35e60b11842b491b815e3e98c835e7b23596609a (refs/tags/v1.3.1): rev-list-refs/tags/v1.3.1 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\n'
+E         rev-list --objects 45628f3693a2a93bbe3570e21b871bf91d0b6acf (refs/tags/v1.2.0): rev-list-refs/tags/v1.2.0 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\n'
+E         rev-list --objects 493c34b0aa4c65d0a21d81db383cf35bb56f6ee0 (refs/tags/v1.3.0): rev-list-refs/tags/v1.3.0 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\n'
+E         rev-list --objects 518aac585f9a5f3220b0b504cb5df30edee0e99f (refs/tags/v0.9.0-rc1): rev-list-refs/tags/v0.9.0-rc1 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\nfatal: packed object 5c32ac075f74e19b9b84fc7bdeb71710ef93412a (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\n'
+E         rev-list --objects 69305d3a6d68e96388e91dcdde3447ea7042944f (refs/heads/hotfix/1.2.1): rev-list-refs/heads/hotfix/1.2.1 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\n'
+E         rev-list --objects 769013b9f4a84795d101ca52157a07dbea36ea7b (refs/tags/v1.0.0): rev-list-refs/tags/v1.0.0 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\nfatal: packed object 42a0ce88a3f877fbd4850a231f94e57c8f069370 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\n'
+E         rev-list --objects 808da7c33e7ae9c4a01418296aedbe08c62e274e (refs/tags/v1.1.0): rev-list-refs/tags/v1.1.0 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\nfatal: packed object 6ed47e8c3cfccc7fe7080c6dfaabf7d59e05326f (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\n'
+E         rev-list --objects 96c39b55657285256dc37c2f43385dc564a654f1 (refs/heads/main): rev-list-refs/heads/main exited 128; stderr tail: "error: inflate: data stream error (incorrect data check)\nerror: corrupt loose object '6e51414cbc4506538265c702c40710e33e16a695'\nfatal: loose object 6e51414cbc4506538265c702c40710e33e16a695 (stored in /run/verifier/repo/objects/6e/51414cbc4506538265c702c40710e33e16a695) is corrupt\n"
+E         rev-list --objects bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 (refs/tags/v1.2.1): rev-list-refs/tags/v1.2.1 exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\n'
+E         rev-list --objects d13c784d66243541536833780676efba0d86042a (refs/heads/feature/retry-policy): rev-list-refs/heads/feature/retry-policy exited 128; stderr tail: 'error: inflate: data stream error (unknown compression method)\nfatal: packed object c30cfac86f61d9e3f5782f272924333776ecd662 (stored in /run/verifier/repo/objects/pack/pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack) is corrupt\n'
+E         rev-list --objects fe3c1bd736a49008c896bfe91cd633a1922003ef (refs/heads/develop): rev-list-refs/heads/develop exited 128; stderr tail: "error: inflate: data stream error (incorrect data check)\nerror: corrupt loose object '6e51414cbc4506538265c702c40710e33e16a695'\nfatal: loose object 6e51414cbc4506538265c702c40710e33e16a695 (stored in /run/verifier/repo/objects/6e/51414cbc4506538265c702c40710e33e16a695) is corrupt\n"
+E         613 of the original's 613 reachable objects are not reachable here:
+E         00b8e676fd7460059ef92d91449e0f3a9179db31
+E         01804338bd5b6c900c063f26d6cf1d5bda9d8708
+E         01cb7b94c18f9a6ef606bf97073112f286138176
+E         026d7a5817041ef0fd77b27b82180eae6aa47033
+E         047f2ef66ed787728853036a173568c3b70425ac
+E         0488ed08463e0686ab10a7f2a69847c734e8c35e
+E         04b49e0135d8db6bec8b0b44824516b5352df6d9
+E         04cf09615e02cf05de39ce04475da39bfc2df18e
+E         04fdf5317278eeea6ff23e3c31f7fc03d56113a3
+E         0501cc394c78e39d3afc1f9b6295c597e8c2d56d
+E         05ed4efcbeb959106cd1136406c5c32acbfea6b4
+E         06104fefede207152b78cdd7ce5f33996f72795d
+E         ... 613 in total
+E       assert False
+
+test_outputs.py:150: AssertionError
+----------------------------- Captured stdout call -----------------------------
+objects: reachable 0, original 613
+==================================== PASSES ====================================
+_____________________________ test_artifact_staged _____________________________
+----------------------------- Captured stdout call -----------------------------
+staged: {'files': 88, 'dirs': 78, 'bytes': 175325, 'skipped': [], 'skipped_count': 0, 'refs_on_disk': {'loose_count': 6, 'packed_count': 3, 'packed_truncated': False, 'malformed_packed': [], 'malformed_count': 0, 'names': ['refs/heads/main', 'refs/remotes/mirror/develop', 'refs/remotes/mirror/feature/cache-warmup', 'refs/remotes/mirror/feature/retry-policy', 'refs/remotes/mirror/hotfix/1.2.1', 'refs/remotes/mirror/main', 'refs/tags/v0.9.0-rc1', 'refs/tags/v1.0.0', 'refs/tags/v1.1.0'], 'count': 9, 'unexpected': [], 'unexpected_count': 0, 'replace': [], 'replace_count': 0}, 'config': {'bytes': 196, 'run': {'label': 'config-list', 'argv': ['git', 'config', '--file', '/run/verifier/config-check/config', '--no-includes', '--list', '-z'], 'returncode': 0, 'timed_out': False, 'truncated': False, 'seconds': 0.04, 'stdout_tail': 'core.repositoryformatversion\n0\x00core.filemode\ntrue\x00core.bare\ntrue\x00core.logallrefupdates\ntrue\x00remote.mirror.url\ngit@mirror.example:orbit/orbit.git\x00remote.mirror.fetch\n+refs/heads/*:refs/remotes/mirror/*\x00', 'stderr_tail': ''}, 'keys': ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch'], 'key_count': 6, 'problems': [], 'error': None}, 'cleaned': {'removed': ['hooks'], 'forbidden': [], 'config_before': '[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = true\n\tlogAllRefUpdates = true\n[remote "mirror"]\n\turl = git@mirror.example:orbit/orbit.git\n\tfetch = +refs/heads/*:refs/remotes/mirror/*\n', 'config_replaced': True}, 'present': {'HEAD': True, 'objects': True, 'refs': True}}
+config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+neutralised before grading: ['hooks']
+=========================== short test summary info ============================
+PASSED test_outputs.py::test_artifact_staged
+PASSED test_outputs.py::test_no_history_rewrite
+FAILED test_outputs.py::test_fsck_clean - AssertionError: fsck exited 7; stde...
+FAILED test_outputs.py::test_refs_restored - AssertionError: expected refs ab...
+FAILED test_outputs.py::test_history_intact - AssertionError: rev-list --obje...
+========================= 3 failed, 2 passed in 1.07s ==========================

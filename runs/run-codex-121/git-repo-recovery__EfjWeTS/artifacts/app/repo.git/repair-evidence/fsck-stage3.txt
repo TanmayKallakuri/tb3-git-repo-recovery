@@ -1,0 +1,8 @@
+broken link from    tree 844d5fe8de3417e4f00fd2501f27892edde60630
+              to    blob 5fab911abddbe711c096bc95e2c4701bb86dc73b
+broken link from    tree 0961668b91a3a570f5a49dff6044db0dd9505c1f
+              to    blob 0f21f2abd320bc7a3e95791a7f6b334c59b2557a
+missing blob 0f21f2abd320bc7a3e95791a7f6b334c59b2557a
+dangling tag 45628f3693a2a93bbe3570e21b871bf91d0b6acf
+missing blob 5fab911abddbe711c096bc95e2c4701bb86dc73b
+dangling tag 493c34b0aa4c65d0a21d81db383cf35bb56f6ee0
