@@ -421,7 +421,9 @@ echo "released $ver"
 
 RELEASE_SH_V3 = RELEASE_SH_V2.replace('''# x.y.0 releases get an annotated tag that carries the release notes; point
 # releases get a lightweight tag.''', '''# x.y.0 releases get an annotated tag; point releases get a lightweight
-# tag.''').replace('''        # the notes of this release: the bullet lines of its CHANGELOG section
+# tag.''')
+assert RELEASE_SH_V3 != RELEASE_SH_V2, "the v3 comment substring is absent from RELEASE_SH_V2"
+RELEASE_SH_V3 = RELEASE_SH_V3.replace('''        # the notes of this release: the bullet lines of its CHANGELOG section
         {
             printf 'orbit %s\\n\\n' "$ver"
             sed -n "/^## $ver - /,/^## /{/^- /p;}" CHANGELOG.md

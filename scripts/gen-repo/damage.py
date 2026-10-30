@@ -204,6 +204,13 @@ def hidden_tail(original, loose, refs, names, pack_b):
     root2 = git(original, "rev-parse", cw2 + "^{tree}").strip()
     check(tree2 == root2 and root2 in kept and commit2 == cw2,
           f"patch 2 applied on {cw1[:12]} gives the dangling tree {root2[:12]} and commit-tree reproduces {cw2[:12]}")
+    # the oracle matches a patch to a commit by (author name, email, epoch, subject); commit1/commit2 equal cw1/cw2, so these are the patches' tuples
+    every = git(original, "log", "--all", "--format=%H|%an|%ae|%at|%s").splitlines()
+    ident = lambda oid: git(original, "log", "-1", "--format=%an|%ae|%at|%s", oid).strip()
+    first_hits = [l.split("|", 1)[0] for l in every if l.split("|", 1)[1] == ident(cw1)]
+    second_hits = [l.split("|", 1)[0] for l in every if l.split("|", 1)[1] == ident(cw2)]
+    check(first_hits == [cw1], f"patch 1's (author, email, epoch, subject) matches exactly one commit, {cw1[:12]}: {len(first_hits)} found")
+    check(second_hits == [cw2], f"patch 2's (author, email, epoch, subject) matches no commit other than {cw2[:12]}: {len(second_hits)} found")
     author, committer = git(original, "log", "-1", "--format=%an <%ae> %ad|%cn <%ce> %cd", "--date=raw", cw2).strip().split("|")
     check(author == committer, f"{cw2[:12]} has committer == author, like every commit")
     tail["L1"] = {"ref": branch, "commit": cw2, "parent": cw1, "kept": kept, "root_tree": root2,

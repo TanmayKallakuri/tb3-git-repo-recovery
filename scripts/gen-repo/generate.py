@@ -231,6 +231,7 @@ class Generator:
 
     def step_branch(self, name, start):
         self.git("branch", name, start)
+        self.dirty = True
 
     def step_merge(self, into, frm, author, message):
         self.checkout(into)
