@@ -12,19 +12,27 @@ claude-code agent on the subscription (see RESULTS.md section 4).
     python3 scripts/rubric-review/stage.py tasks/git-repo-recovery tmp/rubric-review
 """
 import argparse
+import os
 import pathlib
 import shutil
+import stat
 
 HERE = pathlib.Path(__file__).resolve()
 REPO = HERE.parents[2]
 TB = REPO.parent / "terminal-bench"
 
 
+def _writable_then_retry(func, path, _exc):
+    """rmtree helper: git object files are read-only, which Windows refuses to delete."""
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
+
+
 def stage(task_dir: pathlib.Path, destination: pathlib.Path) -> None:
     task_dir = task_dir.resolve()
     name = task_dir.name
     if destination.exists():
-        shutil.rmtree(destination)
+        shutil.rmtree(destination, onexc=_writable_then_retry)
     environment = destination / "environment"
     tests = destination / "tests"
     environment.mkdir(parents=True)

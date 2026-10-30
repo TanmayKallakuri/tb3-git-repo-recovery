@@ -49,6 +49,19 @@ case "${1:-}" in
         run cheat-claude-h harbor run -c scripts/cheat-job-claude.json "${claude_args[@]}" --job-name cheat-claude-h
         CODEX_FORCE_AUTH_JSON=1 run cheat-codex-h harbor run -c scripts/cheat-job-codex.json "${codex_args[@]}" --job-name cheat-codex-h
         ;;
+    # The three pieces of "rest" as separate stages, so the codex and the
+    # claude-code attempts can run in two processes at the same time (each
+    # agent's attempts stay sequential: n_concurrent_trials is 1).
+    rest-codex)
+        CODEX_FORCE_AUTH_JSON=1 run run-codex-h harbor run -c scripts/run-job-codex-2.json "${codex_args[@]}" --job-name run-codex-h
+        ;;
+    rest-claude)
+        run run-claude-h harbor run -c scripts/run-job-claude-2.json "${claude_args[@]}" --job-name run-claude-h
+        ;;
+    cheats)
+        run cheat-claude-h harbor run -c scripts/cheat-job-claude.json "${claude_args[@]}" --job-name cheat-claude-h
+        CODEX_FORCE_AUTH_JSON=1 run cheat-codex-h harbor run -c scripts/cheat-job-codex.json "${codex_args[@]}" --job-name cheat-codex-h
+        ;;
     rubric)
         # The hosted /review job: the task staged as upstream's stage_task.py
         # does, reviewed by claude-code with the CI reviewer model. The model
