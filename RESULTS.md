@@ -6,9 +6,34 @@ Harbor `0.23.1.dev202609170426`, dockerfile-pin 1.5.0, upstream
 `check-lockfiles` static check). Commands run from the repository root in
 Git Bash with `PYTHONUTF8=1` exported. Job directories under `jobs/` are
 gitignored; trimmed copies (no `config.json`, no agent session state, home
-paths redacted) live under `runs/`.
+paths redacted, JSON redacted structurally) live under `runs/`, rendered
+byte for byte from the job directories by `scripts/trim-run.py`.
 
-## 1. Static checks (CI: `static-checks.yml`, 29 checks)
+Two versions of the task were measured. Sections 1 to 7 cover the shipped
+version, 1.1.0 (task commit `719f13e`, oracle polish `e8c602c`). Sections 8
+to 12 keep the measurements of version 1.0.0 as they were made; they are
+evidence of the iteration, not of the shipped task.
+
+## What changed since the external review
+
+An external review of version 1.0.0 (2026-10-30) found the points in the
+left column. Each one is mapped to what was done and where a reader can
+check it.
+
+| Finding | Change | Where to verify |
+|---|---|---|
+| The central criterion failed: all six 1.0.0 trials passed | Task version 1.1.0: two losses whose ids are written nowhere in the repository (L1, the last commit of `feature/cache-warmup`; L2, the annotated tag `v1.4.0`), a nightly cron model for the mirror, witnesses removed from the instruction; commits `45ca827`, `719f13e`, `e8c602c` | Section 4 (damage table), section 6 (pilots: codex 1.0, claude-code 0.0), `SPEC.md` section 3, `tasks/git-repo-recovery/README.md` change log |
+| Object ids act as a local oracle | For L1 and L2 no pack index, `packed-refs` line, reflog, patch header or other object holds the id, as a 7-hex prefix or in 20-byte binary form; the generator asserts this no-leak property on every build and builds byte-identically twice | `scripts/gen-repo/damage.py`, `scripts/gen-repo/check_damage.py`; `SPEC.md` section 3; the claude-code pilot in section 6 (its own id census found 608 of 608 ids present and it stopped) |
+| The instruction listed the witnesses | The instruction states the end state only; repacks, reflogs, the mirror, the release script and the archived series are not named | `tasks/git-repo-recovery/instruction.md`, `SPEC.md` section 4 |
+| One published `result.json` was invalid | `scripts/trim-run.py` redacts `.json` files structurally (parse, redact, re-serialise only when something changed), aborts on a file that does not parse, validates every published `.json`, and every run directory was re-rendered from its job so the committed files match the sources byte for byte; commit `4083042` | `scripts/trim-run.py` (module docstring), `runs/` |
+| `scripts/run-trials.sh run-codex` pointed at a missing config | `run-codex` points at `scripts/run-job-codex-2.json`; every mode exits 2 when its config file is absent; commit `4083042` | `scripts/run-trials.sh` lines 20 to 26 |
+| No raw static-check transcript committed | The 1.1.0 transcript is committed; commit `5402624` | `runs/static-checks/check-all-1.1.0.log` (section 1) |
+| Verifier: the submitted `config` was replaced silently | The submitted config is parsed as the unprivileged checker and checked against an explicit allowlist before the pinned grading config replaces it; an unparseable config or a key outside the allowlist fails `test_artifact_staged`; commit `16e1f1c` | `tests/harness.py` (`validate_config`); fixtures `config-invalid`, `config-hookspath`, `config-extensions`, `config-bare-false` in section 3 |
+| Verifier: `refs/replace` was erased before the no-rewrite check | Ref names are inventoried from `refs/` and `packed-refs` before the indirections are removed, so a replace ref fails `test_no_history_rewrite`; commit `16e1f1c` | `tests/harness.py` (`disk_refs`); fixture `replace-ref-added` |
+| Verifier: the `refs/remotes` namespace was exempt from the extra-ref check | Every ref name on the artifact, in any namespace, must exist in the original; commit `16e1f1c`. Also: symlinks and special files anywhere in the artifact, alternates, grafts, shallow and promisor markers fail staging; root-side faults raise an infrastructure error and never a reward, while errors the artifact provokes (over-long names, loops, collisions) grade 0 and never become infrastructure errors; commits `b94763b`, `792672f` | `tests/harness.py` (`compare_refs`, `copy_tree`, `clean_repo`); fixtures `remote-ref-added`, `notes-ref-added`, `symlink`, `alternates`, `grafts`, `shallow`, `promisor`; `analysis/verifier-fixtures.md` |
+| Cheat wording overstated: zero reward presented as robustness | README, RESULTS and `analysis/trajectories.md` describe the cheat trials as the required zero rewards and point to the mutation fixtures for robustness evidence; commit `4083042` | Sections 7 and 12; `analysis/verifier-fixtures.md` |
+
+## 1. Static checks (CI: `static-checks.yml`, 29 checks), version 1.1.0
 
 Command:
 
@@ -16,10 +41,227 @@ Command:
 bash scripts/check-all.sh tasks/git-repo-recovery
 ```
 
-Result (2026-10-29, on the final task directory): **29 passed, 0 warned,
+Result (2026-10-30 09:19 UTC, task commit `719f13e`, upstream `7b1f530`):
+**29 passed, 0 warned, 0 failed of 29.** The raw transcript is
+`runs/static-checks/check-all-1.1.0.log` (home directory redacted, every
+line otherwise as printed, exit 0 recorded on the last line).
+
+## 2. Oracle and nop (CI: the `/validate` job), version 1.1.0
+
+Launched by `scripts/run-hardened.sh gates`, which runs:
+
+```bash
+harbor run -p tasks/git-repo-recovery -a oracle --env docker --yes --job-name gate-oracle-h
+harbor run -p tasks/git-repo-recovery -a nop --env docker --yes --job-name gate-nop-h
+```
+
+| Job | Trial | Reward | Exceptions | Total (UTC, 2026-10-30) | Notes |
+|---|---|---|---|---|---|
+| `gate-oracle-h` | `git-repo-recovery__T5RFqnC` | **1.0** | 0 | 09:15:43 to 09:16:24 | 5 of 5 checks passed; verifier 0.4 min, Harbor end to end |
+| `gate-nop-h` | `git-repo-recovery__ASmMsCy` | **0.0** | 0 | 09:16:44 to 09:17:20 | `test_fsck_clean`, `test_refs_restored`, `test_history_intact` fail (9 refs absent, rev-list dies on the damaged pack entries and corrupt loose objects); `test_artifact_staged` and `test_no_history_rewrite` pass |
+| `gate-oracle-h2` | `git-repo-recovery__u8q8U2r` | **1.0** | 0 | 09:31:09 to 09:31:45 | rerun after the oracle polish in `e8c602c` (pinned replay environment, fatal check when a release stays untagged); 5 of 5 |
+
+Trimmed copies: `runs/gate-oracle-h/`, `runs/gate-nop-h/`, `runs/gate-oracle-h2/`.
+
+## 3. Verifier mutation fixtures, version 1.1.0
+
+`scripts/verifier-fixtures.sh` grades 19 scratch repositories, each a copy
+of `tests/original` changed in exactly one way, with the real verifier in
+its own container, and requires the reward each case must get and the
+check that must fail. The two legitimate layouts (unchanged, repacked)
+must score 1; the seventeen mutations (moved branch, deleted tag, refs
+added under `refs/remotes`, `refs/replace` and `refs/notes`, a deleted and
+a rewritten object, four config mutations, alternates, a symlink, grafts,
+shallow, a promisor marker, HEAD moved) must score 0 on the named check.
+
+| Run | Original | Result |
+|---|---|---|
+| 2026-10-30 08:44 UTC | 1.0.0 | 19 of 19 as expected; the committed 1.0.0 verifier (`a972b72`) graded on the same cases accepted 11 of the 17 mutations |
+| 2026-10-30 09:15 UTC | 1.1.0 (regenerated original) | 19 of 19 as expected, exit 0 |
+
+Both tables, with the verifier image digests, are in
+`analysis/verifier-fixtures.md`.
+
+## 4. Ground truth and the damage, version 1.1.0
+
+The original repository and the damage are generated deterministically by
+`scripts/gen-repo/` inside a container with the task images' git; the
+build was repeated and produced byte-identical files. Every timestamp
+before the tail of the history is frozen, so both packfiles and the
+victims of D1, D2, D4, D5 and D6 are the 1.0.0 ones
+(`scripts/gen-repo/frozen-victims.txt`, checked by `verify.sh`); the D3
+picks changed because they are chosen among loose objects and the tail
+added some. The generator records every item and its intended recovery
+path in `tests/damage.json` (never in the agent image).
+
+Sizing: 610 reachable objects, 158 commits, 13 refs (5 branches, 8 tags)
+in the original; 53 damage items in 11 classes (46 objects counting the
+deleted pack index, 9 lost refs; L1 and L2 each count once).
+
+| Class | Damage | Items | Intended recovery |
+|---|---|---|---|
+| D1 | pack-B entries zeroed, intact copies in pack-A | 20 | read pack-A |
+| D2 | pack-B delta bases zeroed, 6 dependents intact only in pack-B | 3 (+6) | base from pack-A, apply pack-B's delta |
+| D3 | loose objects with one altered zlib byte | 6 | checksum-guided single-byte search |
+| D4 | the three archived 1.2 patch commits with their trees and blobs, zeroed, no copy | 13 | rebuild from `docs/patches/*.patch`, committer = author; the From lines carry the ids |
+| D5 | `docs/API.md` blob of v1.3.0, zeroed, no copy | 1 | regenerate with the tree's `tools/gen_api_docs.py` |
+| D6 | pack-A index deleted | 1 | `git index-pack` |
+| R1 | loose ref of `develop` deleted, reflog intact | 1 | reflog |
+| R2 | `feature/retry-policy` ref and reflog deleted | 1 | `refs/remotes/mirror/feature/retry-policy` (equal to the tip: no change after the last nightly) |
+| R3 | `packed-refs` truncated (annotated `v1.2.0`, `v1.3.0`; lightweight `v1.2.1`, `v1.3.1`), loose `hotfix/1.2.1` deleted | 5 | tag objects; reflog; release commit pinned by `VERSION`, `CHANGELOG.md` and later `git describe` strings |
+| L1 | the last commit of `feature/cache-warmup` (made after the last nightly push), its ref and its reflog; tree and blobs left dangling; the id appears nowhere | 1 | `docs/patches/cache-warmup/series` and its second patch (zero commit ids): apply on the commit the mirror holds, committer = author, date from the header; the tree must be the one dangling tree |
+| L2 | the annotated tag object `v1.4.0` and its ref; the id appears nowhere; tags have no reflog and are not mirrored | 1 | `tools/release.sh` as of the release commit (v2: full CHANGELOG section as the message, tagger and date from the release commit); v1 made the surviving tags, v3 at the tip is one-line and says so |
+
+What makes L1 and L2 different from everything else: a wrong
+reconstruction of either passes `git fsck --full --strict` and every
+check an agent can run locally, and only the hidden original rejects it.
+Restoring `feature/cache-warmup` at the mirror's value, or tagging 1.4.0
+with a one-line message, is exactly such a wrong reconstruction. The
+mirror is a simulated nightly cron (15 pushes at 02:00 UTC, documented in
+`docs/operations.md` in the tree and visible in the mirror reflogs), so
+every mirror ref equals its branch at the last nightly.
+
+## 5. Implementation rubric (CI: the hosted `/review` job), version 1.1.0
+
+Staged by `scripts/rubric-review/stage.py` the way upstream's
+`stage_task.py` does and launched by `scripts/run-hardened.sh rubric`
+(reviewer `claude-code` with the CI reviewer model named `claude-sonnet-5`,
+see section 11 for why the provider prefix is dropped).
+
+| Job | Trial | Verdicts | Notes |
+|---|---|---|---|
+| `rubric-review-h` | TBD (running) | TBD (running) | TBD (running) |
+
+The 1.0.0 review (35 pass, 0 fail, 2 not applicable on the second
+complete run) is in section 11.
+
+## 6. Trials (`/run`, 3 attempts per agent) and cheat trials (`/cheat`), version 1.1.0
+
+All attempts use the CI defaults (`.github/harbor-run-defaults.yml` at
+upstream `7b1f530`): codex `openai/gpt-6-astra` at `reasoning_effort=xhigh`,
+claude-code `anthropic/claude-fable-5-1` at `reasoning_effort=max` with
+`CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000`. Subscriptions, no API keys; the
+agent-setup allowance tripled (section 12 records why). Launched by
+`scripts/run-hardened.sh`, one stage at a time so that the calibration
+rule holds (one attempt per agent before any further trial is spent):
+`gates`, `pilot-codex`, `pilot-claude`, then `rest-codex` and
+`rest-claude` in two processes, `cheats`, `rubric`. Every trial here was
+graded by Harbor end to end.
+
+| Agent | Job / trial | Reward | Agent phase | Tool calls | Tokens in (cached) / out | Grade route |
+|---|---|---|---|---|---|---|
+| codex, attempt 1 | `pilot-codex-h` / `git-repo-recovery__m9wqtVr` | **1.0** | 7.4 min | 14 | 924k (855k) / 12k | Harbor, 5 of 5 checks |
+| codex, attempt 2 | `run-codex-h` / TBD (running) | TBD (running) | TBD (running) | TBD (running) | TBD (running) | Harbor |
+| codex, attempt 3 | `run-codex-h` / TBD (running) | TBD (running) | TBD (running) | TBD (running) | TBD (running) | Harbor |
+| claude-code, attempt 1 | `pilot-claude-h` / `git-repo-recovery__w2hS6QT` | **0.0** | 22.9 min | 39 | 4.46M (4.28M) / 100k | Harbor, 3 of 5: `test_refs_restored`, `test_history_intact` fail |
+| claude-code, attempt 2 | `run-claude-h` / TBD (running) | TBD (running) | TBD (running) | TBD (running) | TBD (running) | Harbor |
+| claude-code, attempt 3 | `run-claude-h` / TBD (running) | TBD (running) | TBD (running) | TBD (running) | TBD (running) | Harbor |
+| claude-code + hack prompt | `cheat-claude-h` / TBD (running) | TBD (running) | TBD (running) | TBD (running) | TBD (running) | Harbor |
+| codex + hack prompt | `cheat-codex-h` / TBD (running) | TBD (running) | TBD (running) | TBD (running) | TBD (running) | Harbor |
+
+Pilot timings: `pilot-codex-h` ran 09:18:26 to 09:29:12 UTC on 2026-10-30
+(agent phase 7.4 min, verifier 0.4 min); `pilot-claude-h` ran 09:18:27 to
+09:45:09 UTC (agent phase 22.9 min, verifier 0.3 min). Trimmed copies with
+trajectory, console log, artifact and verifier output:
+`runs/pilot-codex-h/`, `runs/pilot-claude-h/`. The numbers come from
+`python3 scripts/summarize-trial.py pilot-codex-h pilot-claude-h`.
+
+What the codex pilot did: inventoried both packs with its own parser
+(index CRCs against the pack bytes), wrote every intact entry out and
+recombined the delta dependents with their pack-A bases, repaired the six
+corrupt loose objects by single-byte search, rebuilt the three archived
+1.2 commits with `git mailinfo`, `git apply --cached` and `write-tree` and
+commit objects with committer equal to author, regenerated `docs/API.md`
+at every release commit with the tree's generator, then read
+`tools/archive-series.sh`, `tools/release.sh`, the cache-warmup series
+and `CHANGELOG.md` at HEAD and `tools/release.sh` as of the 1.4.0 release
+commit (`git show <release commit>:tools/release.sh`). It replayed the
+cache-warmup series on the merge base, checked that the first patch
+reproduces the mirror's commit and that the second patch's tree is the one
+dangling tree, and made the branch point at the rebuilt commit; it built
+the `v1.4.0` tag object the way the v2 script specifies (tagger from the
+release commit, `orbit v1.4.0`, the bullet lines of the CHANGELOG
+section) with `git mktag`; it placed the lightweight tags on the
+`Release v1.2.1` and `Release v1.3.1` commits after listing every release
+commit with its `VERSION` content, and wrote all nine refs in one
+`update-ref --stdin` transaction after asserting none existed. Before
+finishing it checked that `format-patch --no-thread --zero-commit
+--no-signature` from the restored tip reproduces the archived series byte
+for byte and that fsck is clean with no unreachable objects. Both hidden
+targets were right.
+
+What the claude-code pilot did: the same salvage (own pack parser,
+single-byte repair, the 1.2 series by hash, `docs/API.md` by hash), and
+then more than was needed: it re-implemented git's delta encoder,
+validated it against all 300 intact deltas, and rewrote the zeroed
+payloads so the damaged pack's trailer checksum recomputed to the original
+value. It restored four refs: `develop` and `hotfix/1.2.1` from their
+reflogs, `v1.2.0` and `v1.3.0` from the dangling tag objects. Its own
+census found every one of the 608 ids the damaged repository names
+readable, fsck was clean, and it stopped. Five refs were missing:
+`feature/cache-warmup` (L1), `v1.4.0` (L2), `feature/retry-policy` (R2,
+the mirror route), `v1.2.1` and `v1.3.1` (R3, the describe-string route);
+9 of the original's 610 reachable objects are not reachable from the
+expected refs (the L1 commit with its root tree, subtree and blob, the L2
+tag object, and the four objects only the lost branch's earlier commit
+reaches). It had read the mirror's refs and reflogs, the cache-warmup
+series file and both patches, and had listed the dangling tree, and its
+final message says it left the feature branches and the series alone on
+purpose, because the reflogs record no local `feature/*` branch and the
+second patch "never existed" in the repository. It never read `VERSION`,
+`CHANGELOG.md`, `tools/release.sh` or `docs/operations.md`, and never ran
+`git describe`; in every 1.0.0 attempt, when the instruction named the
+mirror and the release script, it did. That is a task failure, not an
+infrastructure one: the agent phase completed, the artifact was collected
+and graded, and the verifier's reasons are in
+`runs/pilot-claude-h/git-repo-recovery__w2hS6QT/verifier/`. The
+step-by-step account is in `analysis/trajectories.md`.
+
+## 7. Reading against the brief, version 1.1.0
+
+The brief asks for three attempts per agent that genuinely fail, with the
+task still correct, deterministic and cheap, and cheat trials at zero.
+
+- Correct, deterministic, cheap: the oracle passes (twice, section 2), the
+  nop fails on the right checks, the static checks are 29 of 29 with the
+  transcript committed, the verifier rejects all seventeen mutations and
+  accepts both legitimate layouts (section 3), the repository builds
+  byte-identically, and the pilots cost 7 and 23 minutes of agent time on
+  subscriptions.
+- Codex: attempt 1 passed in 7.4 minutes. Whatever attempts 2 and 3 do, at
+  most two of codex's three attempts can fail, so the criterion as written
+  (three failures) is not met for codex on 1.1.0. Attempts 2 and 3: TBD
+  (running).
+- Claude-code: attempt 1 failed, on exactly the elements that have no local
+  oracle (L1, L2) and the witnesses the instruction no longer names (the
+  mirror route, the describe-string route). Attempts 2 and 3: TBD (running).
+- Cheat trials: TBD (running). A zero here is the required numerical
+  outcome; evidence that the verifier rejects bypass attempts is section 3.
+
+Final verdict against the brief: TBD (running).
+
+## Previous version 1.0.0 (superseded)
+
+Sections 8 to 12 are the measurements of version 1.0.0 (task commit
+`a972b72` with the rubric fixes of `7d7e6ac`), kept with their numbers
+unchanged. Trimmed copies of every 1.0.0 job remain under `runs/`. The
+six passing trials and the two zero-reward cheat trials are the evidence
+that drove the 1.1.0 redesign; they say nothing about the shipped task.
+
+## 8. Static checks (CI: `static-checks.yml`, 29 checks), version 1.0.0
+
+Command:
+
+```bash
+bash scripts/check-all.sh tasks/git-repo-recovery
+```
+
+Result (2026-10-29, on the 1.0.0 task directory): **29 passed, 0 warned,
 0 failed of 29.** Both images install only apt packages or a committed
 `uv.lock`, so the new `check-lockfiles` check passes; the ground-truth
-files under `tests/` carry the canary line the canary check requires.
+files under `tests/` carry the canary line the canary check requires. No
+raw transcript of this run was committed; the 1.1.0 transcript in section
+1 is the committed one.
 
 | Check | Result |
 |---|---|
@@ -29,7 +271,7 @@ files under `tests/` carry the canary line the canary check requires.
 | Task slug length, Task package name, Separate verifier, Verifier tooling baked, Trial network fetch | PASS |
 | Pip pinning, Pytest version pin, Nproc usage, CPU parallelism advisory, Compose volumes | PASS |
 
-## 2. Oracle and nop (CI: the `/validate` job)
+## 9. Oracle and nop (CI: the `/validate` job), version 1.0.0
 
 Commands:
 
@@ -42,19 +284,17 @@ harbor run -p tasks/git-repo-recovery -a nop --env docker --yes --job-name gate-
 |---|---|---|---|---|---|
 | `gate-oracle-2` | `git-repo-recovery__RJLMpZQ` | **1.0** | 0 | 2026-10-29 19:27:48 to 19:28:10 | 5 of 5 checks passed: fsck clean, 12 refs and HEAD identical, 579 reachable objects identical, no extra refs; under a second of git work |
 | `gate-nop-2` | `git-repo-recovery__Xqe8i2w` | **0.0** | 0 | 2026-10-29 19:28:46 to 19:29:10 | `test_fsck_clean`, `test_refs_restored` and `test_history_intact` fail as expected (8 refs absent, every rev-list dies on a damaged pack entry); the other two pass |
-| `gate-nop-3` | `git-repo-recovery__Xd8qmr2` | **0.0** | 0 | 2026-10-30 02:52:41 to 02:53:16 | rerun after the Docker Desktop restart described in section 5, to confirm Harbor again runs the verifier end to end; the same three checks fail, the same two pass; 35 s for the whole job |
+| `gate-nop-3` | `git-repo-recovery__Xd8qmr2` | **0.0** | 0 | 2026-10-30 02:52:41 to 02:53:16 | rerun after the Docker Desktop restart described in section 12, to confirm Harbor again runs the verifier end to end; the same three checks fail, the same two pass; 35 s for the whole job |
 
 An earlier pair (`gate-oracle-1` / `gate-nop-1`, 19:17) passed the same
-way on the repository before the leak fix of section 3; `gate-*-2` is the
-pair on the shipped repository.
+way on the repository before the leak fix of section 10; `gate-*-2` is the
+pair on the 1.0.0 repository.
 
-## 3. Ground truth and the damage
+## 10. Ground truth and the damage, version 1.0.0
 
-The original repository and the damage are generated deterministically by
-`scripts/gen-repo/` inside a container with the task images' git. The
-generator records every damaged or lost item and its intended recovery
-path in `tasks/git-repo-recovery/tests/damage.json` (never in the agent
-image).
+The 1.0.0 repository had 579 reachable objects and 12 refs (5 branches, 7
+tags); 45 damaged or lost objects plus the pack-A index, and 8 lost refs.
+The classes below are the 1.0.0 ones; the 1.1.0 table is section 4.
 
 | Class | Damage | Items | Intended recovery |
 |---|---|---|---|
@@ -76,9 +316,9 @@ contains a lost ref's name or id, and that each lightweight tag's release
 commit is the only candidate consistent with the later describe strings
 (`git rev-list --count` against the described commit). The oracle never
 read those files. Everything is regenerated deterministically: three
-generations produced byte-identical shipped files.
+generations produced byte-identical files.
 
-## 4. Implementation rubric (CI: the hosted `/review` job, `claude-code` with `anthropic/claude-sonnet-5`, 37 criteria)
+## 11. Implementation rubric (CI: the hosted `/review` job, `claude-code` with `anthropic/claude-sonnet-5`, 37 criteria), version 1.0.0
 
 Staged the way upstream's `terminal-bench/scripts/review/stage_task.py` does, by `scripts/rubric-review/stage.py` (the task
 under review at `/app/task-under-review/`, the rubric at `/app/rubric.toml`,
@@ -102,7 +342,7 @@ alternates, hooks, replace refs and promisor markers before grading).
 | Criterion | Reviewer's finding | Change |
 |---|---|---|
 | `difficulty_explanation_quality` | The explanation did not say who does this work in the real world or whether the repository is synthetic. | Two sentences added: git-hosting engineers and data-recovery contractors; synthetic history made by git itself, one route back per loss. |
-| `task_readme` | `Relevant experience` is the `TODO(Tanmay)` placeholder. | Paragraph written; the review was rerun on the final task directory (below). |
+| `task_readme` | `Relevant experience` is the `TODO(Tanmay)` placeholder. | Paragraph written; the review was rerun on the 1.0.0 task directory (below). |
 
 Not applicable: `structured_data_schema` (the deliverable is a repository
 state) and `score_provenance` (every check is boolean).
@@ -116,16 +356,15 @@ verifier found no `verdicts.json` and scored 0. The review was repeated as
 the first run resolved to.
 
 Third run (`rubric-review-3`, 2026-10-30 04:00 to 04:05 UTC, trial
-`rubric-review__WueLwQh`, on the final task directory): **35 pass, 0 fail,
+`rubric-review__WueLwQh`, on the 1.0.0 task directory): **35 pass, 0 fail,
 2 not applicable** (`runs/rubric-review-3/rubric-review__WueLwQh/artifacts/app/verdicts.json`). The two criteria that
 failed the first time now pass: the reviewer found the difficulty
 explanation names the practitioner and the synthetic origin, and the
 README's `Relevant experience` section present. The reviewer again ran
-the reference solution against the shipped repository and confirmed the
+the reference solution against the 1.0.0 repository and confirmed the
 579-object reachable set and every ref matched the original.
 
-
-## 5. Trials (`/run`) and cheat trials (`/cheat`)
+## 12. Trials (`/run`) and cheat trials (`/cheat`), version 1.0.0
 
 ### Calibration: one codex attempt before anything else
 
@@ -154,8 +393,8 @@ assertions on each. It left a recovery report inside the repository
 (extra files are allowed) and removed the corrupt pack.
 
 Reading: every intended recovery path was found and executed in under six
-minutes. The task is correct, cheap and well specified, and it is not hard
-for this model.
+minutes. Version 1.0.0 was correct, cheap and well specified, and it was
+not hard for this model.
 
 ### Full trial set (`/run`, 3 attempts per agent; `/cheat`, 1 per agent)
 
@@ -196,7 +435,7 @@ container block indefinitely while image and compose commands kept
 working. (An earlier reading, that the jobs were being reaped, was wrong:
 a process query showed every job alive and waiting.) Restarting Docker
 Desktop at 02:47 UTC on 2026-10-30 cleared both containers; a fresh nop
-gate (`gate-nop-3` in section 2) then ran through verification in 35 s,
+gate (`gate-nop-3` in section 9) then ran through verification in 35 s,
 and every job after it was graded by Harbor itself. The trials that fell
 into the stall were graded locally from the artifact Harbor had already
 collected (`scripts/regrade-local.sh`: the image built from
@@ -204,7 +443,7 @@ collected (`scripts/regrade-local.sh`: the image built from
 `/app/repo.git` as Harbor uploads it); their agent phases were complete
 and recorded (trajectory, console log, final message).
 
-#### Final results
+#### Final results, version 1.0.0
 
 | Agent (CI defaults) | Attempts | Passed | Agent time per attempt | Cheat trial |
 |---|---|---|---|---|
@@ -222,13 +461,15 @@ claude-code ran five inventory commands and declined to attempt a bypass.
 The zero rewards therefore show the required numerical outcome, not
 adversarial robustness. Robustness evidence comes from the verifier
 mutation fixtures in `scripts/verifier-fixtures.sh`, with results recorded
-in `analysis/verifier-fixtures.md`.
+in `analysis/verifier-fixtures.md` (section 3).
 
-Reading against the brief. The task clears every CI gate, its oracle and
-nop behave, its cheat trials score 0.0 as the brief requires (without exercising the verifier, so that is not evidence of its robustness), and it is deterministic and cheap
-(about six to twenty minutes of agent time, no API spend). The brief's
-requirement that the three attempts per agent genuinely fail is **not
-met**: both models recover every object and every ref. Why they succeed,
-step by step, and what a harder version would change, is in
-`analysis/trajectories.md`; how this design was reached and what the two
-earlier designs measured is in `analysis/iterations.md`.
+Reading of 1.0.0 against the brief. Version 1.0.0 cleared every CI gate,
+its oracle and nop behaved, its cheat trials scored 0.0 as the brief
+requires (without exercising the verifier, so that is not evidence of its
+robustness), and it was deterministic and cheap (about six to twenty
+minutes of agent time, no API spend). The brief's requirement that the
+three attempts per agent genuinely fail was **not met**: both models
+recovered every object and every ref. Why they succeeded, step by step,
+is in `analysis/trajectories.md` under its 1.0.0 heading; the redesign
+that followed is version 1.1.0 (sections 1 to 7) and design 4 in
+`analysis/iterations.md`.

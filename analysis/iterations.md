@@ -64,3 +64,98 @@ Every design got exactly one codex attempt before anything else was run.
 Designs 2 and 3 together cost about four dollars of equivalent usage and
 thirty minutes of agent time to measure, against the twelve full trials
 that would otherwise have been run on them.
+
+## Design 4: `git-repo-recovery` 1.1.0, the hardening (this repository, shipped)
+
+Version 1.0.0 was measured in full (six passes, two cheat trials at zero,
+RESULTS.md sections 8 to 12) and reviewed externally on 2026-10-30. The
+review's central finding was the one the measurements already showed:
+every completed attempt by either model passed. Its reading of why
+matched `trajectories.md`: object ids act as a local oracle (44 of the 45
+lost objects were named by a hash the agent could compute, so every
+reconstruction was search with instant feedback), and the instruction
+listed the witnesses (the mirror, the reflogs, the release script, the
+archived series), so finding them was not part of the work.
+
+Principle of the redesign: keep everything else, remove the oracle for a
+few targets. Two losses were added whose exact bytes are derivable from
+explicit evidence in the tree but whose ids appear nowhere in the
+repository, not as a 7-hex prefix, not in binary form, not in a pack
+index, `packed-refs`, a reflog or a patch header. The generator asserts
+that property on every build. A wrong reconstruction of either passes
+`git fsck --full --strict` and every check the agent can run; only the
+hidden original rejects it. Everything else stays locally checkable, so
+the task cannot be solved by scanning for ids alone.
+
+- L1: the last commit on `feature/cache-warmup`, made after the nightly
+  mirror push, deleted with its ref and reflog; its tree and blobs left
+  dangling. The series is archived in the tree with zero commit ids
+  (`format-patch --zero-commit --no-thread --no-signature`) and a series
+  file naming the branch it was exported from. The commit has to be
+  rebuilt byte for byte: the mirror's commit as parent, the patch's author
+  and date, committer equal to author as on every commit in the
+  repository. Restoring the branch at the mirror's value is the wrong
+  answer that passes fsck.
+- L2: the annotated tag `v1.4.0`, made by version 2 of `tools/release.sh`
+  (message from the CHANGELOG section, tagger and date from the release
+  commit), deleted with its ref. Version 1 made the surviving tags,
+  version 3 at the tip is one-line and its commit body says 1.4.0 carried
+  the full notes. The tag has to be rebuilt by replaying the script as of
+  the release commit, not as of HEAD. A one-line tag, or a lightweight
+  one, is the wrong answer that passes fsck.
+- The mirror became a simulated nightly cron (15 pushes at 02:00 UTC,
+  documented in `docs/operations.md`, `update by push` entries by
+  `mirror cron` in the mirror reflogs), so every mirror ref equals its
+  branch at the last nightly and lags every branch that moved on the last
+  day.
+- The instruction states the end state only. Nothing names the repacks,
+  the reflogs, the mirror, the release script or the archived series.
+- Every timestamp before the tail of the history is frozen, so both
+  packfiles and the D1, D2, D4, D5 and D6 victims are unchanged from
+  1.0.0; the oracle gained the series route and the release-replay route;
+  the verifier gained the config allowlist, the pre-clean ref inventory
+  and the full ref-name comparison (`verifier-fixtures.md`).
+
+What the red-team review of the design predicted, before any trial. The
+review read the design text before the generator was changed (its T1 and
+T2 are L1 and L2 here). It expected the lost cache-warmup commit to be the
+most common failure: a strong agent would restore the branch to the
+mirror's stale commit and stop there, because at that point fsck already
+reports nothing missing. For the tag it expected agents to make `v1.4.0`
+lightweight, the way `v1.2.1` and `v1.3.1` are restored, or to copy the
+one-line format of HEAD's v3 script or of the surviving v1 tags. Per
+attempt it put codex at about 0.45 to rebuild the commit exactly and 0.50
+for the tag, and claude-code at about 0.60 for each; that gives about 0.45
+that all three codex attempts fail, 0.30 for claude-code, and 0.13 for
+both agents. Two wording fixes it asked for were applied and are asserted
+by the generator: the series file says the patches were exported from the
+tip of `feature/cache-warmup`, and the archive script's header says commit
+ids are omitted because the archive records content, not history
+positions. The calibration rule was kept: one attempt per agent before
+anything else.
+
+| Gate or trial | Result |
+|---|---|
+| Static checks, oracle, nop | 29 of 29 (transcript committed), 1.0 (twice), 0.0 |
+| Verifier fixtures | 19 of 19 on the 1.0.0 original and on the 1.1.0 original |
+| Rubric | TBD (running) |
+| codex pilot (`pilot-codex-h`, `m9wqtVr`) | **reward 1.0** in 7.4 minutes, 14 tool calls, 924k input tokens: read `tools/release.sh` as of the release commit, replayed the archived series onto the mirror's commit with the tree checked against the dangling one, rebuilt both hidden targets exactly |
+| claude-code pilot (`pilot-claude-h`, `w2hS6QT`) | **reward 0.0** in 22.9 minutes, 39 tool calls, 4.46M input tokens: fsck clean, every id its own census could name present, four refs restored from reflogs and tag objects, five refs missing (L1, L2, the mirror route, the two describe-string tags) |
+| remaining attempts, cheat trials | TBD (running) |
+
+What it taught so far: removing the local oracle for two items changed
+the outcome for one model and not the other, and the pilots inverted the
+review's per-agent expectation: codex, given the lower odds, passed;
+claude-code, given the higher, failed. Claude-code's failure is on
+exactly the elements that were changed, and its final message shows it
+saw the evidence (the series file, the zero-id patch, the dangling tree,
+the mirror's refs and reflogs) and decided against acting on it; codex
+treated the same evidence as instructions. The brief needs three failures
+per agent; codex's first pass already means the codex side cannot reach
+that bar on 1.1.0. Final tallies: TBD (running).
+
+## The rule that made the iteration affordable, applied again
+
+Design 4 followed the same rule: one codex attempt and one claude-code
+attempt before the remaining trials were launched, in parallel processes
+once the pilots had shown the task survives contact.

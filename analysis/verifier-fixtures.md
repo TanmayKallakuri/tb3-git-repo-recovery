@@ -115,3 +115,46 @@ mounts, files travel with `docker cp`. The mutations are in
 `scripts/verifier-fixtures/mutate.py` (object-level ones); they run inside
 the verifier container with its own git, so the host's git and line endings
 never touch a fixture.
+
+## Run of 2026-10-30 on the 1.1.0 original
+
+The same 19 cases, graded again after the repository was regenerated for
+task version 1.1.0 (commit `45ca827`: two losses with no local oracle, the
+nightly mirror model, 610 reachable objects and 13 refs). The fixture
+runner discovers the HEAD branch, a second branch and an annotated tag in
+the copy at run time, so no case needed editing for the new original. The
+verifier image digest changed because `tests/original/` is part of it.
+
+| item | value |
+|---|---|
+| date | 2026-10-30 09:15 UTC |
+| host | Windows 11, Docker Desktop 29.8.1 (Linux containers), Git Bash |
+| verifier image | `grr-verifier-fixtures` `sha256:42e4d2d307d21ecda22b40609aa9a3f5ceebec93a18939ac87a0d86bfde1ad6e` |
+| base image | `python:3.12-slim-bookworm@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e` |
+| git in the image | 2.39.5 |
+| raw output | `tmp/verifier-fixtures-1.1.0.log` (gitignored; the table below is copied from it) |
+
+| case | expected | observed | status | must fail | failed checks (observed) |
+|---|---|---|---|---|---|
+| unchanged | 1 | 1 | PASS | - | - |
+| repack | 1 | 1 | PASS | - | - |
+| branch-moved | 0 | 0 | PASS | test_refs_restored | test_refs_restored |
+| tag-deleted | 0 | 0 | PASS | test_refs_restored | test_refs_restored |
+| remote-ref-added | 0 | 0 | PASS | test_no_history_rewrite | test_no_history_rewrite |
+| replace-ref-added | 0 | 0 | PASS | test_no_history_rewrite | test_no_history_rewrite |
+| notes-ref-added | 0 | 0 | PASS | test_no_history_rewrite | test_no_history_rewrite |
+| loose-object-deleted | 0 | 0 | PASS | test_fsck_clean | test_fsck_clean, test_refs_restored, test_history_intact |
+| blob-rewritten | 0 | 0 | PASS | test_fsck_clean | test_fsck_clean |
+| config-invalid | 0 | 0 | PASS | test_artifact_staged | test_artifact_staged |
+| config-hookspath | 0 | 0 | PASS | test_artifact_staged | test_artifact_staged |
+| config-extensions | 0 | 0 | PASS | test_artifact_staged | test_artifact_staged |
+| alternates | 0 | 0 | PASS | test_artifact_staged | test_artifact_staged |
+| symlink | 0 | 0 | PASS | test_artifact_staged | test_artifact_staged, test_fsck_clean, test_refs_restored, test_history_intact, test_no_history_rewrite |
+| grafts | 0 | 0 | PASS | test_artifact_staged | test_artifact_staged |
+| shallow | 0 | 0 | PASS | test_artifact_staged | test_artifact_staged |
+| promisor | 0 | 0 | PASS | test_artifact_staged | test_artifact_staged |
+| config-bare-false | 0 | 0 | PASS | test_artifact_staged | test_artifact_staged |
+| head-moved | 0 | 0 | PASS | test_refs_restored | test_refs_restored |
+
+19 cases, 0 not as expected, exit 0. The observed failed sets are the same
+as in the first run, case for case.
