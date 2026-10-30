@@ -6,7 +6,8 @@
 #
 # Each case runs in its own container of the verifier image: scripts/verifier-fixtures/run-case.sh builds the
 # mutation there with the image's git, /tests/test.sh grades it the way Harbor does, and the verifier output is
-# copied to tmp/verifier-fixtures/<case>/. Prints a table (case, expected, observed, status, failing checks).
+# copied to tmp/verifier-fixtures/<case>/. Prints a table (case, expected, observed, status, the check
+# that must fail, the failed checks observed). A 0 without the expected check among them is MISMATCH.
 # INFRA means the container or the verifier itself failed and no reward was produced; it is never counted as 0.
 # Exits non-zero when any case is MISMATCH or INFRA.
 # VERIFIER_FIXTURES_TESTS, VERIFIER_FIXTURES_IMAGE and VERIFIER_FIXTURES_OUT override the tests directory the
@@ -21,27 +22,28 @@ FIXTURES="$HERE/verifier-fixtures"
 OUT="${VERIFIER_FIXTURES_OUT:-$ROOT/tmp/verifier-fixtures}"
 IMAGE="${VERIFIER_FIXTURES_IMAGE:-grr-verifier-fixtures}"
 
-# "<case> <expected reward>"; the mutations themselves live in verifier-fixtures/run-case.sh.
+# "<case> <expected reward> <check>"; the check is the name that must be among the failed checks of every 0-case
+# ("-" for the cases that must pass). The mutations themselves live in verifier-fixtures/run-case.sh.
 CASES=(
-  "unchanged 1"
-  "repack 1"
-  "branch-moved 0"
-  "tag-deleted 0"
-  "remote-ref-added 0"
-  "replace-ref-added 0"
-  "notes-ref-added 0"
-  "loose-object-deleted 0"
-  "blob-rewritten 0"
-  "config-invalid 0"
-  "config-hookspath 0"
-  "config-extensions 0"
-  "alternates 0"
-  "symlink 0"
-  "grafts 0"
-  "shallow 0"
-  "promisor 0"
-  "config-bare-false 0"
-  "head-moved 0"
+  "unchanged 1 -"
+  "repack 1 -"
+  "branch-moved 0 test_refs_restored"
+  "tag-deleted 0 test_refs_restored"
+  "remote-ref-added 0 test_no_history_rewrite"
+  "replace-ref-added 0 test_no_history_rewrite"
+  "notes-ref-added 0 test_no_history_rewrite"
+  "loose-object-deleted 0 test_fsck_clean"
+  "blob-rewritten 0 test_fsck_clean"
+  "config-invalid 0 test_artifact_staged"
+  "config-hookspath 0 test_artifact_staged"
+  "config-extensions 0 test_artifact_staged"
+  "alternates 0 test_artifact_staged"
+  "symlink 0 test_artifact_staged"
+  "grafts 0 test_artifact_staged"
+  "shallow 0 test_artifact_staged"
+  "promisor 0 test_artifact_staged"
+  "config-bare-false 0 test_artifact_staged"
+  "head-moved 0 test_refs_restored"
 )
 
 hostpath() {
@@ -53,7 +55,7 @@ selected=()
 for wanted in "$@"; do
     known=0
     for entry in "${CASES[@]}"; do
-        [ "${entry% *}" = "$wanted" ] && known=1
+        [ "${entry%% *}" = "$wanted" ] && known=1
     done
     if [ "$known" -eq 0 ]; then
         echo "unknown case: $wanted (known: $(printf '%s\n' "${CASES[@]}" | cut -d' ' -f1 | tr '\n' ' '))" >&2
@@ -84,8 +86,7 @@ rows=()
 bad=0
 total=0
 for entry in "${CASES[@]}"; do
-    name=${entry% *}
-    expected=${entry##* }
+    read -r name expected check <<<"$entry"
     if [ "${#selected[@]}" -gt 0 ]; then
         wanted=0
         for pick in "${selected[@]}"; do [ "$pick" = "$name" ] && wanted=1; done
@@ -113,12 +114,18 @@ for entry in "${CASES[@]}"; do
         fi
     fi
     case "$observed" in
-        0|1) if [ "$observed" = "$expected" ]; then status=PASS; else status=MISMATCH; fi ;;
+        0|1)
+            status=PASS
+            [ "$observed" = "$expected" ] || status=MISMATCH
+            # A 0 for the wrong reason is a mismatch: the expected check must be among the failed ones.
+            if [ "$status" = PASS ] && [ "$check" != "-" ]; then
+                case ",$failed," in *",$check,"*) ;; *) status=MISMATCH ;; esac
+            fi ;;
         *) observed=none; status=INFRA; failed=- ;;
     esac
     [ "$status" = PASS ] || bad=$((bad + 1))
-    rows+=("$name|$expected|$observed|$status|$failed")
-    printf '%-22s expected %s  observed %-4s  %s\n' "$name" "$expected" "$observed" "$status" >&2
+    rows+=("$name|$expected|$observed|$status|$check|$failed")
+    printf '%-22s expected %s  observed %-4s  %s  failed=%s\n' "$name" "$expected" "$observed" "$status" "$failed" >&2
     if [ "$status" = INFRA ]; then
         echo "  log tail ($log):" >&2
         tail -n 8 "$log" | sed 's/^/    /' >&2
@@ -126,12 +133,13 @@ for entry in "${CASES[@]}"; do
 done
 
 echo
-printf '| %-22s | %-8s | %-8s | %-8s | %s |\n' case expected observed status "failing checks"
-printf '|%s|%s|%s|%s|%s|\n' "$(printf -- '-%.0s' $(seq 24))" "$(printf -- '-%.0s' $(seq 10))" \
-    "$(printf -- '-%.0s' $(seq 10))" "$(printf -- '-%.0s' $(seq 10))" "$(printf -- '-%.0s' $(seq 16))"
+printf '| %-22s | %-8s | %-8s | %-8s | %-24s | %s |\n' case expected observed status "must fail" "failed checks (observed)"
+printf '|%s|%s|%s|%s|%s|%s|\n' "$(printf -- '-%.0s' $(seq 24))" "$(printf -- '-%.0s' $(seq 10))" \
+    "$(printf -- '-%.0s' $(seq 10))" "$(printf -- '-%.0s' $(seq 10))" "$(printf -- '-%.0s' $(seq 26))" \
+    "$(printf -- '-%.0s' $(seq 26))"
 for row in "${rows[@]}"; do
-    IFS='|' read -r name expected observed status failed <<<"$row"
-    printf '| %-22s | %-8s | %-8s | %-8s | %s |\n' "$name" "$expected" "$observed" "$status" "$failed"
+    IFS='|' read -r name expected observed status check failed <<<"$row"
+    printf '| %-22s | %-8s | %-8s | %-8s | %-24s | %s |\n' "$name" "$expected" "$observed" "$status" "$check" "$failed"
 done
 echo
 echo "$total cases, $bad not as expected"

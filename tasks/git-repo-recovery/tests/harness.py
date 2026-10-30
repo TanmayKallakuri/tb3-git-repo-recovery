@@ -284,22 +284,47 @@ def remove_path(path: str) -> None:
 
 
 def _make_dir(path: str, mode: int, owner: User | None) -> None:
-    os.mkdir(path, mode)
-    os.chmod(path, mode)
-    if owner is not None:
-        os.chown(path, owner.uid, owner.gid, follow_symlinks=False)
-
-
-def _copy_file(src: str, dst: str, mode: int, owner: User | None) -> None:
-    src_fd = os.open(src, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    """Create a root-side directory; any OSError is a verifier-side fault (full disk, bad mount), never the agent's."""
     try:
-        dst_fd = os.open(dst, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, mode)
+        os.mkdir(path, mode)
+        os.chmod(path, mode)
+        if owner is not None:
+            os.chown(path, owner.uid, owner.gid, follow_symlinks=False)
+    except OSError as exc:
+        raise InfraError(f"cannot create {path}: {exc.strerror}") from exc
+
+
+def _copy_file(src: str, dst: str, mode: int, owner: User | None, src_error: type[Exception] = StageError) -> None:
+    """Copy one regular file; a fault reading src raises src_error, a fault creating or writing dst raises InfraError."""
+    try:
+        src_fd = os.open(src, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    except OSError as exc:
+        raise src_error(f"cannot read {src}: {exc.strerror}") from exc
+    try:
         try:
-            os.fchmod(dst_fd, mode)
-            if owner is not None:
-                os.fchown(dst_fd, owner.uid, owner.gid)
-            with os.fdopen(src_fd, "rb", closefd=False) as source, os.fdopen(dst_fd, "wb", closefd=False) as target:
-                shutil.copyfileobj(source, target, 1024 * 1024)
+            dst_fd = os.open(dst, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, mode)
+        except OSError as exc:
+            raise InfraError(f"cannot create {dst}: {exc.strerror}") from exc
+        try:
+            try:
+                os.fchmod(dst_fd, mode)
+                if owner is not None:
+                    os.fchown(dst_fd, owner.uid, owner.gid)
+            except OSError as exc:
+                raise InfraError(f"cannot set up {dst}: {exc.strerror}") from exc
+            while True:
+                try:
+                    chunk = os.read(src_fd, 1024 * 1024)
+                except OSError as exc:
+                    raise src_error(f"cannot read {src}: {exc.strerror}") from exc
+                if not chunk:
+                    break
+                try:
+                    view = memoryview(chunk)
+                    while view:
+                        view = view[os.write(dst_fd, view):]
+                except OSError as exc:
+                    raise InfraError(f"cannot write {dst}: {exc.strerror}") from exc
         finally:
             os.close(dst_fd)
     finally:
@@ -313,13 +338,19 @@ def _reserve(report: dict, src: str, size: int) -> None:
 
 
 def copy_tree(src: str, dst: str, owner: User | None = None, readable: bool = False, reject: bool = False) -> dict:
-    """Copy the regular files and directories below src into a new dst; anything else is listed, or refused with reject."""
+    """Copy the regular files and directories below src into a new dst; anything else is listed, or refused with reject.
+
+    reject marks src as the agent's artifact: a fault reading it raises StageError. Faults reading any other src, and
+    every fault creating or writing below dst, raise InfraError."""
     dir_mode, file_mode = (0o755, 0o644) if readable else (0o700, 0o600)
-    check_no_symlink(src)
+    src_error = StageError if reject else InfraError
     try:
+        check_no_symlink(src)
         top = os.lstat(src)
     except FileNotFoundError as exc:
         raise StageError(f"{src} does not exist") from exc
+    except OSError as exc:
+        raise src_error(f"cannot read {src}: {exc.strerror}") from exc
     if not stat.S_ISDIR(top.st_mode):
         raise StageError(f"{src} is not a directory")
     report = {"files": 0, "dirs": 0, "bytes": 0, "skipped": []}
@@ -329,13 +360,19 @@ def copy_tree(src: str, dst: str, owner: User | None = None, readable: bool = Fa
         source_dir, target_dir, depth = pending.pop()
         if depth >= MAX_DEPTH:
             raise StageError(f"{src} is nested deeper than {MAX_DEPTH} levels")
-        with os.scandir(source_dir) as entries:
-            children = sorted(entries, key=lambda entry: entry.name)
+        try:
+            with os.scandir(source_dir) as entries:
+                children = sorted(entries, key=lambda entry: entry.name)
+        except OSError as exc:
+            raise src_error(f"cannot list {source_dir}: {exc.strerror}") from exc
         for entry in children:
             rel = os.path.relpath(entry.path, src)
             if reject and (entry.name in REJECTED_ANYWHERE or (depth == 0 and entry.name in REJECTED_AT_ROOT)):
                 raise StageError(f"{src} contains {rel}, which would redirect git away from the repository")
-            st = entry.stat(follow_symlinks=False)
+            try:
+                st = entry.stat(follow_symlinks=False)
+            except OSError as exc:
+                raise src_error(f"cannot stat {entry.path}: {exc.strerror}") from exc
             target = os.path.join(target_dir, entry.name)
             if stat.S_ISDIR(st.st_mode):
                 _reserve(report, src, 0)
@@ -345,7 +382,7 @@ def copy_tree(src: str, dst: str, owner: User | None = None, readable: bool = Fa
             elif stat.S_ISREG(st.st_mode):
                 _reserve(report, src, st.st_size)
                 report["files"] += 1
-                _copy_file(entry.path, target, file_mode, owner)
+                _copy_file(entry.path, target, file_mode, owner, src_error)
             elif reject:
                 raise StageError(f"{src} contains {rel}, which is not a regular file or directory")
             else:
@@ -392,6 +429,14 @@ def reset_work() -> None:
         raise InfraError(f"cannot reset {WORK}: {exc}") from exc
 
 
+def split_lines(text: str) -> list[str]:
+    """Split on newline only (str.splitlines also breaks on \\x0b, \\x0c, \\x1c-\\x1e, \\x85, U+2028); no trailing empty element."""
+    lines = text.split("\n")
+    if lines and lines[-1] == "":
+        lines.pop()
+    return lines
+
+
 def disk_refs(repo: str, original_names: set[str]) -> dict:
     """Ref names the staged copy holds before cleaning, read without git: files below refs/ and packed-refs lines."""
     loose, packed, malformed = [], [], []
@@ -406,10 +451,10 @@ def disk_refs(repo: str, original_names: set[str]) -> dict:
         with os.fdopen(fd, "rb") as source:
             text = source.read(CAPTURE_BYTES).decode("utf-8", "replace")
             truncated = bool(source.read(1))
-        for line in text.splitlines():
+        for line in split_lines(text):
             if not line.strip() or line[0] in "#^":
                 continue
-            fields = line.split()
+            fields = line.split(" ")
             if len(fields) == 2 and OBJECT_ID.match(fields[0]):
                 packed.append(fields[1])
             else:
@@ -437,12 +482,12 @@ def parse_config_list(data: bytes) -> list[tuple[str, str | None]]:
 def key_problem(key: str) -> str | None:
     section, _, rest = key.partition(".")
     subsection, _, name = rest.rpartition(".")
-    if not name or name in REJECTED_KEYS:
+    if not name or name in REJECTED_KEYS or rest.startswith("."):
         return f"{key} is not an allowed key"
     if section in NAMED_SECTIONS:
         return None if subsection and name in NAMED_SECTIONS[section] else f"{key} is not an allowed key"
     if section in PLAIN_SECTIONS:
-        return None if not subsection and name in PLAIN_SECTIONS[section] else f"{key} is not an allowed key"
+        return None if "." not in rest and name in PLAIN_SECTIONS[section] else f"{key} is not an allowed key"
     if section in OPEN_SECTIONS:
         return None
     return f"{key} is not in an allowed section"
@@ -455,12 +500,16 @@ def config_problems(entries: list[tuple[str, str | None]]) -> list[str]:
     bare = [value for key, value in entries if key == "core.bare"]
     if not versions:
         problems.append("core.repositoryformatversion is missing; it must be 0")
-    elif any((value or "").strip() != "0" for value in versions):
-        problems.append(f"core.repositoryformatversion must be 0, found {versions[-1]!r}")
+    else:
+        wrong = next((value for value in versions if (value or "").strip() != "0"), "0")
+        if wrong != "0":
+            problems.append(f"core.repositoryformatversion must be 0, found {wrong!r}")
     if not bare:
         problems.append("core.bare is missing; it must be true")
-    elif any(value is not None and value.strip().lower() not in TRUE_VALUES for value in bare):
-        problems.append(f"core.bare must be true, found {bare[-1]!r}")
+    else:
+        wrong = next((value for value in bare if value is not None and value.strip().lower() not in TRUE_VALUES), None)
+        if wrong is not None:
+            problems.append(f"core.bare must be true, found {wrong!r}")
     return problems
 
 
@@ -509,14 +558,15 @@ def validate_config(repo: str) -> dict:
 
 def stage_artifact(original_names: set[str]) -> dict:
     """Snapshot /app/repo.git root-held, record its refs and config, neutralise it, then make the checker-owned copy."""
+    report = copy_tree(ARTIFACT, STAGED, reject=True)
     try:
-        report = copy_tree(ARTIFACT, STAGED, reject=True)
+        # From here on everything touches only root-held copies, so an OSError is a verifier-side fault.
         report["refs_on_disk"] = disk_refs(STAGED, original_names)
         report["config"] = validate_config(STAGED)
         report["cleaned"] = clean_repo(STAGED)
-        copy_tree(STAGED, REPO, owner=CHECKER)
     except OSError as exc:
-        raise StageError(f"copying {ARTIFACT}: {exc}") from exc
+        raise InfraError(f"staging {ARTIFACT}: {exc}") from exc
+    copy_tree(STAGED, REPO, owner=CHECKER)
     present = {}
     for name in BARE_PARTS:
         try:
@@ -608,7 +658,7 @@ def original_objects(expected: dict) -> dict:
     if not names.ok:
         raise InfraError(f"for-each-ref on the original failed: exit {names.returncode}, timed out {names.timed_out}, "
                          f"truncated {names.truncated}, stderr tail {_text(names.stderr, 500)!r}")
-    return {"ids": parse_ids(run.stdout), "names": set(names.stdout.decode("utf-8", "replace").split()),
+    return {"ids": parse_ids(run.stdout), "names": set(split_lines(names.stdout.decode("utf-8", "replace"))),
             "run": run.summary(), "refs_run": names.summary()}
 
 
@@ -629,7 +679,7 @@ def compare_refs(expected: dict, original_names: set[str], disk: dict) -> dict:
     run = run_git(REPO, FOR_EACH_REF_ARGS, "for-each-ref")
     actual = parse_ref_lines(run.stdout.decode("utf-8", "replace")) if run.ok else []
     everything = run_git(REPO, ALL_REFS_ARGS, "all-refs")
-    names = set(everything.stdout.decode("utf-8", "replace").split()) if everything.ok else set()
+    names = set(split_lines(everything.stdout.decode("utf-8", "replace"))) if everything.ok else set()
     expected_rows, actual_rows = set(expected["refs"]), set(actual)
     # A name the original lacked fails whatever its namespace; a remote-tracking ref the original had and the
     # artifact lacks does not, because the instruction asks for the branches and tags (compared exactly above).

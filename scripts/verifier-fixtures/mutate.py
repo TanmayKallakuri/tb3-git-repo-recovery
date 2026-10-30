@@ -14,9 +14,18 @@ def git(repo: str, *args: str, stdin: bytes = b"") -> subprocess.CompletedProces
     return subprocess.run(["git", f"--git-dir={repo}", *args], input=stdin, capture_output=True, check=False)
 
 
+def head_branch(repo: str) -> str:
+    """The branch HEAD points at, from symbolic-ref; exits (a fixture build failure) when HEAD is not on a branch."""
+    head = git(repo, "symbolic-ref", "HEAD")
+    ref = head.stdout.decode(errors="replace").strip()
+    if head.returncode != 0 or not ref.startswith("refs/heads/"):
+        sys.exit(f"HEAD is not a symbolic ref to a branch: {head.stderr.decode(errors='replace').strip()}")
+    return ref
+
+
 def loose_reachable(repo: str, want_type: str | None = None) -> list[tuple[str, str]]:
-    """Objects reachable from main, in traversal order, whose loose file exists; optionally of one type."""
-    listing = git(repo, "rev-list", "--objects", "refs/heads/main", "--")
+    """Objects reachable from HEAD's branch, in traversal order, whose loose file exists; optionally of one type."""
+    listing = git(repo, "rev-list", "--objects", head_branch(repo), "--")
     if listing.returncode != 0:
         sys.exit(f"rev-list failed: {listing.stderr.decode(errors='replace')}")
     ids = [line.split()[0] for line in listing.stdout.decode(errors="replace").splitlines() if line.strip()]
@@ -46,7 +55,7 @@ def delete_loose(repo: str) -> None:
             os.unlink(path)
             print(f"deleted loose object {oid}")
             return
-    sys.exit("no object reachable from main exists only as a loose file")
+    sys.exit("no object reachable from HEAD's branch exists only as a loose file")
 
 
 def rewrite_blob(repo: str) -> None:
@@ -61,7 +70,7 @@ def rewrite_blob(repo: str) -> None:
                 target.write(zlib.compress(b"blob %d\0" % len(content) + content))
             print(f"rewrote loose blob {oid} in place with {len(content)} bytes of different content")
             return
-    sys.exit("no blob reachable from main exists only as a loose file")
+    sys.exit("no blob reachable from HEAD's branch exists only as a loose file")
 
 
 def main() -> None:

@@ -8,6 +8,11 @@ mutation 0. `scripts/verifier-fixtures.sh` builds the image, runs every case
 in its own container, prints the table and exits non-zero on any mismatch.
 A verifier that fails to run (no reward file, `test.sh` exit 2, container
 error) prints INFRA, never 0.
+Every 0-case also names the check that must be among the failed checks, and a
+0 for any other reason is reported as MISMATCH; the table prints the observed
+failed set. The branch, tag and HEAD refs a mutation touches are discovered in
+the copy at run time (`symbolic-ref HEAD`, `for-each-ref`), not hardcoded; a
+missing ref makes the case INFRA.
 
 ## Run of 2026-10-30
 
