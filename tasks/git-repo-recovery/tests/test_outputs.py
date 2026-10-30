@@ -31,9 +31,16 @@ def _listing(items: list, count: int) -> str:
 def check_staged(details: dict) -> tuple[bool, str]:
     if details["stage_error"]:
         return False, details["stage_error"]
-    absent = [name for name, present in details["stage"]["present"].items() if not present]
+    stage = details["stage"]
+    absent = [name for name, present in stage["present"].items() if not present]
     if absent:
         return False, f"{harness.ARTIFACT} lacks {', '.join(absent)}"
+    if stage["config"]["error"]:
+        return False, f"config: {stage['config']['error']}"
+    forbidden = stage["cleaned"]["forbidden"]
+    if forbidden:
+        return False, (f"{harness.ARTIFACT} carries {', '.join(forbidden)}: alternates, grafts, shallow files and "
+                       f"promisor markers borrow objects from elsewhere or excuse missing ones")
     bare = details["bare"]
     if not bare["is_bare"]:
         problem = _run_problem(bare["run"])
@@ -99,11 +106,11 @@ def check_no_rewrite(details: dict) -> tuple[bool, str]:
     problem = _run_problem(refs["all_refs_run"])
     if problem:
         problems.append(problem)
-    if refs["extra_names"]:
-        problems.append(f"refs that did not exist before the failure:\n{_listing(refs['extra_names'], len(refs['extra_names']))}")
-    if refs["other_namespaces"]:
-        problems.append(f"refs outside refs/heads, refs/tags and refs/remotes:\n"
-                        f"{_listing(refs['other_namespaces'], len(refs['other_namespaces']))}")
+    if refs["replace_refs"]:
+        problems.append(f"replacement refs present:\n{_listing(refs['replace_refs'], refs['replace_count'])}")
+    if refs["unexpected_names"]:
+        problems.append(f"refs that did not exist before the failure:\n"
+                        f"{_listing(refs['unexpected_names'], refs['unexpected_count'])}")
     return not problems, "\n".join(problems)
 
 
@@ -144,9 +151,11 @@ def _assert_check(graded: dict, name: str) -> None:
 
 
 def test_artifact_staged(graded):
-    """The submitted /app/repo.git is a bare repository: HEAD, objects/ and refs/ present and git calls it bare."""
+    """The submitted /app/repo.git is a plain bare repository: HEAD, objects/ and refs/ present, an allowlisted
+    config, no alternates, grafts, shallow file or promisor marker, and git calls it bare."""
     stage = graded["stage"] or {}
     print(f"staged: {stage}")
+    print(f"config keys: {(stage.get('config') or {}).get('keys')}")
     print(f"neutralised before grading: {(stage.get('cleaned') or {}).get('removed')}")
     _assert_check(graded, "test_artifact_staged")
 
@@ -173,5 +182,5 @@ def test_history_intact(graded):
 
 
 def test_no_history_rewrite(graded):
-    """No branch or tag exists that the repository did not have before the failure."""
+    """No ref of any kind, replacement refs included, exists that the repository did not have before the failure."""
     _assert_check(graded, "test_no_history_rewrite")
