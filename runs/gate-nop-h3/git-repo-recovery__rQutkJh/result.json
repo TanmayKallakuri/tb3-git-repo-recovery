@@ -1,0 +1,116 @@
+{
+  "id": "bef6fc92-f908-4f5a-a550-a0fe00376353",
+  "task_name": "terminal-bench/git-repo-recovery",
+  "trial_name": "git-repo-recovery__rQutkJh",
+  "trial_uri": "file:///<home>/Downloads/tb3-git-repo-recovery/jobs/gate-nop-h3/git-repo-recovery__rQutkJh",
+  "task_id": {
+    "path": "tasks\\git-repo-recovery"
+  },
+  "source": null,
+  "task_checksum": "ac2d1d8e4f493ed5203c3cbc9849cf2fa51046432fd8dd5672d08ec6585f952c",
+  "config": {
+    "task": {
+      "path": "tasks\\git-repo-recovery",
+      "git_url": null,
+      "git_commit_id": null,
+      "name": null,
+      "ref": null,
+      "overwrite": false,
+      "download_dir": null,
+      "source": null
+    },
+    "trial_name": "git-repo-recovery__rQutkJh",
+    "trials_dir": "jobs\\gate-nop-h3",
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "agent_timeout_multiplier": null,
+    "verifier_timeout_multiplier": null,
+    "agent_setup_timeout_multiplier": null,
+    "environment_build_timeout_multiplier": null,
+    "agent": {
+      "name": "nop",
+      "import_path": null,
+      "model_name": null,
+      "n_concurrent": null,
+      "concurrency_group": null,
+      "skills": [],
+      "override_timeout_sec": null,
+      "override_setup_timeout_sec": null,
+      "max_timeout_sec": null,
+      "resume_trajectory": false,
+      "load_trajectory": null,
+      "extra_allowed_hosts": [],
+      "kwargs": {},
+      "mcp_servers": []
+    },
+    "user_agent": null,
+    "environment": {
+      "type": "docker",
+      "import_path": null,
+      "force_build": false,
+      "delete": true,
+      "stream": false,
+      "cpu_enforcement_policy": "auto",
+      "memory_enforcement_policy": "auto",
+      "override_cpus": null,
+      "override_memory_mb": null,
+      "override_storage_mb": null,
+      "override_gpus": null,
+      "override_tpu": null,
+      "mounts": null,
+      "extra_docker_compose": [],
+      "kwargs": {},
+      "extra_allowed_hosts": []
+    },
+    "verifier": {
+      "override_timeout_sec": null,
+      "max_timeout_sec": null,
+      "disable": false
+    },
+    "artifacts": [],
+    "extra_instruction_paths": [],
+    "extra_instructions": [],
+    "job_id": "c0fb6864-12af-4d32-864d-7c5304376164",
+    "source_trial": null
+  },
+  "agent_info": {
+    "name": "nop",
+    "version": "1.0.0",
+    "model_info": null
+  },
+  "agent_result": {
+    "n_input_tokens": null,
+    "n_cache_tokens": null,
+    "n_output_tokens": null,
+    "cost_usd": null,
+    "model_usage": null,
+    "rollout_details": null,
+    "metadata": null
+  },
+  "verifier_result": {
+    "rewards": {
+      "reward": 0.0
+    }
+  },
+  "verifier_environment_mode": "separate",
+  "exception_info": null,
+  "started_at": "2026-10-30T11:49:22.037741Z",
+  "finished_at": "2026-10-30T11:50:06.458665Z",
+  "environment_setup": {
+    "started_at": "2026-10-30T11:49:22.438779Z",
+    "finished_at": "2026-10-30T11:49:30.306041Z"
+  },
+  "agent_setup": {
+    "started_at": "2026-10-30T11:49:30.306100Z",
+    "finished_at": "2026-10-30T11:49:30.306175Z"
+  },
+  "agent_execution": {
+    "started_at": "2026-10-30T11:49:30.306271Z",
+    "finished_at": "2026-10-30T11:49:30.309525Z"
+  },
+  "verifier": {
+    "started_at": "2026-10-30T11:49:38.081599Z",
+    "finished_at": "2026-10-30T11:50:06.458644Z"
+  },
+  "step_results": null
+}
