@@ -1,0 +1,20 @@
+VERIFIED 593 Counter({'tree': 270, 'blob': 165, 'commit': 154, 'tag': 4})
+UNRESOLVED DELTAS 4 ZEROED 37 ZEROED WITHOUT DUPLICATES 14
+MISSING {'oid': 'c30cfac86f61d9e3f5782f272924333776ecd662', 'type': 1, 'size': 333, 'base': None, 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:7556'}
+MISSING {'oid': '11546642caef9b8f524df49a139bb6862b747dc8', 'type': 1, 'size': 243, 'base': None, 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:7780'}
+MISSING {'oid': 'cac0888c02248f2457ccc0f47aad766d41e8a37c', 'type': 1, 'size': 422, 'base': None, 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:7951'}
+MISSING {'oid': '7d33f4dadc548a87cbe997c130d557800b812772', 'type': 6, 'size': 31, 'base': '74761b95272e40244b652ec1b3a033a641145541', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:28110'}
+MISSING {'oid': '8943aea7d10b0ad320dd488c1b01786ca8c031b5', 'type': 6, 'size': 32, 'base': '9998bc284780a4d58bdbad3192a0a9b6586d865b', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:29501'}
+MISSING {'oid': '88d8473dbbe152e91a26acec7b9aa56c917eb913', 'type': 6, 'size': 32, 'base': 'd87b585a77e5b37ec250815c6cff3b26bf366328', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:29546'}
+MISSING {'oid': '89727e43a784441b1ef8f792c2a7377a9435163f', 'type': 6, 'size': 57, 'base': '9998bc284780a4d58bdbad3192a0a9b6586d865b', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:29592'}
+MISSING {'oid': '26b365efd3049431a7bf5033d91c680cf177d604', 'type': 6, 'size': 32, 'base': '89727e43a784441b1ef8f792c2a7377a9435163f', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:29664'}
+MISSING {'oid': 'f7d9c041a939367f3e12911698b17aa7d5f63204', 'type': 6, 'size': 32, 'base': '88d8473dbbe152e91a26acec7b9aa56c917eb913', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:29708'}
+MISSING {'oid': '0f21f2abd320bc7a3e95791a7f6b334c59b2557a', 'type': 3, 'size': 4380, 'base': None, 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:34306'}
+MISSING {'oid': 'b31372d6e56a840828f7a0a31276d3ba2cbe7ba6', 'type': 6, 'size': 11, 'base': '0f85136f0ab8d0d3abc9880960f8010a42778f50', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:41482'}
+MISSING {'oid': '4357b8ed3dd4d6e24c1d695ef93ffa5312f32f05', 'type': 6, 'size': 15, 'base': '591d9df16ac49a264dc0d12c61762770ec10408b', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:47418'}
+MISSING {'oid': '2831e784e676c303433667812211487ce363f115', 'type': 6, 'size': 17, 'base': '19f0996f819936629df2c5809decc0b4f9f6bc0f', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:48146'}
+MISSING {'oid': '9ee0482da23721f2cdd9f71f776d7267fb7b9967', 'type': 6, 'size': 7, 'base': 'fe28c25e25d0bf94a17ebaf867952a1e81e71245', 'source': 'pack-0edbe236157d7f40502eaa2e054bc68160f770ab.pack:52252'}
+BLOCKED c9ced31dc02bfab1f052c50aaee245ff4686dfe2 base 7d33f4dadc548a87cbe997c130d557800b812772
+BLOCKED 55c8a92b3c4ab5caab3c878c5c155ac5728f3d22 base 89727e43a784441b1ef8f792c2a7377a9435163f
+BLOCKED 5fab911abddbe711c096bc95e2c4701bb86dc73b base 0f21f2abd320bc7a3e95791a7f6b334c59b2557a
+BLOCKED a71b87eb182a0fcbd8d629f280042c28220d29ce base 5fab911abddbe711c096bc95e2c4701bb86dc73b

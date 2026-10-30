@@ -1,0 +1,152 @@
+{
+  "checks": {
+    "verifiable": {
+      "outcome": "pass",
+      "explanation": "The verifier is a deterministic, root-run test.sh that stages the submitted repo, runs git under a locked-down environment, and compares exact object/ref sets against a pristine original baked into tests/Dockerfile; no runtime network installs occur in test.sh and all verifier tooling (uv, pytest, git) is baked into the image."
+    },
+    "solvable": {
+      "outcome": "pass",
+      "explanation": "I ran solution/recover.py against a fresh copy of environment/repo.git without Docker: it produced a bare repo that passes `git fsck --full --strict --no-dangling` with exit 0, and its for-each-ref/HEAD output and reachable object set (610 objects) matched tests/expected-refs.txt, tests/expected-head.txt, and tests/original byte-for-byte, confirming the reference solution genuinely passes the verifier."
+    },
+    "difficult": {
+      "outcome": "pass",
+      "explanation": "The task requires deep git plumbing expertise (packfile/delta formats, loose-object repair, reflog/patch/tag-object forensics, replaying a release script) across 53 distinct damage items in 11 classes; this is well beyond an average undergraduate's reach and matches real data-recovery/git-hosting engineering work."
+    },
+    "interesting": {
+      "outcome": "pass",
+      "explanation": "Recovering a corrupted bare git repository after a storage failure is a realistic scenario for engineers running git hosting or data-recovery contractors, as stated in the README's Relevant experience section."
+    },
+    "outcome_verified": {
+      "outcome": "pass",
+      "explanation": "instruction.md states only the desired end state (fsck clean, refs/branches restored with original content, no rewritten history, no new refs) and gives no step-by-step procedure or tool-specific instructions."
+    },
+    "anti_cheat_robustness": {
+      "outcome": "pass",
+      "explanation": "The agent image only ever receives the damaged environment/repo.git (confirmed via environment/Dockerfile); the pristine tests/original, damage.json, and expected-* files live only in the verifier image under separate-verifier mode. I confirmed empirically that the two hardest items (the feature/cache-warmup tip and the v1.4.0 tag) are reconstructed via genuine commit-tree/release-script replay rather than being retrievable as a hidden object, matching the README's claims."
+    },
+    "task_security": {
+      "outcome": "pass",
+      "explanation": "All Dockerfiles, scripts, and the harness perform only legitimate build/verify actions (pinned base images, standard apt installs, scoped file operations under /app, /tests, /run/verifier, /logs/verifier); no credential access, exfiltration, obfuscation, or prompt injection was found."
+    },
+    "functional_verification": {
+      "outcome": "pass",
+      "explanation": "tests/harness.py executes real git subcommands (fsck, for-each-ref, rev-list, cat-file) on a staged copy and compares actual outputs/reachable object sets to the original; no string/keyword scanning of source files is used."
+    },
+    "deterministic_reproducible": {
+      "outcome": "pass",
+      "explanation": "Base images are pinned by digest, Python test dependencies are pinned and hash-locked in tests/uv.lock, apt packages (git, ca-certificates) are left unpinned per convention, and the recovery/verification process is fully deterministic with no stochastic steps."
+    },
+    "essential_difficulty": {
+      "outcome": "pass",
+      "explanation": "Difficulty comes from genuine reasoning about git internals and evidence reconstruction, not formatting; the acceptance criteria (exact object ids, exact ref/HEAD equality) are intrinsic to git's content-addressed model rather than arbitrary clerical precision."
+    },
+    "test_instruction_alignment": {
+      "outcome": "pass",
+      "explanation": "Every test (artifact staged in place, fsck clean, refs/HEAD restored, history intact, no rewrite/new refs) traces directly to a sentence in instruction.md, and every instruction requirement (fsck clean, branches/tags restored with original content, no rewritten history, no new refs, nothing borrowed from outside the repo) has corresponding test coverage."
+    },
+    "novel": {
+      "outcome": "pass",
+      "explanation": "The repository and its specific combination of 11 damage classes are synthetically generated and unique to this task; while generic git-recovery techniques are documented online, this instance requires applying them through genuine exploration rather than recall of a memorized solution."
+    },
+    "agentic": {
+      "outcome": "pass",
+      "explanation": "Solving this requires iterative multi-step terminal interaction — inventorying packs, inspecting reflogs/config/tree, applying patches, replaying scripts, and repeatedly re-running fsck — that cannot be done in a single zero-shot generation."
+    },
+    "reviewable": {
+      "outcome": "pass",
+      "explanation": "The README's numeric claims (610 objects, 158 commits, 13 refs, 53 damage items in 11 classes) all verified exactly against the actual repository and damage.json, and preflight.py cross-checks the hand-authored expected-refs/expected-head files against the original repository computed live with git rather than trusting a hardcoded value."
+    },
+    "instruction_concision": {
+      "outcome": "pass",
+      "explanation": "instruction.md uses the absolute path `/app/repo.git`, states the desired end state without prescribing a method, and does not mention any recovery tools, libraries, or techniques the agent should discover itself."
+    },
+    "effective_instruction_length": {
+      "outcome": "pass",
+      "explanation": "instruction.md is 146 words (per the word-count tool) with no referenced external requirement documents; it is tight and has no unnecessary repetition or fragmentation."
+    },
+    "solution_quality": {
+      "outcome": "pass",
+      "explanation": "solution/recover.py (1001 lines, kept as its own file rather than a heredoc in solve.sh) performs genuine computation — pack inventory, delta application, single-byte loose-object repair, patch replay, release-script replay — with no hardcoded object ids, and I verified it actually produces the correct, verifier-matching result."
+    },
+    "separate_verifier_configured": {
+      "outcome": "pass",
+      "explanation": "All verifier inputs (ARTIFACT via the declared artifact, ORIGINAL/expected-refs/expected-head baked via tests/Dockerfile's `COPY . /tests/`) are available without the agent container; verifier tooling (uv, pytest, git) is fully baked into tests/Dockerfile with no runtime installs in test.sh; the intentional divergence between environment/repo.git (damaged) and tests/original (pristine) is documented in README's Verification explanation as the anti-cheat design."
+    },
+    "environment_hygiene": {
+      "outcome": "pass",
+      "explanation": "environment/Dockerfile copies only repo.git/ (no tests/ or solution/, no test-only deps); tests/Dockerfile owns all verifier-only dependencies and creates the checker user and artifact landing directories; both Dockerfiles run `apt-get update` before installs and clean up `/var/lib/apt/lists/*` afterward, with apt packages left unpinned."
+    },
+    "structured_data_schema": {
+      "outcome": "not_applicable",
+      "explanation": "The deliverable is a repaired bare git repository, not a structured data format like JSON/CSV/API output, so a normative schema document does not apply."
+    },
+    "typos": {
+      "outcome": "pass",
+      "explanation": "No typos were found in filenames, paths, commands, or variable names across instruction.md, README.md, task.toml, the Dockerfiles, harness.py, test_outputs.py, preflight.py, solve.sh, or recover.py."
+    },
+    "difficulty_explanation_quality": {
+      "outcome": "pass",
+      "explanation": "The README's Difficulty explanation concretely describes the 53-item, 11-class damage taxonomy, names the two unrecoverable-by-lookup items and why they are hard, and states who in the real world would do this work, satisfying both the agent- and human-difficulty requirements."
+    },
+    "solution_explanation_quality": {
+      "outcome": "pass",
+      "explanation": "The Solution explanation accurately summarizes recover.py's strategy (pack inventory, byte-search repair, patch/tag/release-script reconstruction, ref recovery) and is fully consistent with the actual solution files, as I confirmed by running the solution and inspecting its logged steps."
+    },
+    "verification_explanation_quality": {
+      "outcome": "pass",
+      "explanation": "The Verification explanation precisely matches harness.py/test_outputs.py's five checks (staging/bareness, fsck, refs+HEAD, reachable objects, no rewrite/new refs) and relies on exact-match comparisons rather than tolerances, so no calibration justification is needed."
+    },
+    "category_and_tags": {
+      "outcome": "pass",
+      "explanation": "category=Software/subcategory=Systems fits a git-internals debugging task, and tags (git, data-recovery, version-control, packfiles, debugging) are specific and directly descriptive of the skills exercised."
+    },
+    "task_name": {
+      "outcome": "pass",
+      "explanation": "\"git-repo-recovery\" is a 3-word, lowercase kebab-case slug that clearly conveys the task's subject matter."
+    },
+    "resource_configuration": {
+      "outcome": "pass",
+      "explanation": "The 8-hour agent timeout matches the stated 6-hour expert estimate and genuine difficulty, the 600s verifier timeout comfortably covers the harness's own bounded per-command budgets (120s/420s), and cpus/memory/storage are modest and appropriate for a ~1MB git repository rather than inflating difficulty via compute."
+    },
+    "task_readme": {
+      "outcome": "pass",
+      "explanation": "README.md includes Task Metadata, Change Log, Difficulty explanation, Solution explanation, Verification explanation, and Relevant experience sections, all substantive and non-redundant with the instruction or solution code."
+    },
+    "expert_time_estimate": {
+      "outcome": "pass",
+      "explanation": "The 6-hour estimate is non-zero and plausible given the breadth of reconstruction techniques required, and is consistent with the 8-hour agent timeout and the detailed difficulty explanation."
+    },
+    "task_toml_schema": {
+      "outcome": "pass",
+      "explanation": "task.toml uses only recognized fields across [task], [metadata], [verifier], [agent], and [environment], with no invented keys."
+    },
+    "no_extraneous_files": {
+      "outcome": "fail",
+      "explanation": "tests/damage.json is not read by harness.py, preflight.py, test_outputs.py, solve.sh, or recover.py, nor named in instruction.md or README.md; although its contents corroborate the README's difficulty claims, nothing in the task actually references or requires the file, which the rubric treats as extraneous."
+    },
+    "artifact_efficiency": {
+      "outcome": "not_applicable",
+      "explanation": "The single declared artifact (/app/repo.git/, ~800KB) is entirely the agent's in-place deliverable with no separable build-time-fixed component to bake into the verifier instead, matching the small-deliverable exception."
+    },
+    "verifier_execution_isolation": {
+      "outcome": "pass",
+      "explanation": "harness.py runs all git commands on the staged artifact as the unprivileged `checker` user with resource limits and process-group cleanup, test.sh chmods /logs/verifier and /tests to 700 before any of that runs, and the root test.sh alone derives and writes the final reward from pytest's exit code."
+    },
+    "ctrf_reporting": {
+      "outcome": "pass",
+      "explanation": "test.sh invokes pytest with `--ctrf /logs/verifier/ctrf.json` and test.sh additionally validates the CTRF report's shape (5 named tests, all passed) before deriving the reward."
+    },
+    "do_not_modify_enforced": {
+      "outcome": "pass",
+      "explanation": "The instruction's \"do not rewrite history, do not create refs that did not exist\" constraints are directly enforced by test_no_history_rewrite (replace-ref and unexpected-ref-name checks) and reinforced by the exact-id comparisons in test_refs_restored/test_history_intact, so a violating agent fails verification."
+    },
+    "binary_reward": {
+      "outcome": "pass",
+      "explanation": "test.sh writes exactly `1` or `0` to /logs/verifier/reward.txt based on the pytest exit code and a secondary CTRF-shape check, with no fractional or weighted computation on any reachable path; infra-level failures remove the reward file instead of scoring it."
+    },
+    "score_provenance": {
+      "outcome": "not_applicable",
+      "explanation": "All checks are discrete pass/fail conditions (fsck clean, refs match, objects match) with no underlying continuous metric being thresholded, so there is no raw measurement/threshold pair to preserve beyond what the CTRF report and reward-details.json already capture."
+    }
+  }
+}

@@ -1,0 +1,32 @@
+preflight: ok, git version 2.39.5, original passes fsck as checker, 13 expected refs
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /tests
+configfile: pyproject.toml
+plugins: json-ctrf-0.5.2
+collected 5 items
+
+test_outputs.py .....                                                    [100%]
+
+==================================== PASSES ====================================
+_____________________________ test_artifact_staged _____________________________
+----------------------------- Captured stdout call -----------------------------
+staged: {'files': 641, 'dirs': 250, 'bytes': 296343, 'skipped': [], 'skipped_count': 0, 'refs_on_disk': {'loose_count': 15, 'packed_count': 3, 'packed_truncated': False, 'malformed_packed': [], 'malformed_count': 0, 'names': ['refs/heads/develop', 'refs/heads/feature/cache-warmup', 'refs/heads/feature/retry-policy', 'refs/heads/hotfix/1.2.1', 'refs/heads/main', 'refs/remotes/mirror/develop', 'refs/remotes/mirror/feature/cache-warmup', 'refs/remotes/mirror/feature/retry-policy', 'refs/remotes/mirror/hotfix/1.2.1', 'refs/remotes/mirror/main', 'refs/tags/v0.9.0-rc1', 'refs/tags/v1.0.0', 'refs/tags/v1.1.0', 'refs/tags/v1.2.0', 'refs/tags/v1.2.1', 'refs/tags/v1.3.0', 'refs/tags/v1.3.1', 'refs/tags/v1.4.0'], 'count': 18, 'unexpected': [], 'unexpected_count': 0, 'replace': [], 'replace_count': 0}, 'config': {'bytes': 196, 'run': {'label': 'config-list', 'argv': ['git', 'config', '--file', '/run/verifier/config-check/config', '--no-includes', '--list', '-z'], 'returncode': 0, 'timed_out': False, 'truncated': False, 'seconds': 0.02, 'stdout_tail': 'core.repositoryformatversion\n0\x00core.filemode\ntrue\x00core.bare\ntrue\x00core.logallrefupdates\ntrue\x00remote.mirror.url\ngit@mirror.example:orbit/orbit.git\x00remote.mirror.fetch\n+refs/heads/*:refs/remotes/mirror/*\x00', 'stderr_tail': ''}, 'keys': ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch'], 'key_count': 6, 'problems': [], 'error': None}, 'cleaned': {'removed': ['hooks'], 'forbidden': [], 'config_before': '[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = true\n\tlogAllRefUpdates = true\n[remote "mirror"]\n\turl = git@mirror.example:orbit/orbit.git\n\tfetch = +refs/heads/*:refs/remotes/mirror/*\n', 'config_replaced': True}, 'present': {'HEAD': True, 'objects': True, 'refs': True}}
+config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+neutralised before grading: ['hooks']
+_______________________________ test_fsck_clean ________________________________
+----------------------------- Captured stdout call -----------------------------
+fsck: {'label': 'fsck', 'argv': ['git', '--git-dir=/run/verifier/repo', '-c', 'safe.directory=*', 'fsck', '--full', '--strict', '--no-dangling'], 'returncode': 0, 'timed_out': False, 'truncated': False, 'seconds': 0.08, 'stdout_tail': '', 'stderr_tail': ''}
+______________________________ test_refs_restored ______________________________
+----------------------------- Captured stdout call -----------------------------
+refs: expected 13, found 13, HEAD 'ref: refs/heads/main'
+_____________________________ test_history_intact ______________________________
+----------------------------- Captured stdout call -----------------------------
+objects: reachable 610, original 610
+=========================== short test summary info ============================
+PASSED test_outputs.py::test_artifact_staged
+PASSED test_outputs.py::test_fsck_clean
+PASSED test_outputs.py::test_refs_restored
+PASSED test_outputs.py::test_history_intact
+PASSED test_outputs.py::test_no_history_rewrite
+============================== 5 passed in 1.38s ===============================

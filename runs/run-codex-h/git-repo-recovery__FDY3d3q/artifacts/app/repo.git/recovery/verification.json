@@ -1,0 +1,19 @@
+{
+  "fsck_exit_code": 0,
+  "fsck_output_bytes": 0,
+  "total_objects": 610,
+  "object_counts": {
+    "tree": 276,
+    "commit": 158,
+    "blob": 171,
+    "tag": 5
+  },
+  "original_indexed_and_loose_object_ids_verified": 608,
+  "original_metadata_files_preserved_exactly": 18,
+  "reflog_object_ids_verified": 145,
+  "all_objects_reachable": true,
+  "cache_archive_roundtrip": "byte-for-byte match",
+  "branches": 5,
+  "tags": 8,
+  "remote_tracking_refs": 5
+}

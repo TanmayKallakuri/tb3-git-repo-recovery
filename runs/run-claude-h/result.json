@@ -1,0 +1,44 @@
+{
+    "id": "9ded1025-e233-4999-a37c-bc22a1342bcf",
+    "started_at": "2026-10-30T03:11:58.027163",
+    "updated_at": "2026-10-30T04:08:04.406708",
+    "finished_at": "2026-10-30T04:08:04.406708",
+    "n_total_trials": 2,
+    "stats": {
+        "n_completed_trials": 2,
+        "n_errored_trials": 0,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "claude-code__claude-fable-5-1__adhoc": {
+                "n_trials": 2,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "mean": 0.5
+                    }
+                ],
+                "pass_at_k": {
+                    "2": 1.0
+                },
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "git-repo-recovery__CMQWEQW"
+                        ],
+                        "1.0": [
+                            "git-repo-recovery__kLSoSqt"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        },
+        "n_input_tokens": 10837648,
+        "n_cache_tokens": 10441308,
+        "n_output_tokens": 210762,
+        "cost_usd": 21.048626999999996
+    }
+}

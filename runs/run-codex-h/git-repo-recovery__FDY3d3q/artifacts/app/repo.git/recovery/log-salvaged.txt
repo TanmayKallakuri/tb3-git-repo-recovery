@@ -1,0 +1,53 @@
+904cdd39e94b7267b40adfc4caeeed4ffb91e06c 2026-10-15T15:35:47+00:00 Merge branch 'develop'
+bfa5ad83b686bad7e2e4e0f8b570bb3a2315e5bf 2026-10-15T18:39:55+05:30 Add a cache test for empty tables
+0b88cd7556af7e6c6ee454184c22f203ec0b786c 2026-10-15T11:34:41+01:00 Archive the cache-warmup series
+a0b8dca738bf9020a3e88252f9f53ab493c1469f 2026-10-10T21:08:08+00:00 Keep the tag message to one line
+9fb12416d536e187818f5c9da52d795dc5c43361 2026-10-08T23:52:01+00:00 Start the 1.5 roadmap
+f7bb1c5481079d595d2fa53657e0785d8b28206b 2026-10-05T19:30:18+05:30 Merge branch 'main' into develop
+407a8740ca9fe7768f2f31fd8169dc6edb94aa9b 2026-10-03T07:26:14+05:30 Release v1.4.0
+43b7a0d98d5d7d1f1509adf2e93527d8992fe9b5 2026-10-01T09:04:38+00:00 Merge branch 'develop'
+9c3b699020fdcdcf35ed7f5c5a9d43e122565c8e 2026-09-26T13:51:47+01:00 Add an operations note
+a541433306a2cfb95214da3e1cd71ed2fdbbb6a7 2026-09-25T06:56:03+05:30 Add a script to archive a branch as a patch series
+7189ab51fc86cd66ba9b1d0655ec4365d4deaa70 2026-09-21T19:57:11+00:00 Carry the release notes in the tag
+d13c784d66243541536833780676efba0d86042a 2026-09-18T18:21:25+05:30 Document the retry policy module
+6a291a82188b43228b75bb71b25399592fec2010 2026-09-17T22:05:23+05:30 Add a test for warmup ordering
+4e86b816df5b1685b9708389cf5b962e85efd800 2026-09-15T23:06:41+05:30 Merge branch 'main' into develop
+148c15071f76a8de6d7b8eb496202345e41ac9bf 2026-09-14T08:27:25+00:00 Refresh VERSION for the dist tarball
+e2e5e720516f652120ddc8dce745438eba10bc75 2026-09-11T05:43:43+00:00 Fix the usage line in the README
+aef3e022037917637248671a8d936d6710f61da6 2026-09-10T20:13:51+01:00 Warm the cache in a background thread
+35e60b11842b491b815e3e98c835e7b23596609a 2026-09-08T21:37:13+01:00 Release v1.3.1
+2f97cf4e201ab93f1a9937c59938055685787055 2026-09-07T03:54:58+01:00 Fix the month wrap in next_run
+4da3cbbc5c4bdffd0a420565f48332e125a7f53f 2026-09-05T03:53:31+05:30 Merge branch 'main' into develop
+ebcc265012e322e29e4bb97e4afdae1ba2c87492 2026-09-02T23:30:16+00:00 Release v1.3.0
+eb707215f580ae7587865f42df88e5a669c1d0eb 2026-09-01T17:07:09+00:00 Merge branch 'develop'
+c68ced9de14117fbec5322618559ed90243556bb 2026-08-31T04:25:38+00:00 Expose the cache in the package namespace
+9ede4e0d205305a34efa6588668a1b1a9ef7858f 2026-08-28T21:58:10+01:00 Merge branch 'feature/cache-warmup' into develop
+43b85f3057459e6407714c6488448e713c1ef340 2026-08-27T01:31:58+01:00 Document the warmup cache
+b52b146621e5ac95a599f0c137cca96a69f29061 2026-08-25T16:34:46+05:30 Add docstrings to the storage module
+8d1466ebec95c0b6443aee56b2fc7fda7976d4a5 2026-08-23T16:19:57+05:30 Describe the retry behaviour in the runner docstrings
+e7829fa366d2890f566ae3402fdce392a87d01c4 2026-08-21T16:43:54+01:00 Add tests for the warmup cache
+0af46845f319092446c8325427883c07d599ac07 2026-08-19T16:05:54+01:00 Warm the cache on scheduler start
+3ba6faf783f8bb335dd937e3b6817c047621aa63 2026-08-18T16:07:24+01:00 Add a warmup cache for job commands
+af4e4cd4deff009ddf4a7bb1e8ce4b954eecfa82 2026-08-17T08:02:36+00:00 Refresh VERSION for the dist tarball
+f1a290eb51399680feebcdf831444684102158a6 2026-08-14T13:25:59+00:00 Merge branch 'develop'
+fce245f6f526f178349b414bea64a881bb80252e 2026-08-13T07:50:35+01:00 Add a troubleshooting page
+fbecd721b2978234be7db8e10734190b45b85fab 2026-08-12T01:03:19+00:00 Archive the 1.2 patch series from the list
+e4a74c45e1bd251a2b145946e3a0ce2c8c7664eb 2026-08-10T01:39:15+05:30 Add a test for the configurable backoff
+e956f4e5647ad5d29e13af5f3479bc69b61b8d6d 2026-08-07T21:08:14+05:30 Make the backoff factor configurable from the job table
+01cb7b94c18f9a6ef606bf97073112f286138176 2026-08-06T00:12:12+05:30 Merge branch 'main' into develop
+bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 2026-08-04T02:33:42+01:00 Release v1.2.1
+a1f95bb280cc43fdd18b059593a0ced50c35c812 2026-08-02T05:29:02+01:00 Merge branch 'hotfix/1.2.1'
+69305d3a6d68e96388e91dcdde3447ea7042944f 2026-08-01T06:37:41+01:00 Add a regression test for weekday 7
+a445cabc265189d8cf6ff8b56d0e0ae6f03fc6d6 2026-07-29T22:50:30+01:00 Accept 7 as Sunday in weekday fields
+72fb1de272bc65b56ebb10a2bfe83ab9ae7a7a69 2026-07-28T13:56:42+05:30 Merge branch 'main' into develop
+c256b5c79663b545147eb748961436ae09201284 2026-07-26T01:17:27+00:00 Release v1.2.0
+dd77972d02e61fbb72e1941e643dcabfe402ea26 2026-07-24T19:50:13+00:00 Merge branch 'develop'
+4e081e37325e8c45eaed603300b72b3ad121ee07 2026-07-23T13:39:34+01:00 Add a test for the simplified parser
+83a861111d14088eeb5f4a9bbc4c36f359d9ab79 2026-07-22T02:11:54+00:00 Simplify parse_field
+0eb7e2931c46e2411867401ffd93b61d0b083874 2026-07-19T20:08:20+05:30 Mark the retry policy done in the roadmap
+93da578bf27ed5fdcfc3edf3504299e3541b6905 2026-07-17T06:37:37+01:00 Trim the roadmap: 1.1 leftovers are done
+b7b945be7b8b194810aae632616a04a1f6c655dc 2026-07-16T20:45:10+00:00 Merge branch 'feature/retry-policy' into develop
+991ce07b30999e2714e23493042c46379113eccb 2026-07-14T01:17:33+00:00 Move the daemon section to its own page
+2d71f7961cc16aa356fff6b43fd007e3a0e2f1b3 2026-07-12T19:58:33+05:30 Remove the stale retry notes from the user guide
+e9a3bbd1f33ef99c26ecb1572fe574b079e1dd87 2026-07-11T12:04:29+01:00 Document the retry policy
+a733a8acd01d28fdb88ea5ae0ec9060ae6ea3b07 2026-07-09T09:01:13+05:30 Read the attempt limit from the job table

@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Lena Fischer <lena@orbit.example>
+Date: Thu, 15 Oct 2026 10:51:01 +0100
+Subject: [PATCH 2/2] Add a cache size limit
+
+A job table with thousands of distinct commands made the warmup resolve
+every one of them before the first tick. Stop after `limit` entries, 256
+by default; the rest stay unresolved until they are looked up.
+---
+ orbit/cache.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/orbit/cache.py b/orbit/cache.py
+index a262592..e682c62 100644
+--- a/orbit/cache.py
++++ b/orbit/cache.py
+@@ -7,12 +7,15 @@ import threading
+ class WarmupCache:
+     """Maps the first word of every command to its resolved path."""
+ 
+-    def __init__(self):
++    def __init__(self, limit=256):
+         self.paths = {}
++        self.limit = limit
+ 
+     def warm(self, jobs):
+         """Resolve the executable of every job; unknown ones map to None."""
+         for job in jobs:
++            if len(self.paths) >= self.limit:
++                break
+             self.paths[job.command[0]] = shutil.which(job.command[0])
+         return self.paths
+ 
