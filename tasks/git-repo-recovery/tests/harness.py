@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import errno
 import json
 import os
 import re
@@ -38,6 +39,8 @@ LIST_LIMIT = 2000
 MAX_ENTRIES = 200_000
 MAX_BYTES = 512 * 1024 * 1024
 MAX_DEPTH = 64
+PATH_MAX = 4096
+NAME_MAX = 255
 BARE_PARTS = ("HEAD", "objects", "refs")
 REJECTED_ANYWHERE = (".git",)
 REJECTED_AT_ROOT = ("gitdir", "commondir")
@@ -82,6 +85,19 @@ class InfraError(Exception):
 
 class StageError(Exception):
     """The artifact cannot be staged safely; check 1 fails, the verifier does not."""
+
+
+# Errors the artifact's own names or shapes can provoke below the destination (too long a path or name, a symlink loop,
+# a name collision, a name the filesystem refuses). An artifact must never be able to convert a failing grade into an
+# infrastructure error, so when copying the artifact these are StageError (a graded failure). Resource faults (ENOSPC,
+# EIO, EROFS, EMFILE, ENFILE, ENOMEM, EDQUOT, EAGAIN) and anything unlisted stay InfraError.
+ARTIFACT_ERRNOS = frozenset((errno.ENAMETOOLONG, errno.ELOOP, errno.EEXIST, errno.ENOTDIR, errno.EISDIR, errno.EINVAL,
+                             errno.EPERM, errno.EILSEQ))
+
+
+def classify_os_error(exc: OSError, artifact: bool) -> type[Exception]:
+    """StageError for an artifact-caused errno while handling the artifact; InfraError otherwise (vetted content)."""
+    return StageError if artifact and exc.errno in ARTIFACT_ERRNOS else InfraError
 
 
 @dataclass(frozen=True)
@@ -283,19 +299,22 @@ def remove_path(path: str) -> None:
         os.unlink(path)
 
 
-def _make_dir(path: str, mode: int, owner: User | None) -> None:
-    """Create a root-side directory; any OSError is a verifier-side fault (full disk, bad mount), never the agent's."""
+def _make_dir(path: str, mode: int, owner: User | None, artifact: bool = False) -> None:
+    """Create a root-side directory; an OSError is a verifier-side fault (full disk, bad mount) unless artifact is set
+    and the errno is one the artifact's own names can provoke (see ARTIFACT_ERRNOS)."""
     try:
         os.mkdir(path, mode)
         os.chmod(path, mode)
         if owner is not None:
             os.chown(path, owner.uid, owner.gid, follow_symlinks=False)
     except OSError as exc:
-        raise InfraError(f"cannot create {path}: {exc.strerror}") from exc
+        raise classify_os_error(exc, artifact)(f"cannot create {path}: {exc.strerror}") from exc
 
 
 def _copy_file(src: str, dst: str, mode: int, owner: User | None, src_error: type[Exception] = StageError) -> None:
-    """Copy one regular file; a fault reading src raises src_error, a fault creating or writing dst raises InfraError."""
+    """Copy one regular file; a fault reading src raises src_error, a fault creating or writing dst raises InfraError
+    (StageError for an artifact-caused errno when src_error is StageError, i.e. when copying the artifact)."""
+    artifact = src_error is StageError
     try:
         src_fd = os.open(src, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
     except OSError as exc:
@@ -304,14 +323,14 @@ def _copy_file(src: str, dst: str, mode: int, owner: User | None, src_error: typ
         try:
             dst_fd = os.open(dst, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, mode)
         except OSError as exc:
-            raise InfraError(f"cannot create {dst}: {exc.strerror}") from exc
+            raise classify_os_error(exc, artifact)(f"cannot create {dst}: {exc.strerror}") from exc
         try:
             try:
                 os.fchmod(dst_fd, mode)
                 if owner is not None:
                     os.fchown(dst_fd, owner.uid, owner.gid)
             except OSError as exc:
-                raise InfraError(f"cannot set up {dst}: {exc.strerror}") from exc
+                raise classify_os_error(exc, artifact)(f"cannot set up {dst}: {exc.strerror}") from exc
             while True:
                 try:
                     chunk = os.read(src_fd, 1024 * 1024)
@@ -324,7 +343,7 @@ def _copy_file(src: str, dst: str, mode: int, owner: User | None, src_error: typ
                     while view:
                         view = view[os.write(dst_fd, view):]
                 except OSError as exc:
-                    raise InfraError(f"cannot write {dst}: {exc.strerror}") from exc
+                    raise classify_os_error(exc, artifact)(f"cannot write {dst}: {exc.strerror}") from exc
         finally:
             os.close(dst_fd)
     finally:
@@ -337,11 +356,20 @@ def _reserve(report: dict, src: str, size: int) -> None:
     report["bytes"] += size
 
 
+def check_name_lengths(rel: str, name: str) -> None:
+    """Refuse an artifact path whose staged or checker copy could not be created: raises StageError, never InfraError."""
+    if len(os.fsencode(name)) > NAME_MAX:
+        raise StageError(f"{rel[:200]!r} has a name component longer than {NAME_MAX} bytes")
+    if len(os.fsencode(rel)) + max(len(STAGED), len(REPO)) + 1 >= PATH_MAX:
+        raise StageError(f"{rel[:200]!r} is too long to stage (path of {PATH_MAX} bytes or more)")
+
+
 def copy_tree(src: str, dst: str, owner: User | None = None, readable: bool = False, reject: bool = False) -> dict:
     """Copy the regular files and directories below src into a new dst; anything else is listed, or refused with reject.
 
-    reject marks src as the agent's artifact: a fault reading it raises StageError. Faults reading any other src, and
-    every fault creating or writing below dst, raise InfraError."""
+    reject marks src as the agent's artifact: a fault reading it raises StageError, and so does a fault creating or
+    writing below dst whose errno the artifact's own names can provoke. Faults reading any other src, every other fault
+    below dst, and every fault when src is not the artifact, raise InfraError."""
     dir_mode, file_mode = (0o755, 0o644) if readable else (0o700, 0o600)
     src_error = StageError if reject else InfraError
     try:
@@ -369,6 +397,8 @@ def copy_tree(src: str, dst: str, owner: User | None = None, readable: bool = Fa
             rel = os.path.relpath(entry.path, src)
             if reject and (entry.name in REJECTED_ANYWHERE or (depth == 0 and entry.name in REJECTED_AT_ROOT)):
                 raise StageError(f"{src} contains {rel}, which would redirect git away from the repository")
+            if reject:
+                check_name_lengths(rel, entry.name)
             try:
                 st = entry.stat(follow_symlinks=False)
             except OSError as exc:
@@ -377,7 +407,7 @@ def copy_tree(src: str, dst: str, owner: User | None = None, readable: bool = Fa
             if stat.S_ISDIR(st.st_mode):
                 _reserve(report, src, 0)
                 report["dirs"] += 1
-                _make_dir(target, dir_mode, owner)
+                _make_dir(target, dir_mode, owner, reject)
                 pending.append((entry.path, target, depth + 1))
             elif stat.S_ISREG(st.st_mode):
                 _reserve(report, src, st.st_size)
@@ -560,12 +590,12 @@ def stage_artifact(original_names: set[str]) -> dict:
     """Snapshot /app/repo.git root-held, record its refs and config, neutralise it, then make the checker-owned copy."""
     report = copy_tree(ARTIFACT, STAGED, reject=True)
     try:
-        # From here on everything touches only root-held copies, so an OSError is a verifier-side fault.
+        # Only root-held copies from here on, but their names and shapes are still the artifact's: classify by errno.
         report["refs_on_disk"] = disk_refs(STAGED, original_names)
         report["config"] = validate_config(STAGED)
         report["cleaned"] = clean_repo(STAGED)
     except OSError as exc:
-        raise InfraError(f"staging {ARTIFACT}: {exc}") from exc
+        raise classify_os_error(exc, True)(f"staging {ARTIFACT}: {exc}") from exc
     copy_tree(STAGED, REPO, owner=CHECKER)
     present = {}
     for name in BARE_PARTS:
