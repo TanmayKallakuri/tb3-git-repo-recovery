@@ -1,0 +1,3 @@
+error: inflate: data stream error (invalid distance too far back)
+error: corrupt loose object 'a0b8dca738bf9020a3e88252f9f53ab493c1469f'
+fatal: loose object a0b8dca738bf9020a3e88252f9f53ab493c1469f (stored in /run/verifier/repo/objects/a0/b8dca738bf9020a3e88252f9f53ab493c1469f) is corrupt
