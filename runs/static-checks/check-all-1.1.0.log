@@ -1,4 +1,4 @@
-# git-repo-recovery 1.1.0 static checks, 2026-10-30T09:19:15Z, task commit 719f13e, upstream terminal-bench 7b1f530
+# git-repo-recovery 1.1.0 static checks, 2026-10-30T11:49:33Z, task commit f29cadf, upstream terminal-bench 7b1f530
 # command: bash scripts/check-all.sh tasks/git-repo-recovery
 check-all: task=tasks/git-repo-recovery root=<home>/Downloads/tb3-git-repo-recovery
 check-all: checks=<home>/Downloads/terminal-bench/scripts/checks (7b1f530)
