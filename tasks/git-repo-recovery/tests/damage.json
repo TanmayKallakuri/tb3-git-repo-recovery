@@ -538,21 +538,21 @@
    "type": "blob"
   },
   {
-   "altered_byte": 83,
+   "altered_byte": 158,
    "class": "D3",
-   "object": "aef3e022037917637248671a8d936d6710f61da6",
-   "offset": 90,
-   "original_byte": 9,
+   "object": "a541433306a2cfb95214da3e1cd71ed2fdbbb6a7",
+   "offset": 132,
+   "original_byte": 196,
    "path": "",
    "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
    "type": "commit"
   },
   {
-   "altered_byte": 204,
+   "altered_byte": 218,
    "class": "D3",
-   "object": "6a291a82188b43228b75bb71b25399592fec2010",
-   "offset": 88,
-   "original_byte": 150,
+   "object": "a0b8dca738bf9020a3e88252f9f53ab493c1469f",
+   "offset": 142,
+   "original_byte": 128,
    "path": "",
    "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
    "type": "commit"
@@ -560,10 +560,10 @@
   {
    "altered_byte": 3,
    "class": "D3",
-   "object": "b10242c6f02a2ad627f772aa0a930370863f5bf8",
-   "offset": 250,
+   "object": "3695dba707dabc7cfc5d3fd31d5b51210f320873",
+   "offset": 158,
    "original_byte": 89,
-   "path": "orbit",
+   "path": "docs",
    "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
    "type": "tree"
   },
@@ -578,22 +578,22 @@
    "type": "tree"
   },
   {
-   "altered_byte": 142,
+   "altered_byte": 88,
    "class": "D3",
-   "object": "249050286553f369868a4dcc1ea152086c8d9ddb",
-   "offset": 18,
-   "original_byte": 212,
-   "path": "VERSION",
+   "object": "484b4b97230a00acb0873bb582d80fe9b780e271",
+   "offset": 185,
+   "original_byte": 2,
+   "path": "orbit/retry.py",
    "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
    "type": "blob"
   },
   {
-   "altered_byte": 155,
+   "altered_byte": 187,
    "class": "D3",
-   "object": "288a9e8fa5c067c97f629f34fdab02d2951480f4",
-   "offset": 247,
-   "original_byte": 193,
-   "path": "docs/ROADMAP.md",
+   "object": "576f4f21182ceb3e810001b16056524ab67423fe",
+   "offset": 146,
+   "original_byte": 225,
+   "path": "tests/test_cache.py",
    "recovery": "try every single-byte substitution until the stream inflates to content hashing to the file name",
    "type": "blob"
   },
@@ -604,15 +604,9 @@
   },
   {
    "class": "R1",
-   "expected": "6a1c42a2adb5cb6991cf51c848b58793e404ab29",
+   "expected": "bfa5ad83b686bad7e2e4e0f8b570bb3a2315e5bf",
    "recovery": "last entry of logs/refs/heads/develop",
    "ref": "refs/heads/develop"
-  },
-  {
-   "class": "R1",
-   "expected": "fc1b7e8984ec70b6ee8ab78deceda6116e970f43",
-   "recovery": "last entry of logs/refs/heads/feature/cache-warmup",
-   "ref": "refs/heads/feature/cache-warmup"
   },
   {
    "class": "R2",
@@ -717,6 +711,42 @@
    "expected": "69305d3a6d68e96388e91dcdde3447ea7042944f",
    "recovery": "last entry of logs/refs/heads/hotfix/1.2.1",
    "ref": "refs/heads/hotfix/1.2.1"
+  },
+  {
+   "class": "L1",
+   "expected": "17b019fc2af6346c773b9cb5384bdab7be88f739",
+   "kept": [
+    "0012e2838907e3539c66cc23fefc5f3ffe850613",
+    "f46321cf9098771aa156b14dec794db0db4fa463",
+    "e682c62e2ff91fde19f17b7e335b7a80e2d465b4"
+   ],
+   "last_nightly": 1791684000,
+   "mirror": "aef3e022037917637248671a8d936d6710f61da6",
+   "object": "17b019fc2af6346c773b9cb5384bdab7be88f739",
+   "parent": "aef3e022037917637248671a8d936d6710f61da6",
+   "patch": "docs/patches/cache-warmup/0002-Add-a-cache-size-limit.patch",
+   "recovery": "the series file names the branch and lists the archived patches; the last patch matches no commit, so apply it on the branch's last commit (the mirror's value): the tree it gives is the dangling tree, commit-tree with author == committer and the patch's date gives the commit; advance the ref",
+   "ref": "refs/heads/feature/cache-warmup",
+   "root_tree": "0012e2838907e3539c66cc23fefc5f3ffe850613",
+   "series": "docs/patches/cache-warmup/series",
+   "type": "commit"
+  },
+  {
+   "bullets": [
+    "- Add an operations note",
+    "- Add a script to archive a branch as a patch series",
+    "- Carry the release notes in the tag",
+    "- Add a test for warmup ordering",
+    "- Refresh VERSION for the dist tarball",
+    "- Fix the usage line in the README"
+   ],
+   "class": "L2",
+   "commit": "407a8740ca9fe7768f2f31fd8169dc6edb94aa9b",
+   "expected": "86854525c257784651a04311d3d1fcba90846ead",
+   "object": "86854525c257784651a04311d3d1fcba90846ead",
+   "recovery": "the release commit exists; tools/release.sh as of that commit (not HEAD's) makes an annotated tag whose message is the CHANGELOG section, tagged by the release commit's committer at its date; replay it and keep the tag object",
+   "ref": "refs/tags/v1.4.0",
+   "type": "tag"
   }
  ],
  "packs": {
@@ -731,7 +761,9 @@
   "D4": 13,
   "D5": 1,
   "D6": 1,
-  "R1": 2,
+  "L1": 1,
+  "L2": 1,
+  "R1": 1,
   "R2": 1,
   "R3": 5
  }

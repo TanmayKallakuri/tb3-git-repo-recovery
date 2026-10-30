@@ -64,6 +64,19 @@ def inflates(data, start):
     return d.eof
 
 
+def loose_inflates(repo, oid):
+    path = repo / "objects" / oid[:2] / oid[2:]
+    try:
+        return hashlib.sha1(zlib.decompress(path.read_bytes())).hexdigest() == oid
+    except (OSError, zlib.error):
+        return False
+
+
+def git_show(repo, path, rev="HEAD"):
+    proc = subprocess.run(["git", "-C", str(repo), "show", f"{rev}:{path}"], env=ENV, capture_output=True)
+    return proc.stdout if proc.returncode == 0 else b""
+
+
 def pack_a_ids(pack_path):
     with tempfile.TemporaryDirectory() as tmp:
         copy = Path(tmp) / pack_path.name
@@ -135,10 +148,30 @@ def main():
             else:
                 kind, start = entry_data_start(b_data, b_offsets[item["expected"]])
                 check(ref_absent(item["ref"]) and inflates(b_data, start), f"R3 {item['ref']} absent; tag object {item['expected'][:12]} intact in pack-B")
+        elif cls in ("L1", "L2"):
+            oid = item["object"]
+            fan_out = repo / "objects" / oid[:2]
+            gone = oid not in loose and oid not in b_offsets and oid not in a_ids and (not fan_out.exists() or any(fan_out.iterdir()))
+            check(gone and ref_absent(item["ref"]) and not (repo / "logs" / item["ref"]).exists(),
+                  f"{cls} {item['type']} {oid[:12]}: object in no pack and not loose, {item['ref']} absent, no reflog, no empty fan-out directory")
+            if cls == "L1":
+                mirror = (repo / "refs" / "remotes" / "mirror" / "feature" / "cache-warmup").read_text().strip()
+                kept_ok = all(loose_inflates(repo, k) for k in item["kept"])
+                patch = git_show(repo, item["patch"])
+                series = git_show(repo, item["series"])
+                check(mirror == item["mirror"] and kept_ok and patch.startswith(b"From 0000000000000000000000000000000000000000 ")
+                      and b"feature/cache-warmup" in series and item["patch"].rsplit("/", 1)[1].encode() in series,
+                      f"L1 mirror ref is the parent {mirror[:12]}; {len(item['kept'])} new objects of the lost commit loose and intact; "
+                      f"the archived patch has an all-zero From line and the series file names branch and patch")
+            else:
+                script = git_show(repo, "tools/release.sh", item["commit"])
+                head_script = git_show(repo, "tools/release.sh")
+                check(loose_inflates(repo, item["commit"]) and b"git tag -a -F -" in script and script != head_script,
+                      f"L2 release commit {item['commit'][:12]} loose and intact; tools/release.sh there differs from HEAD's and writes the notes into the tag")
     check(packed_names[-1] == "refs/tags/v1.1.0", f"packed-refs ends with v1.1.0: {packed_names}")
     check(sorted(p.name for p in (repo / "info").iterdir()) == ["exclude"], "info/ holds only exclude")
     check(not (repo / "objects" / "info" / "packs").exists(), "objects/info/packs absent")
-    lost = [i for i in damage["items"] if i["class"].startswith("R")]
+    lost = [i for i in damage["items"] if i["class"][0] in "RL"]
     exempt = (repo / "objects", repo / "logs", repo / "refs" / "remotes")
     scanned = [p for p in repo.rglob("*") if p.is_file() and not any(p.is_relative_to(e) for e in exempt)]
     leaks = []
@@ -152,6 +185,24 @@ def main():
                 if needle in data or needle.decode() in rel:
                     leaks.append(f"{needle.decode()} in {rel}")
     check(not leaks, f"no lost ref id or name in the {len(scanned)} files outside objects/, logs/ and refs/remotes/ ({', '.join(leaks) or 'clean'})")
+    # The hidden ids (L1, L2) must appear nowhere at all: every file, every path, every loose object's content.
+    hidden = {i["object"] for i in damage["items"] if i["class"].startswith("L")}
+    needles = {t: (t[:7].encode(), t[:7].upper().encode(), bytes.fromhex(t)) for t in hidden}
+    every = [p for p in repo.rglob("*") if p.is_file()]
+    leaks = []
+    for p in every:
+        rel = p.relative_to(repo).as_posix()
+        data = p.read_bytes()
+        contents = [data]
+        if p.parent.parent == repo / "objects" and len(p.parent.name) == 2:
+            try:
+                contents.append(zlib.decompress(data))
+            except zlib.error:
+                pass
+        for t, ns in needles.items():
+            if t[:7] in rel.replace("/", "") or any(n in c for n in ns for c in contents):
+                leaks.append(f"{t[:12]} in {rel}")
+    check(not leaks, f"no hidden id (7-hex prefix or 20-byte form) in any of the {len(every)} files, paths or loose objects ({', '.join(leaks) or 'clean'})")
     # Reflog messages must not spell out releases or tag names: the lightweight
     # tags are meant to be inferred from the tree, not grepped from logs/.
     log_hits = []
