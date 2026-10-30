@@ -1,0 +1,1127 @@
+03d41e4d28a0b0ccbd8f2ab30b581c2a450879c8 tree 0012e2838907e3539c66cc23fefc5f3ffe850613
+parent aef3e022037917637248671a8d936d6710f61da6
+author Lena Fischer <lena@orbit.example> 1791800154 +0100
+committer Lena Fischer <lena@orbit.example> 1791800154 +0100
+
+Add a cache size limit
+
+A job table with thousands of distinct commands made the warmup resolve
+every one of them before the first tick. Stop after `limit` entries, 256
+by default; the rest stay unresolved until they are looked up.
+
+0f5b978a55bbd7d89021bd633575c837fd3d13c6 tree 99eb54ba669980e2a6b17077aa956fe6abf38a2a
+parent ff78beb24bafe2ef21aeb32eebb887b9ef4c2ce1
+author Lena Fischer <lena@orbit.example> 1790320646 +0100
+committer Lena Fischer <lena@orbit.example> 1790320646 +0100
+
+Add an operations note
+
+148c15071f76a8de6d7b8eb496202345e41ac9bf tree 57baaa4b9b0851047e1e916fdf60b82285e01921
+parent e2e5e720516f652120ddc8dce745438eba10bc75
+author Mira Okafor <mira@orbit.example> 1789374445 +0000
+committer Mira Okafor <mira@orbit.example> 1789374445 +0000
+
+Refresh VERSION for the dist tarball
+
+3f054199033f9b8fe259627dd0c3d72c99ef15fb tree 43fc246f78df36eb9bede056c109a9a4b4e1ad5f
+parent 6a291a82188b43228b75bb71b25399592fec2010
+author Mira Okafor <mira@orbit.example> 1789995465 +0000
+committer Mira Okafor <mira@orbit.example> 1789995465 +0000
+
+Carry the release notes in the tag
+
+The annotated tag of an x.y.0 release now holds the changelog section of
+that release, in the name of the release commit's committer and dated
+from the changelog heading, which now carries the time. Point releases
+keep a lightweight tag; the -l flag is gone, the version decides.
+
+4e86b816df5b1685b9708389cf5b962e85efd800 tree 57baaa4b9b0851047e1e916fdf60b82285e01921
+parent 4da3cbbc5c4bdffd0a420565f48332e125a7f53f
+parent 148c15071f76a8de6d7b8eb496202345e41ac9bf
+author Dev Patel <dev@orbit.example> 1789493801 +0530
+committer Dev Patel <dev@orbit.example> 1789493801 +0530
+
+Merge branch 'main' into develop
+
+5d03e27436b4fa3c54eb465049a5888de2b1d5a8 tree 51d7bc80169bc287d352afe9d80c02ccb2c51fe6
+parent 0f5b978a55bbd7d89021bd633575c837fd3d13c6
+parent cba733c406273a7abe5131c1259a52beba999df5
+author Dev Patel <dev@orbit.example> 1790946014 +0530
+committer Dev Patel <dev@orbit.example> 1790946014 +0530
+
+Merge branch 'main' into develop
+
+6a291a82188b43228b75bb71b25399592fec2010 tree 65c9cad16ef7d75a04518497684a2f690f77fcde
+parent 4e86b816df5b1685b9708389cf5b962e85efd800
+author Dev Patel <dev@orbit.example> 1789662923 +0530
+committer Dev Patel <dev@orbit.example> 1789662923 +0530
+
+Add a test for warmup ordering
+
+6c7a2e5edae37f8a957fa9d68c99b7e5df5c69f1 tree 99eb54ba669980e2a6b17077aa956fe6abf38a2a
+parent 148c15071f76a8de6d7b8eb496202345e41ac9bf
+parent 0f5b978a55bbd7d89021bd633575c837fd3d13c6
+author Mira Okafor <mira@orbit.example> 1790655342 +0000
+committer Mira Okafor <mira@orbit.example> 1790655342 +0000
+
+Merge branch 'develop'
+
+6e51414cbc4506538265c702c40710e33e16a695 tree 5d30ecf0373a689538022c7455cd6e50be7ec170
+parent 5d03e27436b4fa3c54eb465049a5888de2b1d5a8
+author Mira Okafor <mira@orbit.example> 1791181777 +0000
+committer Mira Okafor <mira@orbit.example> 1791181777 +0000
+
+Start the 1.5 roadmap
+
+8caad076eb6b22df3d1854065aa4df86dcc869fb tree 4e0ba16f5e10a5f95e7058a47f6bfae1066437e2
+parent e55574cfa7aa8416616e2170b6e2a24ba7046b7c
+author Mira Okafor <mira@orbit.example> 1791634552 +0000
+committer Mira Okafor <mira@orbit.example> 1791634552 +0000
+
+Keep the tag message to one line
+
+The v1.4.0 tag carries the whole changelog section of the release; nobody
+reads it there and it is a second copy to keep in sync. The tag names the
+release, the changelog has the notes.
+
+96c39b55657285256dc37c2f43385dc564a654f1 tree 3fb38c544a6676bcac4fa23bfd686a22093475b8
+parent cba733c406273a7abe5131c1259a52beba999df5
+parent fe3c1bd736a49008c896bfe91cd633a1922003ef
+author Mira Okafor <mira@orbit.example> 1792075993 +0000
+committer Mira Okafor <mira@orbit.example> 1792075993 +0000
+
+Merge branch 'develop'
+
+aef3e022037917637248671a8d936d6710f61da6 tree 648db82791119abd223bbb566279f09eb1d14158
+parent 43b85f3057459e6407714c6488448e713c1ef340
+author Lena Fischer <lena@orbit.example> 1789067631 +0100
+committer Lena Fischer <lena@orbit.example> 1789067631 +0100
+
+Warm the cache in a background thread
+
+c3c89302673fc6a602389c513c8f81c000234d78 tree 4b23bb125d072b989594de258dbea7663c1a3825
+parent 8caad076eb6b22df3d1854065aa4df86dcc869fb
+author Mira Okafor <mira@orbit.example> 1792060081 +0000
+committer Mira Okafor <mira@orbit.example> 1792060081 +0000
+
+Archive the cache-warmup series
+
+cba733c406273a7abe5131c1259a52beba999df5 tree 51d7bc80169bc287d352afe9d80c02ccb2c51fe6
+parent 6c7a2e5edae37f8a957fa9d68c99b7e5df5c69f1
+author Dev Patel <dev@orbit.example> 1790773019 +0530
+committer Dev Patel <dev@orbit.example> 1790773019 +0530
+
+Release v1.4.0
+
+d13c784d66243541536833780676efba0d86042a tree dd9bb53d1ca90e6e14fa61729c8a80903c01835f
+parent e4a74c45e1bd251a2b145946e3a0ce2c8c7664eb
+author Dev Patel <dev@orbit.example> 1789735885 +0530
+committer Dev Patel <dev@orbit.example> 1789735885 +0530
+
+Document the retry policy module
+
+e2e5e720516f652120ddc8dce745438eba10bc75 tree af0f73d3bb272f9284cf0859543690e014dd295a
+parent 35e60b11842b491b815e3e98c835e7b23596609a
+author Mira Okafor <mira@orbit.example> 1789105423 +0000
+committer Mira Okafor <mira@orbit.example> 1789105423 +0000
+
+Fix the usage line in the README
+
+e55574cfa7aa8416616e2170b6e2a24ba7046b7c tree 2e3e246485e54e58af789b19ac8d1b9b969b879d
+parent 6e51414cbc4506538265c702c40710e33e16a695
+author Lena Fischer <lena@orbit.example> 1791312150 +0100
+committer Lena Fischer <lena@orbit.example> 1791312150 +0100
+
+Correct a 1.4.0 release note
+
+The entry for the operations note did not say where the note lives.
+
+fe3c1bd736a49008c896bfe91cd633a1922003ef tree 3fb38c544a6676bcac4fa23bfd686a22093475b8
+parent c3c89302673fc6a602389c513c8f81c000234d78
+author Dev Patel <dev@orbit.example> 1792063574 +0530
+committer Dev Patel <dev@orbit.example> 1792063574 +0530
+
+Add a cache test for empty tables
+
+ff78beb24bafe2ef21aeb32eebb887b9ef4c2ce1 tree 34122478b3a70aba0dc15d5fe871a09f40234270
+parent 3f054199033f9b8fe259627dd0c3d72c99ef15fb
+author Dev Patel <dev@orbit.example> 1790218610 +0530
+committer Dev Patel <dev@orbit.example> 1790218610 +0530
+
+Add a script to archive a branch as a patch series
+
+The 1.2 series was archived by hand. The script rebases a branch onto the
+current head, pushes it and writes its patches into docs/patches/<name>/
+next to a series file that lists them, then commits the archive.
+
+35e60b11842b491b815e3e98c835e7b23596609a tree 74fdf5c66ca24bcdfdf5487850f9ba8112765952
+parent 2f97cf4e201ab93f1a9937c59938055685787055
+author Lena Fischer <lena@orbit.example> 1788899833 +0100
+committer Lena Fischer <lena@orbit.example> 1788899833 +0100
+
+Release v1.3.1
+
+ebcc265012e322e29e4bb97e4afdae1ba2c87492 tree 421c34da38f69afa3fe12d7b44b1a7b1e34c6e75
+parent eb707215f580ae7587865f42df88e5a669c1d0eb
+author Mira Okafor <mira@orbit.example> 1788391816 +0000
+committer Mira Okafor <mira@orbit.example> 1788391816 +0000
+
+Release v1.3.0
+
+bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67 tree e6095f05314c8255bcaca88125d38e7b2fcd2364
+parent a1f95bb280cc43fdd18b059593a0ced50c35c812
+author Lena Fischer <lena@orbit.example> 1785807222 +0100
+committer Lena Fischer <lena@orbit.example> 1785807222 +0100
+
+Release v1.2.1
+
+c256b5c79663b545147eb748961436ae09201284 tree ffb3ea9013c8a2166463e446a147b4a001d871db
+parent dd77972d02e61fbb72e1941e643dcabfe402ea26
+author Mira Okafor <mira@orbit.example> 1785028647 +0000
+committer Mira Okafor <mira@orbit.example> 1785028647 +0000
+
+Release v1.2.0
+
+9099f204096190b4e3cbd96891387f65db44e675 tree 424d228265f916a9d3145e876b3af5aaac16a119
+parent 72686ced90186cd5148dfc55ab3b23cdc868b1ba
+author Lena Fischer <lena@orbit.example> 1778234720 +0100
+committer Lena Fischer <lena@orbit.example> 1778234720 +0100
+
+Release v1.1.0
+
+1fbcf50531d91c00e33bae40dd0b1f4ec3494e65 tree 2e5a722a5f116291b3d1be73f2a4313c0d93f75b
+parent 393aaed5bf6115af34a7e75dcb8d82ef67c25c99
+author Mira Okafor <mira@orbit.example> 1773677336 +0000
+committer Mira Okafor <mira@orbit.example> 1773677336 +0000
+
+Release v1.0.0
+
+518aac585f9a5f3220b0b504cb5df30edee0e99f tree fb053504962e624a083b6af539a21f24c737da11
+parent 44f8846080a7d3ce14744ad90fc864593a1ac433
+author Mira Okafor <mira@orbit.example> 1769850940 +0000
+committer Mira Okafor <mira@orbit.example> 1769850940 +0000
+
+Prepare the 0.9.0 preview
+
+2f97cf4e201ab93f1a9937c59938055685787055 tree 1db9d23d644cc259d63809f2b441d4898b99d5f5
+parent ebcc265012e322e29e4bb97e4afdae1ba2c87492
+author Lena Fischer <lena@orbit.example> 1788749698 +0100
+committer Lena Fischer <lena@orbit.example> 1788749698 +0100
+
+Fix the month wrap in next_run
+
+4da3cbbc5c4bdffd0a420565f48332e125a7f53f tree 421c34da38f69afa3fe12d7b44b1a7b1e34c6e75
+parent c68ced9de14117fbec5322618559ed90243556bb
+parent ebcc265012e322e29e4bb97e4afdae1ba2c87492
+author Dev Patel <dev@orbit.example> 1788560611 +0530
+committer Dev Patel <dev@orbit.example> 1788560611 +0530
+
+Merge branch 'main' into develop
+
+eb707215f580ae7587865f42df88e5a669c1d0eb tree c911afead65f4ee6d654d5d0ac35869163479a47
+parent af4e4cd4deff009ddf4a7bb1e8ce4b954eecfa82
+parent c68ced9de14117fbec5322618559ed90243556bb
+author Mira Okafor <mira@orbit.example> 1788282429 +0000
+committer Mira Okafor <mira@orbit.example> 1788282429 +0000
+
+Merge branch 'develop'
+
+c68ced9de14117fbec5322618559ed90243556bb tree 94d3692ffa21d64ef8f277f039a1c8c40349495d
+parent 9ede4e0d205305a34efa6588668a1b1a9ef7858f
+author Mira Okafor <mira@orbit.example> 1788150338 +0000
+committer Mira Okafor <mira@orbit.example> 1788150338 +0000
+
+Expose the cache in the package namespace
+
+9ede4e0d205305a34efa6588668a1b1a9ef7858f tree d68dd6c02d372ac719f0f80d12d61e697b09cf1c
+parent b52b146621e5ac95a599f0c137cca96a69f29061
+parent 43b85f3057459e6407714c6488448e713c1ef340
+author Lena Fischer <lena@orbit.example> 1787950690 +0100
+committer Lena Fischer <lena@orbit.example> 1787950690 +0100
+
+Merge branch 'feature/cache-warmup' into develop
+
+43b85f3057459e6407714c6488448e713c1ef340 tree 8ade06c1a51b235d763397f8a74015644d4b90c6
+parent e7829fa366d2890f566ae3402fdce392a87d01c4
+author Lena Fischer <lena@orbit.example> 1787790718 +0100
+committer Lena Fischer <lena@orbit.example> 1787790718 +0100
+
+Document the warmup cache
+
+b52b146621e5ac95a599f0c137cca96a69f29061 tree 3c5e0861d9d7008a9d3f89caf823a39b6a610b62
+parent 8d1466ebec95c0b6443aee56b2fc7fda7976d4a5
+author Dev Patel <dev@orbit.example> 1787655886 +0530
+committer Dev Patel <dev@orbit.example> 1787655886 +0530
+
+Add docstrings to the storage module
+
+8d1466ebec95c0b6443aee56b2fc7fda7976d4a5 tree 74328a09d24ed1e4f3c69d0cc08d160c5c625e7d
+parent fce245f6f526f178349b414bea64a881bb80252e
+author Dev Patel <dev@orbit.example> 1787482197 +0530
+committer Dev Patel <dev@orbit.example> 1787482197 +0530
+
+Describe the retry behaviour in the runner docstrings
+
+e7829fa366d2890f566ae3402fdce392a87d01c4 tree 5b02440d9060f65a0391b55274f8f216e9dfcb50
+parent 0af46845f319092446c8325427883c07d599ac07
+author Lena Fischer <lena@orbit.example> 1787327034 +0100
+committer Lena Fischer <lena@orbit.example> 1787327034 +0100
+
+Add tests for the warmup cache
+
+0af46845f319092446c8325427883c07d599ac07 tree ca3e2265d14c1475d53aec2721fe3c5d53407947
+parent 3ba6faf783f8bb335dd937e3b6817c047621aa63
+author Lena Fischer <lena@orbit.example> 1787151954 +0100
+committer Lena Fischer <lena@orbit.example> 1787151954 +0100
+
+Warm the cache on scheduler start
+
+3ba6faf783f8bb335dd937e3b6817c047621aa63 tree b6387c9d01a3565acf4b84ffe80ccef7797f1b8a
+parent fce245f6f526f178349b414bea64a881bb80252e
+author Lena Fischer <lena@orbit.example> 1787065644 +0100
+committer Lena Fischer <lena@orbit.example> 1787065644 +0100
+
+Add a warmup cache for job commands
+
+af4e4cd4deff009ddf4a7bb1e8ce4b954eecfa82 tree 475046ffe9ce07c0afa7db956dfea2fb4080867d
+parent f1a290eb51399680feebcdf831444684102158a6
+author Mira Okafor <mira@orbit.example> 1786953756 +0000
+committer Mira Okafor <mira@orbit.example> 1786953756 +0000
+
+Refresh VERSION for the dist tarball
+
+f1a290eb51399680feebcdf831444684102158a6 tree a35d64c371c1fe3b94da05090c05c47ce2d866a5
+parent bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67
+parent fce245f6f526f178349b414bea64a881bb80252e
+author Mira Okafor <mira@orbit.example> 1786713959 +0000
+committer Mira Okafor <mira@orbit.example> 1786713959 +0000
+
+Merge branch 'develop'
+
+fce245f6f526f178349b414bea64a881bb80252e tree a35d64c371c1fe3b94da05090c05c47ce2d866a5
+parent fbecd721b2978234be7db8e10734190b45b85fab
+author Lena Fischer <lena@orbit.example> 1786603835 +0100
+committer Lena Fischer <lena@orbit.example> 1786603835 +0100
+
+Add a troubleshooting page
+
+fbecd721b2978234be7db8e10734190b45b85fab tree fd07803dd475923ec306ca86dfe9ca3b914dc42b
+parent 01cb7b94c18f9a6ef606bf97073112f286138176
+author Mira Okafor <mira@orbit.example> 1786496599 +0000
+committer Mira Okafor <mira@orbit.example> 1786496599 +0000
+
+Archive the 1.2 patch series from the list
+
+e4a74c45e1bd251a2b145946e3a0ce2c8c7664eb tree f1751ac813282c10b90ba362c20c30d927eefe9b
+parent e956f4e5647ad5d29e13af5f3479bc69b61b8d6d
+author Dev Patel <dev@orbit.example> 1786306155 +0530
+committer Dev Patel <dev@orbit.example> 1786306155 +0530
+
+Add a test for the configurable backoff
+
+e956f4e5647ad5d29e13af5f3479bc69b61b8d6d tree 66ecbec2aea6ce330942e10ce8668006bb68a132
+parent 0eb7e2931c46e2411867401ffd93b61d0b083874
+author Dev Patel <dev@orbit.example> 1786117094 +0530
+committer Dev Patel <dev@orbit.example> 1786117094 +0530
+
+Make the backoff factor configurable from the job table
+
+01cb7b94c18f9a6ef606bf97073112f286138176 tree e6095f05314c8255bcaca88125d38e7b2fcd2364
+parent 72fb1de272bc65b56ebb10a2bfe83ab9ae7a7a69
+parent bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67
+author Dev Patel <dev@orbit.example> 1785955332 +0530
+committer Dev Patel <dev@orbit.example> 1785955332 +0530
+
+Merge branch 'main' into develop
+
+a1f95bb280cc43fdd18b059593a0ced50c35c812 tree e44b2e65cf364b98bbb4a1013017433c9bb3f024
+parent c256b5c79663b545147eb748961436ae09201284
+parent 69305d3a6d68e96388e91dcdde3447ea7042944f
+author Lena Fischer <lena@orbit.example> 1785644942 +0100
+committer Lena Fischer <lena@orbit.example> 1785644942 +0100
+
+Merge branch 'hotfix/1.2.1'
+
+69305d3a6d68e96388e91dcdde3447ea7042944f tree e44b2e65cf364b98bbb4a1013017433c9bb3f024
+parent a445cabc265189d8cf6ff8b56d0e0ae6f03fc6d6
+author Lena Fischer <lena@orbit.example> 1785562661 +0100
+committer Lena Fischer <lena@orbit.example> 1785562661 +0100
+
+Add a regression test for weekday 7
+
+a445cabc265189d8cf6ff8b56d0e0ae6f03fc6d6 tree 56732841337eff81bb894a9dcfa7efb2d98bd797
+parent c256b5c79663b545147eb748961436ae09201284
+author Lena Fischer <lena@orbit.example> 1785361830 +0100
+committer Lena Fischer <lena@orbit.example> 1785361830 +0100
+
+Accept 7 as Sunday in weekday fields
+
+72fb1de272bc65b56ebb10a2bfe83ab9ae7a7a69 tree ffb3ea9013c8a2166463e446a147b4a001d871db
+parent 4e081e37325e8c45eaed603300b72b3ad121ee07
+parent c256b5c79663b545147eb748961436ae09201284
+author Dev Patel <dev@orbit.example> 1785227202 +0530
+committer Dev Patel <dev@orbit.example> 1785227202 +0530
+
+Merge branch 'main' into develop
+
+dd77972d02e61fbb72e1941e643dcabfe402ea26 tree 4401baecb86157ef7e301277daac801b9caf2744
+parent 582b0b5e2cb698b3ed5bdffc0cd45a3902c26d21
+parent 4e081e37325e8c45eaed603300b72b3ad121ee07
+author Mira Okafor <mira@orbit.example> 1784922613 +0000
+committer Mira Okafor <mira@orbit.example> 1784922613 +0000
+
+Merge branch 'develop'
+
+4e081e37325e8c45eaed603300b72b3ad121ee07 tree 4401baecb86157ef7e301277daac801b9caf2744
+parent 83a861111d14088eeb5f4a9bbc4c36f359d9ab79
+author Lena Fischer <lena@orbit.example> 1784810374 +0100
+committer Lena Fischer <lena@orbit.example> 1784810374 +0100
+
+Add a test for the simplified parser
+
+83a861111d14088eeb5f4a9bbc4c36f359d9ab79 tree b36e7d5438a1de144617f857d62d0435902da026
+parent 93da578bf27ed5fdcfc3edf3504299e3541b6905
+author Mira Okafor <mira@orbit.example> 1784686314 +0000
+committer Mira Okafor <mira@orbit.example> 1784686314 +0000
+
+Simplify parse_field
+
+0eb7e2931c46e2411867401ffd93b61d0b083874 tree 1738bfbe6cc047e08a57d788cb88d66d2b5c1e52
+parent 2d71f7961cc16aa356fff6b43fd007e3a0e2f1b3
+author Dev Patel <dev@orbit.example> 1784471900 +0530
+committer Dev Patel <dev@orbit.example> 1784471900 +0530
+
+Mark the retry policy done in the roadmap
+
+93da578bf27ed5fdcfc3edf3504299e3541b6905 tree 568c53d9c0ae0df67ac17a5cc29d830e5d4740fa
+parent b7b945be7b8b194810aae632616a04a1f6c655dc
+author Lena Fischer <lena@orbit.example> 1784266657 +0100
+committer Lena Fischer <lena@orbit.example> 1784266657 +0100
+
+Trim the roadmap: 1.1 leftovers are done
+
+b7b945be7b8b194810aae632616a04a1f6c655dc tree f872d06a65cffdff19a88816a7f1aa96ec08ba50
+parent 991ce07b30999e2714e23493042c46379113eccb
+parent 2d71f7961cc16aa356fff6b43fd007e3a0e2f1b3
+author Mira Okafor <mira@orbit.example> 1784234710 +0000
+committer Mira Okafor <mira@orbit.example> 1784234710 +0000
+
+Merge branch 'feature/retry-policy' into develop
+
+991ce07b30999e2714e23493042c46379113eccb tree a386ea68d4b5d0a911aef96699f4664d584c66ff
+parent 881cb3036f76b7bf5055b2fe511ee9bc515252f8
+author Mira Okafor <mira@orbit.example> 1783991853 +0000
+committer Mira Okafor <mira@orbit.example> 1783991853 +0000
+
+Move the daemon section to its own page
+
+2d71f7961cc16aa356fff6b43fd007e3a0e2f1b3 tree 8338ee4bd12776d6b03af05f09ffb10a08d1b06c
+parent e9a3bbd1f33ef99c26ecb1572fe574b079e1dd87
+author Dev Patel <dev@orbit.example> 1783866513 +0530
+committer Dev Patel <dev@orbit.example> 1783866513 +0530
+
+Remove the stale retry notes from the user guide
+
+e9a3bbd1f33ef99c26ecb1572fe574b079e1dd87 tree 6b4380686e2a87274747f523efd27b60ddf318e2
+parent a733a8acd01d28fdb88ea5ae0ec9060ae6ea3b07
+author Lena Fischer <lena@orbit.example> 1783767869 +0100
+committer Lena Fischer <lena@orbit.example> 1783767869 +0100
+
+Document the retry policy
+
+a733a8acd01d28fdb88ea5ae0ec9060ae6ea3b07 tree 9998bc284780a4d58bdbad3192a0a9b6586d865b
+parent 8356afa2f4b5ed54b0bc389a59434daaf6d09909
+author Dev Patel <dev@orbit.example> 1783567873 +0530
+committer Dev Patel <dev@orbit.example> 1783567873 +0530
+
+Read the attempt limit from the job table
+
+8356afa2f4b5ed54b0bc389a59434daaf6d09909 tree 4aeea63466458c30c14b74721ef4687e5f0a0990
+parent c30cfac86f61d9e3f5782f272924333776ecd662
+author Dev Patel <dev@orbit.example> 1783455193 +0530
+committer Dev Patel <dev@orbit.example> 1783455193 +0530
+
+Add jitter to the backoff
+
+881cb3036f76b7bf5055b2fe511ee9bc515252f8 tree 55c8a92b3c4ab5caab3c878c5c155ac5728f3d22
+parent 4226740fa90a33eef025e615941111f0c9ad4d17
+author Lena Fischer <lena@orbit.example> 1782839286 +0100
+committer Lena Fischer <lena@orbit.example> 1782839286 +0100
+
+Format the cron module
+
+4226740fa90a33eef025e615941111f0c9ad4d17 tree bf3bf3bb4e2f18becd97331cc5e7757201cdb0b4
+parent b7aeb830eac8a30ac42bc9823ac90e8e6b7284ac
+author Mira Okafor <mira@orbit.example> 1782649207 +0000
+committer Mira Okafor <mira@orbit.example> 1782649207 +0000
+
+Update the README feature list
+
+b7aeb830eac8a30ac42bc9823ac90e8e6b7284ac tree 0c3293db971783e671bb676186135d2778c42249
+parent 883ac0586a1fccfbf8f8a6afc783246b17ab3b45
+author Dev Patel <dev@orbit.example> 1782489085 +0530
+committer Dev Patel <dev@orbit.example> 1782489085 +0530
+
+Add a metrics test for failures
+
+883ac0586a1fccfbf8f8a6afc783246b17ab3b45 tree eaebcc4ed4ecf6448c8475220814b889ca3f43ca
+parent 5f2aabc544a7c910190fe9b42b812ca28d05d579
+author Dev Patel <dev@orbit.example> 1782361797 +0530
+committer Dev Patel <dev@orbit.example> 1782361797 +0530
+
+Count timeouts as failures in the metrics
+
+5f2aabc544a7c910190fe9b42b812ca28d05d579 tree 1bd6c9739816cf51a83b88c717d3372e2544d263
+parent 6b8d4990a7025fc52e2ce4f74c7c4b713f8bcde0
+author Mira Okafor <mira@orbit.example> 1782169941 +0000
+committer Mira Okafor <mira@orbit.example> 1782169941 +0000
+
+Add the exit codes to the user guide
+
+6b8d4990a7025fc52e2ce4f74c7c4b713f8bcde0 tree af81338c85d0f0b2ae0051bf4c17233b9fd3b872
+parent 2d1029b4d05b3375406d125aecb66303e020a6f0
+author Lena Fischer <lena@orbit.example> 1782106877 +0100
+committer Lena Fischer <lena@orbit.example> 1782106877 +0100
+
+Handle SIGTERM in the daemon loop
+
+2d1029b4d05b3375406d125aecb66303e020a6f0 tree b9b3f63316f799a87f3fcb4cee79b8ccd4f80be5
+parent e059b657011ad550bef6cf0c7ba1c13c59b328ab
+author Lena Fischer <lena@orbit.example> 1781885837 +0100
+committer Lena Fischer <lena@orbit.example> 1781885837 +0100
+
+Wire notifications into the daemon loop
+
+e059b657011ad550bef6cf0c7ba1c13c59b328ab tree 6ad3170bd1d9fb91f45c99e8c0377a1be28e9d3b
+parent 806d29788f980635df9e83c11d27840b418313d5
+author Dev Patel <dev@orbit.example> 1781754051 +0530
+committer Dev Patel <dev@orbit.example> 1781754051 +0530
+
+Add a test for --dry-run
+
+806d29788f980635df9e83c11d27840b418313d5 tree c4accab097f729b26170cb6b06d28d912a92ea0d
+parent 8b4fdfcb472405d0cf6b5837a3f7a30e8b842dd4
+author Dev Patel <dev@orbit.example> 1781634122 +0530
+committer Dev Patel <dev@orbit.example> 1781634122 +0530
+
+Add the --dry-run flag
+
+8b4fdfcb472405d0cf6b5837a3f7a30e8b842dd4 tree dbb701cf7c84b1404937f29b444130252293544c
+parent f412347e01766ab0a927d3f6da1f0e192c205f35
+author Mira Okafor <mira@orbit.example> 1781490472 +0000
+committer Mira Okafor <mira@orbit.example> 1781490472 +0000
+
+Document the lock file
+
+f412347e01766ab0a927d3f6da1f0e192c205f35 tree a1e1dd1313266c1823b5e0725bdb17deca72e689
+parent 9bc6e3fef16288587b00743e36c1592cf5363ea4
+author Mira Okafor <mira@orbit.example> 1781313433 +0000
+committer Mira Okafor <mira@orbit.example> 1781313433 +0000
+
+Add a test for the lock file
+
+9bc6e3fef16288587b00743e36c1592cf5363ea4 tree 798c54ec337a7aeb9046d856deb9311c34f41354
+parent 4f0125bf93b7c7b1342477fdc6233082de439ede
+author Mira Okafor <mira@orbit.example> 1781124410 +0000
+committer Mira Okafor <mira@orbit.example> 1781124410 +0000
+
+Add a lock file for the daemon
+
+4f0125bf93b7c7b1342477fdc6233082de439ede tree 86bdcf2175a687e4f3ab79108391077878a519c9
+parent b34bed4386feae9fbcc93ad8187fb1743b7137a3
+author Lena Fischer <lena@orbit.example> 1781032573 +0100
+committer Lena Fischer <lena@orbit.example> 1781032573 +0100
+
+Expand the user guide examples
+
+b34bed4386feae9fbcc93ad8187fb1743b7137a3 tree 74356d71ae6fa9c25da448dee9c57f040d384e1e
+parent ba48fb0c3d2e17394c7372488b182f78dcbe1ffb
+author Lena Fischer <lena@orbit.example> 1780850161 +0100
+committer Lena Fischer <lena@orbit.example> 1780850161 +0100
+
+Sort the listing by next run
+
+ba48fb0c3d2e17394c7372488b182f78dcbe1ffb tree 8c48a2fe69b83814f38a452c7773c4eb437a9bd7
+parent fac3107be9d463e1026262b7be7ca76b4b41b7bd
+author Dev Patel <dev@orbit.example> 1780714213 +0530
+committer Dev Patel <dev@orbit.example> 1780714213 +0530
+
+Add a test for the default state path
+
+fac3107be9d463e1026262b7be7ca76b4b41b7bd tree ebb0dac5fa1297af3dd07952804b373d390047cf
+parent 4585b5234d60d062c15abf2c9f66b584ec7c4255
+author Dev Patel <dev@orbit.example> 1780579014 +0530
+committer Dev Patel <dev@orbit.example> 1780579014 +0530
+
+Default the state path next to the config
+
+4585b5234d60d062c15abf2c9f66b584ec7c4255 tree 45fd32146b9d9980dfa7974ce06c84e0e7378ab8
+parent 57dc1039cfc2ff2c8694fbe8034d19f63897e1fe
+author Dev Patel <dev@orbit.example> 1780407462 +0530
+committer Dev Patel <dev@orbit.example> 1780407462 +0530
+
+Rename the state file option
+
+57dc1039cfc2ff2c8694fbe8034d19f63897e1fe tree 7180dbd65f984a6f7da5133700ee7adceec890c8
+parent cd31f8104e2f56457b00dce40176491296933b93
+author Mira Okafor <mira@orbit.example> 1780189155 +0000
+committer Mira Okafor <mira@orbit.example> 1780189155 +0000
+
+Add the weekly roadmap review notes
+
+cd31f8104e2f56457b00dce40176491296933b93 tree 87c3f131055ca27e9a7013a74ed270b1507855e3
+parent 4893efe356b158d943414a9c0c0d7806dda7ef55
+author Mira Okafor <mira@orbit.example> 1780141413 +0000
+committer Mira Okafor <mira@orbit.example> 1780141413 +0000
+
+Document the summary rows
+
+4893efe356b158d943414a9c0c0d7806dda7ef55 tree 94f5ca52b3056438fd892182711483d477702a6f
+parent cb6e8bbc632cdede1b1ff675ddce507cea9913a3
+author Mira Okafor <mira@orbit.example> 1779990282 +0000
+committer Mira Okafor <mira@orbit.example> 1779990282 +0000
+
+Add a metrics summary to the history command
+
+cb6e8bbc632cdede1b1ff675ddce507cea9913a3 tree 6bde5ad9dbe0736834649f49c42a2f50410cbf5b
+parent 4330535db88fe9363127401f3a10684f17dccf01
+author Lena Fischer <lena@orbit.example> 1779779869 +0100
+committer Lena Fischer <lena@orbit.example> 1779779869 +0100
+
+Add a test for stderr capture
+
+4330535db88fe9363127401f3a10684f17dccf01 tree 94b26e9700397546e05f4f2bd359f4330824e3d4
+parent edc0acc1cc8cef653801e0727121c851fb3baba0
+author Lena Fischer <lena@orbit.example> 1779597895 +0100
+committer Lena Fischer <lena@orbit.example> 1779597895 +0100
+
+Capture stderr in the runner
+
+edc0acc1cc8cef653801e0727121c851fb3baba0 tree cea091c6276e902ecf7c896dba0c646ea44de4a8
+parent 84ad79fab280a9927ed7b37fe89368f1a16e94a3
+author Dev Patel <dev@orbit.example> 1779429317 +0530
+committer Dev Patel <dev@orbit.example> 1779429317 +0530
+
+Add a test for the jitter option
+
+7279ca00cb69cb9c81aa8d3f6227b7f6279e981d tree 3769ca5591b27999559c7044e7dbf1ec6fde3704
+parent 988a1921aecba5efa2795bfad4816a3d2f01fa74
+parent 582b0b5e2cb698b3ed5bdffc0cd45a3902c26d21
+author Dev Patel <dev@orbit.example> 1779136729 +0530
+committer Dev Patel <dev@orbit.example> 1779136729 +0530
+
+Merge branch 'main' into develop
+
+582b0b5e2cb698b3ed5bdffc0cd45a3902c26d21 tree 253e48132370f24f938612e45d938eb65d6b2fbb
+parent 98bd87ac9a68a6a3df963ce6cd848281d7b64687
+author Mira Okafor <mira@orbit.example> 1779080485 +0000
+committer Mira Okafor <mira@orbit.example> 1779080485 +0000
+
+Refresh VERSION for the 1.1.0 dist tarball
+
+98bd87ac9a68a6a3df963ce6cd848281d7b64687 tree c48b4a6cc052496fc9b456f2a205ada298b577e4
+parent 9099f204096190b4e3cbd96891387f65db44e675
+author Mira Okafor <mira@orbit.example> 1778889192 +0000
+committer Mira Okafor <mira@orbit.example> 1778889192 +0000
+
+Fix the install command in the README
+
+988a1921aecba5efa2795bfad4816a3d2f01fa74 tree 8ad3ecb59c4536574e4c64746126f3188815ca92
+parent fe37aa82d2025199eeaa23dc88ba7808ed2034f5
+author Lena Fischer <lena@orbit.example> 1778714704 +0100
+committer Lena Fischer <lena@orbit.example> 1778714704 +0100
+
+Add the CLI reference to the user guide
+
+fe37aa82d2025199eeaa23dc88ba7808ed2034f5 tree ef6ef8ebee0b873726f1068be10807b3f2dc3ace
+parent 84160ea37508510a4ff786b923a5ec1fa2c1f510
+author Lena Fischer <lena@orbit.example> 1778556653 +0100
+committer Lena Fischer <lena@orbit.example> 1778556653 +0100
+
+Fix a typo in the user guide
+
+84160ea37508510a4ff786b923a5ec1fa2c1f510 tree 424d228265f916a9d3145e876b3af5aaac16a119
+parent 46400486c0d1cd5b058ab13e360d68b56c2d5e37
+parent 9099f204096190b4e3cbd96891387f65db44e675
+author Dev Patel <dev@orbit.example> 1778405665 +0530
+committer Dev Patel <dev@orbit.example> 1778405665 +0530
+
+Merge branch 'main' into develop
+
+72686ced90186cd5148dfc55ab3b23cdc868b1ba tree 8ab0813a28442613ee90deaf5e32746b4b27251e
+parent 1fbcf50531d91c00e33bae40dd0b1f4ec3494e65
+parent 46400486c0d1cd5b058ab13e360d68b56c2d5e37
+author Lena Fischer <lena@orbit.example> 1778103406 +0100
+committer Lena Fischer <lena@orbit.example> 1778103406 +0100
+
+Merge branch 'develop'
+
+46400486c0d1cd5b058ab13e360d68b56c2d5e37 tree 8ab0813a28442613ee90deaf5e32746b4b27251e
+parent ed21a0eaabd3335bee70504d7110bd458339be0a
+author Lena Fischer <lena@orbit.example> 1778019837 +0100
+committer Lena Fischer <lena@orbit.example> 1778019837 +0100
+
+Remove the unused legacy path helper from storage
+
+ed21a0eaabd3335bee70504d7110bd458339be0a tree 580ccd7d79fe268a1959259861fc8ad6ff2cfdf1
+parent 4b697a2edad7443214ef00e709243549377c2570
+author Mira Okafor <mira@orbit.example> 1777853460 +0000
+committer Mira Okafor <mira@orbit.example> 1777853460 +0000
+
+Drop the TODO file, the roadmap replaced it
+
+4b697a2edad7443214ef00e709243549377c2570 tree c6c6c822ed9639f64119104c0f6f8e400e919fe6
+parent 74537440cd374b6b1a305a6d641a2d54e3f4cbfd
+author Lena Fischer <lena@orbit.example> 1777666615 +0100
+committer Lena Fischer <lena@orbit.example> 1777666615 +0100
+
+Add a smoke test for the CLI
+
+74537440cd374b6b1a305a6d641a2d54e3f4cbfd tree 06d3da63c1c487357d0ae4ff9cb3f1d4f4f942b3
+parent 5c90882bb780f6565571d18d4bdc62ff0d930fb0
+author Dev Patel <dev@orbit.example> 1777530047 +0530
+committer Dev Patel <dev@orbit.example> 1777530047 +0530
+
+Add the retry notes draft to the user guide
+
+5c90882bb780f6565571d18d4bdc62ff0d930fb0 tree 3ea56f64f38e6894894f6e3f7354ca63b10a431d
+parent 5a63a3f021a995b03cf861ed7d5411bf9c68eb5e
+author Mira Okafor <mira@orbit.example> 1777325130 +0000
+committer Mira Okafor <mira@orbit.example> 1777325130 +0000
+
+Document the per-job timeout
+
+5a63a3f021a995b03cf861ed7d5411bf9c68eb5e tree 2fd73b56306270de4f9e22d02f7ca9fef019bb47
+parent 6ed47e8c3cfccc7fe7080c6dfaabf7d59e05326f
+author Mira Okafor <mira@orbit.example> 1777176521 +0000
+committer Mira Okafor <mira@orbit.example> 1777176521 +0000
+
+Add a per-job timeout
+
+7b9d9c2aed527155a4ab5d412326735e846d67fa tree 9ce3e07e90bbffa9fbd77547ace244592521deea
+parent 7fa612bc55a0275eee65b3d6518d67056ddd6d5d
+author Lena Fischer <lena@orbit.example> 1776872164 +0100
+committer Lena Fischer <lena@orbit.example> 1776872164 +0100
+
+Bump the package metadata to 1.1
+
+7fa612bc55a0275eee65b3d6518d67056ddd6d5d tree 59ca08a924b042da6a72d6acbc846f9e0cb19526
+parent 4262eeffeb54c4c68be62f162cebd684ee96f6ac
+author Lena Fischer <lena@orbit.example> 1776721541 +0100
+committer Lena Fischer <lena@orbit.example> 1776721541 +0100
+
+Rename the formatter module to table
+
+4262eeffeb54c4c68be62f162cebd684ee96f6ac tree aa1241df71427a0c8bc99561c0600cd0032d9e50
+parent 37ef59e06cb5bdcf58ba3a73713c2a045f3fd400
+author Mira Okafor <mira@orbit.example> 1776643690 +0000
+committer Mira Okafor <mira@orbit.example> 1776643690 +0000
+
+Add a test for disabled jobs
+
+37ef59e06cb5bdcf58ba3a73713c2a045f3fd400 tree 6beb6bfbf8e5a74cd1dad5d8ed2da666f7aec38a
+parent 8c088d4edd85f5eb13fef596974391fe8372bc83
+author Mira Okafor <mira@orbit.example> 1776497425 +0000
+committer Mira Okafor <mira@orbit.example> 1776497425 +0000
+
+Skip disabled jobs when computing due jobs
+
+8c088d4edd85f5eb13fef596974391fe8372bc83 tree 858d5ebbd72500dd8f064f53bf4f246b64d57b99
+parent 8f7fce3df3a5382c7dbd33f4308f6a5baa26578d
+author Dev Patel <dev@orbit.example> 1776244575 +0530
+committer Dev Patel <dev@orbit.example> 1776244575 +0530
+
+Add tests for notify
+
+0488ed08463e0686ab10a7f2a69847c734e8c35e tree 10d21df322a352f7ff3014b0971473e394a85381
+parent 69c62f3251755737185e0caf47f0bfb0be56021a
+author Mira Okafor <mira@orbit.example> 1775980634 +0000
+committer Mira Okafor <mira@orbit.example> 1775980634 +0000
+
+Document the metrics
+
+69c62f3251755737185e0caf47f0bfb0be56021a tree 2511e210104ec2498627c42f632fa6131399de91
+parent 5f5f15463403619b8521ec7fb8d31cba8a7d0fef
+author Lena Fischer <lena@orbit.example> 1775815410 +0100
+committer Lena Fischer <lena@orbit.example> 1775815410 +0100
+
+Add a history command
+
+5f5f15463403619b8521ec7fb8d31cba8a7d0fef tree 96cd2f5387becaf109a8e00ed1843ad75b0d5dfd
+parent 499acfa2f5d53b49e306e3da2d5bc46cc6b47cd3
+author Lena Fischer <lena@orbit.example> 1775644990 +0100
+committer Lena Fischer <lena@orbit.example> 1775644990 +0100
+
+Keep a run history in the state file
+
+499acfa2f5d53b49e306e3da2d5bc46cc6b47cd3 tree a5e7a1f19379f9fa6e2801be76c2e724b5a3d34e
+parent 7c765d70d2dbf3a92057659aadf40c2fcc0ffeaf
+author Dev Patel <dev@orbit.example> 1775491684 +0530
+committer Dev Patel <dev@orbit.example> 1775491684 +0530
+
+Add a tags filter to the listing
+
+7c765d70d2dbf3a92057659aadf40c2fcc0ffeaf tree 7522e6271bf5e1138d5451f1c32e1a65778e1f04
+parent 08b9353484af1b5b7422e7485fb0608c68f0af49
+author Dev Patel <dev@orbit.example> 1775394693 +0530
+committer Dev Patel <dev@orbit.example> 1775394693 +0530
+
+Validate weekday ranges in the parser
+
+08b9353484af1b5b7422e7485fb0608c68f0af49 tree 398a5927221456f46dcd2891348bdae5b8500418
+parent 45ae259e577c8c1d011e9cab2b4bef412beb771d
+author Lena Fischer <lena@orbit.example> 1775242940 +0100
+committer Lena Fischer <lena@orbit.example> 1775242940 +0100
+
+Allow --verbose on every command
+
+45ae259e577c8c1d011e9cab2b4bef412beb771d tree 885f514666aba745e01b653ec63fd2d7bccdc52b
+parent 6f21886f525ef4c53ae91d37bdf1860c06598af7
+author Mira Okafor <mira@orbit.example> 1775036461 +0000
+committer Mira Okafor <mira@orbit.example> 1775036461 +0000
+
+Document the daemon mode
+
+6f21886f525ef4c53ae91d37bdf1860c06598af7 tree c7d0a5974c2dbad6b80e4d4406a9074d74f39465
+parent 2994e748a94ac52732a7ebcf608e4c359413c382
+author Mira Okafor <mira@orbit.example> 1774907118 +0000
+committer Mira Okafor <mira@orbit.example> 1774907118 +0000
+
+Add the daemon loop to the CLI
+
+2994e748a94ac52732a7ebcf608e4c359413c382 tree 87695ba59bfe1f04ee1849751c8dc1253615a57c
+parent e8a8c7faae80deb10e5cc97fa82593ca16211338
+author Lena Fischer <lena@orbit.example> 1774759920 +0100
+committer Lena Fischer <lena@orbit.example> 1774759920 +0100
+
+Add tests for the runner
+
+e8a8c7faae80deb10e5cc97fa82593ca16211338 tree edf08b01f32f11c563acf0a3bf92c9bd32be2af6
+parent db6e5c8bad8742306fafe95a00cea2ab76a1b722
+author Dev Patel <dev@orbit.example> 1774689700 +0530
+committer Dev Patel <dev@orbit.example> 1774689700 +0530
+
+Report timeouts as failed runs
+
+db6e5c8bad8742306fafe95a00cea2ab76a1b722 tree 587c316f34a523cf797cccec2b54f65acaa7bbf3
+parent a50857249029e767ae782c339442a01b31728de7
+author Dev Patel <dev@orbit.example> 1774441083 +0530
+committer Dev Patel <dev@orbit.example> 1774441083 +0530
+
+Record metrics from the runner
+
+a50857249029e767ae782c339442a01b31728de7 tree d80b91bd89448d1c6a565ce7c6868985a4e5c177
+parent 6c6634e985b5a2d5d459603e5db5e91b07822087
+author Lena Fischer <lena@orbit.example> 1774330021 +0100
+committer Lena Fischer <lena@orbit.example> 1774330021 +0100
+
+Add a table formatter for the CLI
+
+6c6634e985b5a2d5d459603e5db5e91b07822087 tree 9f8f4c5fc1f9adc27c8bb80ae239a88b629a7483
+parent da44e8acfe42979940dcd2537422bbaeca6cf14f
+author Dev Patel <dev@orbit.example> 1774230015 +0530
+committer Dev Patel <dev@orbit.example> 1774230015 +0530
+
+Add counters for runs and failures
+
+da44e8acfe42979940dcd2537422bbaeca6cf14f tree 4af3b74c242592f1fd6d9a30278c963731d3d503
+parent db2ce41b1462cfd2f10fbe04994c6334fcbc98b7
+author Dev Patel <dev@orbit.example> 1773977160 +0530
+committer Dev Patel <dev@orbit.example> 1773977160 +0530
+
+Add notification hooks
+
+393aaed5bf6115af34a7e75dcb8d82ef67c25c99 tree 9c4ea22c923da89c2f1dbf16554b9a036beecfdf
+parent 518aac585f9a5f3220b0b504cb5df30edee0e99f
+parent 49f90deea673fbc510b2246b35c9b48ef5593ad5
+author Mira Okafor <mira@orbit.example> 1773621369 +0000
+committer Mira Okafor <mira@orbit.example> 1773621369 +0000
+
+Merge branch 'develop'
+
+49f90deea673fbc510b2246b35c9b48ef5593ad5 tree 9c4ea22c923da89c2f1dbf16554b9a036beecfdf
+parent e8484412c10dbeab20e4c3836dc73087fabf5d55
+author Lena Fischer <lena@orbit.example> 1773377856 +0100
+committer Lena Fischer <lena@orbit.example> 1773377856 +0100
+
+Tidy the README install section
+
+e8484412c10dbeab20e4c3836dc73087fabf5d55 tree 352934dfc63afad96b3c160cc54e771741fb796e
+parent 3a161596fcd75f0942565accaa7bffcd3e03971c
+author Lena Fischer <lena@orbit.example> 1773230423 +0100
+committer Lena Fischer <lena@orbit.example> 1773230423 +0100
+
+Fix the hour range in the cron parser docs
+
+3a161596fcd75f0942565accaa7bffcd3e03971c tree f34487d2a92c729ec1c615c6d1524e6626a4cebe
+parent bec8789e1223da9cb3212cdfa9728e98cca07300
+author Mira Okafor <mira@orbit.example> 1773105856 +0000
+committer Mira Okafor <mira@orbit.example> 1773105856 +0000
+
+Expand the roadmap for 1.0
+
+bec8789e1223da9cb3212cdfa9728e98cca07300 tree 5ae5604b91f030420923eedb0dae5173c8896b3a
+parent 42a0ce88a3f877fbd4850a231f94e57c8f069370
+author Dev Patel <dev@orbit.example> 1772945909 +0530
+committer Dev Patel <dev@orbit.example> 1772945909 +0530
+
+Log every job start and outcome
+
+65b7a8ee08996337669de37654bcf8f4c0aae298 tree e78bbb11a28bb871f900bff3108dbef6b2c2129d
+parent 65a0a2438f31b537ed5b291f9659914fac59dbc4
+author Mira Okafor <mira@orbit.example> 1772639165 +0000
+committer Mira Okafor <mira@orbit.example> 1772639165 +0000
+
+Handle an empty job table in the CLI
+
+65a0a2438f31b537ed5b291f9659914fac59dbc4 tree f0b014a2cf84b7c99a4920965b63ba0658bc567f
+parent 9a3f3c2a1c8e0d70dbf7b83ec34b4552fca0006a
+author Mira Okafor <mira@orbit.example> 1772477463 +0000
+committer Mira Okafor <mira@orbit.example> 1772477463 +0000
+
+Validate the job name
+
+9a3f3c2a1c8e0d70dbf7b83ec34b4552fca0006a tree 1cd391e736bcd9c7673204f991c71cca683a2801
+parent 8680ce502aa3d09abbb4e83e10541b7e32c55fef
+author Dev Patel <dev@orbit.example> 1772356863 +0530
+committer Dev Patel <dev@orbit.example> 1772356863 +0530
+
+Add the storage tests
+
+8680ce502aa3d09abbb4e83e10541b7e32c55fef tree 8957bb70649bf2618092def54f6feb6b0fc757a0
+parent acbd7775e4b51843a1a40bac8575be6c0c5f168d
+author Lena Fischer <lena@orbit.example> 1772163364 +0100
+committer Lena Fischer <lena@orbit.example> 1772163364 +0100
+
+Document the configuration format
+
+acbd7775e4b51843a1a40bac8575be6c0c5f168d tree 41da751e41fd60d1e17791a4d03c18e3ff1a4997
+parent 1bd0d1c43b4f9406c7283025738ac8ec7260d8cd
+author Lena Fischer <lena@orbit.example> 1772072558 +0100
+committer Lena Fischer <lena@orbit.example> 1772072558 +0100
+
+Add config tests
+
+1bd0d1c43b4f9406c7283025738ac8ec7260d8cd tree 64ef69447385666e5cd9c4dd1b8882eddef2731b
+parent 4883f758b33a8f01ad46c81fa2c456209b61c498
+author Lena Fischer <lena@orbit.example> 1771938052 +0100
+committer Lena Fischer <lena@orbit.example> 1771938052 +0100
+
+Read the job table from a TOML file
+
+4883f758b33a8f01ad46c81fa2c456209b61c498 tree b59ef42d2c464e52c64fed2c27a97e4182b0ee2b
+parent 42890b76b13ce7ec0b9b54240522dabf165d34fe
+author Mira Okafor <mira@orbit.example> 1771702859 +0000
+committer Mira Okafor <mira@orbit.example> 1771702859 +0000
+
+Add the run-once command
+
+42890b76b13ce7ec0b9b54240522dabf165d34fe tree 5f4c3082546445b0ab9de801f21070d8669dafd7
+parent fe3c1b2495aaad66e045b641141f3f9f0419133b
+author Mira Okafor <mira@orbit.example> 1771658786 +0000
+committer Mira Okafor <mira@orbit.example> 1771658786 +0000
+
+List jobs from the CLI
+
+fe3c1b2495aaad66e045b641141f3f9f0419133b tree 7d2400f1c178db6e608e82f1a2dfa5e37f05a7cc
+parent f29f93c83945afc9b317b522c5dde8f8352a153f
+author Dev Patel <dev@orbit.example> 1771430926 +0530
+committer Dev Patel <dev@orbit.example> 1771430926 +0530
+
+Add tests for the scheduler
+
+fe968d970edc3c0ba746872280534e6ae0c8ec0c tree e0d144bfc2afcb60bc02cf70834986c4aad6b2d0
+parent c80df127ccc817dba7cf2f5337afcc5dbc514dd0
+author Mira Okafor <mira@orbit.example> 1771137235 +0000
+committer Mira Okafor <mira@orbit.example> 1771137235 +0000
+
+Derive CronError from OrbitError
+
+c80df127ccc817dba7cf2f5337afcc5dbc514dd0 tree a0c4c76bb5c33c8f473c98492a2202d99c411689
+parent 4eb932a0a283038fae39ec98745b92e9dfd7d83d
+author Mira Okafor <mira@orbit.example> 1770993224 +0000
+committer Mira Okafor <mira@orbit.example> 1770993224 +0000
+
+Add the errors module
+
+4eb932a0a283038fae39ec98745b92e9dfd7d83d tree 16fa421a0afca6f249db4423aca2bb03174746a2
+parent e60e85b869653062f6218ec6bf5f20deebcbf106
+author Lena Fischer <lena@orbit.example> 1770896612 +0100
+committer Lena Fischer <lena@orbit.example> 1770896612 +0100
+
+Persist the next run time of every job
+
+e60e85b869653062f6218ec6bf5f20deebcbf106 tree f053ea8c8c294b8f1b8462fae4f52d18e1a14ea1
+parent 4b728670f616946f49f3884ecaab5c1be88423f7
+author Lena Fischer <lena@orbit.example> 1770692139 +0100
+committer Lena Fischer <lena@orbit.example> 1770692139 +0100
+
+Add a JSON state store
+
+4b728670f616946f49f3884ecaab5c1be88423f7 tree 01804338bd5b6c900c063f26d6cf1d5bda9d8708
+parent 084cf2d54278a0f3b5e8f86b5761e303966228c7
+author Mira Okafor <mira@orbit.example> 1770607786 +0000
+committer Mira Okafor <mira@orbit.example> 1770607786 +0000
+
+Use next_run in the scheduler tick
+
+084cf2d54278a0f3b5e8f86b5761e303966228c7 tree 94fa8816a3f398c5ffc834e06f9b5424b57f3361
+parent 8812dc7b8f2932e6a152b19c81633c51e301d850
+author Dev Patel <dev@orbit.example> 1770439203 +0530
+committer Dev Patel <dev@orbit.example> 1770439203 +0530
+
+Add next_run() to the cron module
+
+8812dc7b8f2932e6a152b19c81633c51e301d850 tree 4a545f2555c0f3b5bec461acf08c5ceea666eac9
+parent 16efb7008548d5a951bb79b4bbb1cf7f7cdf7476
+author Dev Patel <dev@orbit.example> 1770183844 +0530
+committer Dev Patel <dev@orbit.example> 1770183844 +0530
+
+Add matches() to the cron module
+
+16efb7008548d5a951bb79b4bbb1cf7f7cdf7476 tree 7c53249be2cdd56a0fd94e5dd1c1fd85517de2bc
+parent 518aac585f9a5f3220b0b504cb5df30edee0e99f
+author Dev Patel <dev@orbit.example> 1770038401 +0530
+committer Dev Patel <dev@orbit.example> 1770038401 +0530
+
+Export the public names from the package
+
+44f8846080a7d3ce14744ad90fc864593a1ac433 tree 87ccb27f23640185b19ba5827072a5e55d718128
+parent 5c32ac075f74e19b9b84fc7bdeb71710ef93412a
+author Mira Okafor <mira@orbit.example> 1769634045 +0000
+committer Mira Okafor <mira@orbit.example> 1769634045 +0000
+
+Start the roadmap
+
+13d3911235a5fb835a710d95b0873e2952a5a229 tree 00b8e676fd7460059ef92d91449e0f3a9179db31
+parent e5973ba3fcd3aae9e8d7024028e8cd12c77d784e
+author Lena Fischer <lena@orbit.example> 1769331814 +0100
+committer Lena Fischer <lena@orbit.example> 1769331814 +0100
+
+Add the project logo
+
+e5973ba3fcd3aae9e8d7024028e8cd12c77d784e tree 1bbaed1329a146f6b21e7c143dd7f07387642758
+parent 5f278b49cbc0a72c9c1711f78b9d6f24573a62d3
+author Mira Okafor <mira@orbit.example> 1769140917 +0000
+committer Mira Okafor <mira@orbit.example> 1769140917 +0000
+
+Add the release script
+
+5f278b49cbc0a72c9c1711f78b9d6f24573a62d3 tree a48f09ece41458d42ade8a1e21328e3d2124f303
+parent a6013f1d67bc5a1ee4d907c5e19b11b310f4f27d
+author Dev Patel <dev@orbit.example> 1769035517 +0530
+committer Dev Patel <dev@orbit.example> 1769035517 +0530
+
+Add the API doc generator
+
+a6013f1d67bc5a1ee4d907c5e19b11b310f4f27d tree 70afa2d4fa4fdeae992ff1ed2180928b660aba66
+parent 849c080f25cb89ec88117b91e116b1b7a8b702c4
+author Mira Okafor <mira@orbit.example> 1768940660 +0000
+committer Mira Okafor <mira@orbit.example> 1768940660 +0000
+
+Add a Makefile and a TODO list
+
+849c080f25cb89ec88117b91e116b1b7a8b702c4 tree cf144ac9f154dc4dc16196b10beea974a0d5b018
+parent 04cf09615e02cf05de39ce04475da39bfc2df18e
+author Lena Fischer <lena@orbit.example> 1768760798 +0100
+committer Lena Fischer <lena@orbit.example> 1768760798 +0100
+
+Add the first cron parser tests
+
+04cf09615e02cf05de39ce04475da39bfc2df18e tree d67a5a7b85e411150d5559c9851500fddbaf6590
+parent 63cea279b31f1ede03cde9db8edb66cf75c1bf09
+author Mira Okafor <mira@orbit.example> 1768611007 +0000
+committer Mira Okafor <mira@orbit.example> 1768611007 +0000
+
+Add the command-line entry point
+
+63cea279b31f1ede03cde9db8edb66cf75c1bf09 tree 69d4463d27450aa21633756b1527c1c6b14787e9
+parent a935b98741a334095274bbef62d00921a3370ffb
+author Dev Patel <dev@orbit.example> 1768366773 +0530
+committer Dev Patel <dev@orbit.example> 1768366773 +0530
+
+Add a subprocess runner
+
+a935b98741a334095274bbef62d00921a3370ffb tree 168d596ae92a771ef416da8f23fd95e50cbce7a5
+parent 5bf110bd1f8ee6f303569f63a25faa368556f703
+author Mira Okafor <mira@orbit.example> 1768332662 +0000
+committer Mira Okafor <mira@orbit.example> 1768332662 +0000
+
+Add the scheduler core
+
+5bf110bd1f8ee6f303569f63a25faa368556f703 tree ba198171899ea2fea32f29e668d1868d059e18d7
+parent 161cbd04493ad62ae01a6d9f1e5565eca3199592
+author Dev Patel <dev@orbit.example> 1768083729 +0530
+committer Dev Patel <dev@orbit.example> 1768083729 +0530
+
+Add the clock abstraction
+
+161cbd04493ad62ae01a6d9f1e5565eca3199592 tree 51ba72ff44606b08f3070b75c226697af7baf5a0
+parent 172a42b32810a00100165c5859e89f2efd62c24e
+author Mira Okafor <mira@orbit.example> 1767993057 +0000
+committer Mira Okafor <mira@orbit.example> 1767993057 +0000
+
+Add a cron expression parser
+
+172a42b32810a00100165c5859e89f2efd62c24e tree edb0ff42826dae2b08c1e5f2c01c7aa7d4add829
+parent c34a59c7f218e45cec0e6238b3d40adaa4f2e5e2
+author Mira Okafor <mira@orbit.example> 1767853623 +0000
+committer Mira Okafor <mira@orbit.example> 1767853623 +0000
+
+Add the job model
+
+c34a59c7f218e45cec0e6238b3d40adaa4f2e5e2 tree e6fcb386db57dca77d7fe2d9b74ed1f96013c7aa
+author Mira Okafor <mira@orbit.example> 1767716517 +0000
+committer Mira Okafor <mira@orbit.example> 1767716517 +0000
+
+Start the orbit project
+
+84ad79fab280a9927ed7b37fe89368f1a16e94a3 tree a04c2aa50c5b8ebb91a8419b13d12b1823230b8c
+parent 7279ca00cb69cb9c81aa8d3f6227b7f6279e981d
+author Dev Patel <dev@orbit.example> 1779350536 +0530
+committer Dev Patel <dev@orbit.example> 1779350536 +0530
+
+Add a jitter option to the scheduler
+
+6ed47e8c3cfccc7fe7080c6dfaabf7d59e05326f tree 8450a471783d97715be11e56c0c8df2ef32cc6fa
+parent 7b9d9c2aed527155a4ab5d412326735e846d67fa
+author Dev Patel <dev@orbit.example> 1777108436 +0530
+committer Dev Patel <dev@orbit.example> 1777108436 +0530
+
+Reject empty fields in the cron parser
+
+8f7fce3df3a5382c7dbd33f4308f6a5baa26578d tree 9ed4f324a68dd05cc2e93cae2dca6cc43ba434e0
+parent 0488ed08463e0686ab10a7f2a69847c734e8c35e
+author Mira Okafor <mira@orbit.example> 1776141823 +0000
+committer Mira Okafor <mira@orbit.example> 1776141823 +0000
+
+Refresh the roadmap after the 1.0 release
+
+db2ce41b1462cfd2f10fbe04994c6334fcbc98b7 tree 2e5a722a5f116291b3d1be73f2a4313c0d93f75b
+parent 49f90deea673fbc510b2246b35c9b48ef5593ad5
+parent 1fbcf50531d91c00e33bae40dd0b1f4ec3494e65
+author Dev Patel <dev@orbit.example> 1773912278 +0530
+committer Dev Patel <dev@orbit.example> 1773912278 +0530
+
+Merge branch 'main' into develop
+
+42a0ce88a3f877fbd4850a231f94e57c8f069370 tree f8ec3f516c7c576baa76877a6450b8b50bb3069f
+parent 65b7a8ee08996337669de37654bcf8f4c0aae298
+author Dev Patel <dev@orbit.example> 1772770407 +0530
+committer Dev Patel <dev@orbit.example> 1772770407 +0530
+
+Add a logging setup
+
+f29f93c83945afc9b317b522c5dde8f8352a153f tree 05ed4efcbeb959106cd1136406c5c32acbfea6b4
+parent fe968d970edc3c0ba746872280534e6ae0c8ec0c
+author Dev Patel <dev@orbit.example> 1771251525 +0530
+committer Dev Patel <dev@orbit.example> 1771251525 +0530
+
+Add tests for next_run
+
+5c32ac075f74e19b9b84fc7bdeb71710ef93412a tree a6418d8884699787d70ff0f3e18406fa1d54d59f
+parent 13d3911235a5fb835a710d95b0873e2952a5a229
+author Lena Fischer <lena@orbit.example> 1769530873 +0100
+committer Lena Fischer <lena@orbit.example> 1769530873 +0100
+
+Write the user guide

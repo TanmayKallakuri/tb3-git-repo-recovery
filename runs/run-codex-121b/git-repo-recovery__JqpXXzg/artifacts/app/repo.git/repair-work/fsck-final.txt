@@ -1,0 +1,5 @@
+Command: git fsck --full --strict
+Directory: /app/repo.git
+Exit status: 0
+stdout: empty
+stderr: empty

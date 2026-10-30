@@ -1,0 +1,18 @@
+[
+  {
+    "oid": "4a5aaf2c1dc2ed67d06d247069858b3707605a77",
+    "parent": "8caad076eb6b22df3d1854065aa4df86dcc869fb",
+    "tree": "4196d82ff060719a27d6cff6d8da2e4b5353aa54",
+    "patch": "docs/patches/cache-warmup/0001-Warm-the-cache-in-a-background-thread.patch",
+    "author": "Lena Fischer <lena@orbit.example> 1789067631 +0100",
+    "committer": "Mira Okafor <mira@orbit.example> 1789067631 +0100"
+  },
+  {
+    "oid": "1282507db11c676ede8b3873227070b19cd7c7ef",
+    "parent": "4a5aaf2c1dc2ed67d06d247069858b3707605a77",
+    "tree": "59a5cdd0ef82f967f617a3324c53381af0955a99",
+    "patch": "docs/patches/cache-warmup/0002-Add-a-cache-size-limit.patch",
+    "author": "Lena Fischer <lena@orbit.example> 1791800154 +0100",
+    "committer": "Mira Okafor <mira@orbit.example> 1791800154 +0100"
+  }
+]

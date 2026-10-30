@@ -1,10 +1,11 @@
-# How this task was arrived at: four designs, each measured before the next
+# How this task was arrived at: five designs, each measured before the next
 
-The assessment asks for the iteration process. Four task designs were
+The assessment asks for the iteration process. Five task designs were
 built end to end during the week; each cleared the CI gates, and each was
 measured against the frontier models before the decision to keep or
-replace it. The git recovery task in this repository is the third, and
-its 1.1.0 hardening is the fourth. The first two live in their own repositories with the same layout (SPEC,
+replace it. The last three are versions of the git recovery task in this
+repository: 1.0.0 is the third design, its 1.1.0 hardening the fourth,
+and 1.2.0 with its 1.2.1 follow-up the fifth, which ships as 1.2.1. The first two live in their own repositories with the same layout (SPEC,
 RESULTS, trimmed runs) and are available on request; their numbers below
 are copied from their RESULTS files.
 
@@ -65,10 +66,10 @@ Designs 2 and 3 together cost about four dollars of equivalent usage and
 thirty minutes of agent time to measure, against the twelve full trials
 that would otherwise have been run on them.
 
-## Design 4: `git-repo-recovery` 1.1.0, the hardening (this repository, shipped)
+## Design 4: `git-repo-recovery` 1.1.0, the hardening (this repository, superseded by 1.2.0)
 
 Version 1.0.0 was measured in full (six passes, two cheat trials at zero,
-RESULTS.md sections 8 to 12) and reviewed externally on 2026-10-30. The
+RESULTS.md sections 16 to 20) and reviewed externally on 2026-10-30. The
 review's central finding was the one the measurements already showed:
 every completed attempt by either model passed. Its reading of why
 matched `trajectories.md`: object ids act as a local oracle (all 43 of the
@@ -159,8 +160,105 @@ attempt 2 the release script and the point-release versions as well) and
 decided against acting on it, while codex, and claude-code on its third
 attempt, treated the same evidence as instructions.
 
+## Design 5: `git-repo-recovery` 1.2.0 and 1.2.1, the sibling patterns inverted (shipped as 1.2.1)
+
+The 1.1.0 trials showed codex passing every attempt and claude-code
+failing two of three by stopping once fsck was clean. The hypothesis for
+1.2.0: in 1.1.0 the patterns an agent can verify on surviving data pointed
+at the right answer for both oracle-free losses. The lost L1 commit was
+the one whose tree was left dangling, with committer equal to author like
+every other commit, and the lost tag's date was the release commit's
+date, like the four surviving tags. 1.2.0 inverts both, so that the
+verifiable pattern points at a wrong answer that passes fsck.
+
+- L1 is now a rebase. On the last day, after the nightly mirror push,
+  `tools/archive-series.sh` rebased `feature/cache-warmup` onto `develop`
+  with `git rebase -q --committer-date-is-author-date`, run by Mira, so the
+  committer is Mira at Lena's author dates and zone on the only two
+  commits in the history whose committer is not the author. It
+  force-pushed the branch with `--force-with-lease` and archived its two
+  patches with `git format-patch --no-thread --zero-commit
+  --no-signature`. The mirror still holds the pre-rebase pair. Both
+  archived patches match that pair by author, date and subject, and `git
+  format-patch` of the mirror's pair reproduces the archive byte for
+  byte, so the branch looks intact at the mirror's value and nothing
+  dangles. The real tip is the rebased pair, whose two commits and four
+  trees are deleted with the ref and its reflog. The script has a single
+  version in the whole history, so reading it at HEAD or at the archive
+  commit gives the same text; what matters is acting on it.
+- L2 is now dated from its heading. The tag `v1.4.0` takes its date from
+  the time in its CHANGELOG heading, which version 2 of `tools/release.sh`
+  writes from `SOURCE_DATE_EPOCH`, the committer time of the commit the
+  release was cut from; it is in +0000 and in the name of the release
+  commit's committer. The four surviving tags
+  are dated at their release commit's date, so the sibling pattern gives a
+  wrong date. The message is the CHANGELOG section's bullets as of the
+  release commit; a later commit corrected one bullet, so HEAD's
+  `CHANGELOG.md` gives a wrong message.
+- Seven hidden ids: the rebased pair, its four trees and the tag object.
+  The generator's no-leak scan asserts that none appears in any file, path
+  or other object of the damaged repository, as a 7-hex prefix in either
+  case or in 20-byte binary form, and that `git fsck --full` of the
+  damaged repository names none of them.
+- The D3 picks now exclude every ref target, the tooling trees and the
+  mirror's pair. A first 1.2.0 build corrupted a ref target and `git fsck`
+  of the damaged repository died instead of reporting; the generator's
+  `verify.sh` now fails the build when that happens, and asserts that the
+  commits whose committer is not the author are exactly the rebased pair.
+- Everything before the last day is frozen, so the packs and the D1, D2,
+  D4, D5 and D6 victims are still the 1.0.0 ones. The repository was
+  rebuilt deterministically in a container, twice byte-identically.
+- 1.2.1 added one clause to the instruction, "Do not rewrite the history
+  that survived," because the rebase variant makes "rewrite" ambiguous:
+  the agent must redo a rebase that already happened in the original, not
+  invent one. It also corrected the task README's difficulty text to the
+  1.2.0 facts and made the oracle raise before fsck if any route is
+  skipped. The repository bytes, the verifier and the damage did not
+  change.
+
+| Gate or trial | Result |
+|---|---|
+| 1.2.0 static checks, oracle, nop | 29 of 29 at task commit `0502a89`, 1.0, 0.0 |
+| 1.2.0 verifier fixtures | 19 of 19 as expected on the 1.2.0 original; not rerun for 1.2.1, whose verifier and repository bytes are identical |
+| 1.2.0 codex pilot (`pilot-codex-120`, `myvwxLc`) | **reward 1.0** in 6.3 minutes, 17 tool calls, 1.18M input tokens: rebuilt the rebased pair from the archive script and the patch headers and confirmed it with a native rebase, rebuilt the tag from the heading's time and confirmed it with a native `git tag` |
+| 1.2.1 static checks, oracle, nop | 29 of 29 at task commit `fbccdfa`, 1.0, 0.0 |
+| 1.2.1 rubric | 34 pass, 0 fail, 3 not applicable |
+| 1.2.1 codex attempts (`run-codex-121`, `EfjWeTS`, `ynnvZxs`, `sweKZhw`) | **1.0 and 1.0** in 5.7 and 6.7 minutes; the third was cut by the subscription's usage window after it had rebuilt the seven hidden objects at their original ids and before it wrote any ref, and is not counted |
+| 1.2.1 codex replacement attempts (`run-codex-121b`, `JqpXXzg`, `oj4orbL`; the replacement script was launched twice, so two ran) | **1.0 and 1.0** in 5.9 and 6.3 minutes |
+| 1.2.1 claude-code attempts (`run-claude-121`, `w83Yrhe`, `rfCGPva`, `qA8XRxY`) | **0.0, 1.0 and 0.0** in 49.6, 42.2 and 21.7 minutes; attempt 1 restored `feature/cache-warmup` at the mirror's value and rebuilt `v1.4.0` exactly; attempt 3 stopped at a clean fsck with 13 of 18 refs |
+| 1.2.1 claude-code cheat trial (`cheat-claude-121`, `pHijg4V`) | **0.0**; a safety classifier stopped one response, the agent declined the cheat instruction and did an ordinary partial repair that missed both feature branches |
+| 1.2.1 codex cheat trial | the first run (`cheat-codex-121`, `LzQEsGz`) hit the closed usage window before any tool call and is not valid; replacements (`cheat-codex-121b`, `8vNBzqi`, `bRiK3UE`; two, for the same reason): **0.0 and 0.0**, the provider's safeguard rejected the turn before any tool call both times |
+
+What it taught. Claude-code's first 1.2.1 attempt took the mirror's pair,
+the answer every check on surviving data confirms, which is the failure
+1.2.0 was built to produce; its third stopped at a clean fsck with five
+refs missing, the 1.1.0 pattern. Its second attempt, like the 1.2.0 codex
+pilot and both completed 1.2.1 codex attempts, acted on the archive
+script and passed. The hardenings have now been measured in full twice,
+on 1.1.0 and on 1.2.1, and each time they stopped claude-code in two of
+three attempts and codex in none of its completed attempts, the two 1.2.1
+replacement attempts included. Codex's trajectories show why. It reads every
+tool as of every commit, treats what a script says the project did as
+what happened, validates each reconstruction against a hash or a native
+re-run, and on 1.2.0 and 1.2.1 it finished in under seven minutes of
+agent time. A small, fully inspectable git repository in which everything
+lost is recoverable from what remains, which is what makes the task
+correct and oracle-free, does not produce three genuine codex failures.
+Making the evidence thinner would make the task guessable, which the
+brief forbids.
+
+The decision: the design was frozen at 1.2.1, and the remaining effort
+went into evidence and the write-up rather than another redesign. The
+brief's central requirement is not met, for the third version in a row,
+and the write-up says so.
+
 ## The rule that made the iteration affordable, applied again
 
 Design 4 followed the same rule: one codex attempt and one claude-code
 attempt before the remaining trials were launched, in parallel processes
 once the pilots had shown the task survives contact.
+
+Design 5 applied it to 1.2.0 with a single codex pilot. It passed in 6.3
+minutes, as fast as codex had solved 1.1.0, so no further 1.2.0 trial
+was spent. The full set ran once, on 1.2.1, to measure claude-code and to
+ship a version with every measurement on one commit.

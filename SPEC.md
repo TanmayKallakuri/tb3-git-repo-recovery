@@ -324,7 +324,7 @@ category Software, subcategory Systems, tags ["git", "data-recovery",
 cpus 2, memory 2048, storage 10240, separate verifier, artifacts
 ["/app/repo.git/"].
 
-## 8. Run plan for 1.0.0 (superseded; see RESULTS.md for 1.1.0)
+## 8. Run plan for 1.0.0 (superseded; see RESULTS.md for 1.2.1)
 
 Static checks (29), rubric review (sonnet, staged), oracle, nop, then ONE
 codex calibration trial. Then claude-code x3, codex x2 more, cheat x2,

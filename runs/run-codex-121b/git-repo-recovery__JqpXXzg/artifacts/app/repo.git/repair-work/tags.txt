@@ -1,0 +1,27 @@
+769013b9f4a84795d101ca52157a07dbea36ea7b object 1fbcf50531d91c00e33bae40dd0b1f4ec3494e65
+type commit
+tag v1.0.0
+tagger Mira Okafor <mira@orbit.example> 1773677336 +0000
+
+orbit v1.0.0
+
+808da7c33e7ae9c4a01418296aedbe08c62e274e object 9099f204096190b4e3cbd96891387f65db44e675
+type commit
+tag v1.1.0
+tagger Lena Fischer <lena@orbit.example> 1778234720 +0100
+
+orbit v1.1.0
+
+45628f3693a2a93bbe3570e21b871bf91d0b6acf object c256b5c79663b545147eb748961436ae09201284
+type commit
+tag v1.2.0
+tagger Mira Okafor <mira@orbit.example> 1785028647 +0000
+
+orbit v1.2.0
+
+493c34b0aa4c65d0a21d81db383cf35bb56f6ee0 object ebcc265012e322e29e4bb97e4afdae1ba2c87492
+type commit
+tag v1.3.0
+tagger Mira Okafor <mira@orbit.example> 1788391816 +0000
+
+orbit v1.3.0

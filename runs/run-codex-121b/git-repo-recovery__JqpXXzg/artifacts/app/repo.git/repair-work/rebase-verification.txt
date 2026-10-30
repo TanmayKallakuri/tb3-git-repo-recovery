@@ -1,0 +1,2 @@
+Independent Git rebase and exact patch archive round trip passed.
+Tip: 1282507db11c676ede8b3873227070b19cd7c7ef

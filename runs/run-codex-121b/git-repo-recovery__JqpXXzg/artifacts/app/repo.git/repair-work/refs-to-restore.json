@@ -1,0 +1,11 @@
+{
+  "refs/heads/develop": "fe3c1bd736a49008c896bfe91cd633a1922003ef",
+  "refs/heads/hotfix/1.2.1": "69305d3a6d68e96388e91dcdde3447ea7042944f",
+  "refs/heads/feature/retry-policy": "d13c784d66243541536833780676efba0d86042a",
+  "refs/heads/feature/cache-warmup": "1282507db11c676ede8b3873227070b19cd7c7ef",
+  "refs/tags/v1.2.0": "45628f3693a2a93bbe3570e21b871bf91d0b6acf",
+  "refs/tags/v1.2.1": "bb11f51d295d4ace7c8eab9b7404adc0bfeb5c67",
+  "refs/tags/v1.3.0": "493c34b0aa4c65d0a21d81db383cf35bb56f6ee0",
+  "refs/tags/v1.3.1": "35e60b11842b491b815e3e98c835e7b23596609a",
+  "refs/tags/v1.4.0": "24fda256be3109a82ee0d188786d72528b7630fe"
+}
