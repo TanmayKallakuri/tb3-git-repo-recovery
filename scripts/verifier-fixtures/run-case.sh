@@ -44,6 +44,12 @@ annotated_tag() {   # first annotated tag (sorted)
 case "$name" in
   unchanged) ;;
   repack) g repack -a -d ;;
+  config-pager) printf '[core]
+	pager = cat
+' >> "$repo/config" ;;
+  config-user-color) git config --file "$repo/config" user.name "Repair Bot"; git config --file "$repo/config" user.email repair@example.com; git config --file "$repo/config" color.ui auto ;;
+  config-pack-gc) git config --file "$repo/config" pack.window 20; git config --file "$repo/config" gc.auto 0 ;;
+  config-remote) git config --file "$repo/config" remote.backup.url /srv/git/backup.git; git config --file "$repo/config" remote.backup.fetch '+refs/heads/*:refs/remotes/backup/*' ;;
   branch-moved) b=$(other_branch parent) || exit 3; g update-ref "$b" "$b~1" ;;
   tag-deleted) t=$(annotated_tag) || exit 3; g update-ref -d "$t" ;;
   remote-ref-added) h=$(head_ref) || exit 3; g update-ref refs/remotes/injected/extra "$h" ;;
@@ -54,6 +60,8 @@ case "$name" in
   config-invalid) printf '[core\n' >> "$repo/config" ;;
   config-hookspath) git config --file "$repo/config" core.hooksPath /tmp/hooks ;;
   config-extensions) git config --file "$repo/config" extensions.objectFormat sha1 ;;
+  config-objectformat-sha256) git config --file "$repo/config" extensions.objectFormat sha256 ;;
+  config-alternaterefs) git config --file "$repo/config" core.alternateRefsCommand /tmp/refs.sh ;;
   config-bare-false) git config --file "$repo/config" core.bare false ;;
   alternates) echo /tmp/elsewhere/objects > "$repo/objects/info/alternates" ;;
   symlink) rm "$repo/description"; ln -s HEAD "$repo/description" ;;

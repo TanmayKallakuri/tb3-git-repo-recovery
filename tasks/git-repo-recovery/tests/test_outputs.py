@@ -151,8 +151,8 @@ def _assert_check(graded: dict, name: str) -> None:
 
 
 def test_artifact_staged(graded):
-    """The submitted /app/repo.git is a plain bare repository: HEAD, objects/ and refs/ present, an allowlisted
-    config, no alternates, grafts, shallow file or promisor marker, and git calls it bare."""
+    """The submitted /app/repo.git is a plain bare repository: HEAD, objects/ and refs/ present, no rejected config
+    setting, no alternates, grafts, shallow file or promisor marker, and git calls it bare."""
     stage = graded["stage"] or {}
     print(f"staged: {stage}")
     print(f"config keys: {(stage.get('config') or {}).get('keys')}")

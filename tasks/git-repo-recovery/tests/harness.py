@@ -53,21 +53,12 @@ assert set(FORBIDDEN) <= set(INDIRECTION)
 BARE_CONFIG = "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = true\n\tlogallrefupdates = false\n"
 CONFIG_BYTES = 64 * 1024
 CONFIG_LIST_ARGS = ["--no-includes", "--list", "-z"]
-CORE_KEYS = frozenset(("repositoryformatversion", "bare", "filemode", "logallrefupdates", "ignorecase",
-                       "precomposeunicode", "symlinks", "compression", "loosecompression", "autocrlf", "eol",
-                       "safecrlf", "abbrev", "quotepath", "bigfilethreshold", "packedgitlimit", "packedgitwindowsize",
-                       "deltabasecachelimit", "sharedrepository", "warnambiguousrefs", "whitespace", "trustctime",
-                       "checkstat"))
-PLAIN_SECTIONS = {"core": CORE_KEYS, "user": frozenset(("name", "email")),
-                  "fetch": frozenset(("prune", "prunetags", "writecommitgraph", "parallel")),
-                  "push": frozenset(("default", "followtags")), "tag": frozenset(("sort",)),
-                  "commit": frozenset(("cleanup",)), "transfer": frozenset(("fsckobjects",)),
-                  "receive": frozenset(("denynonfastforwards", "denydeletes", "denycurrentbranch", "fsckobjects"))}
-NAMED_SECTIONS = {"remote": frozenset(("url", "pushurl", "fetch", "push", "mirror", "tagopt", "prune",
-                                       "skipdefaultupdate", "skipfetchall")),
-                  "branch": frozenset(("remote", "merge", "rebase", "pushremote", "description"))}
-OPEN_SECTIONS = ("pack", "gc", "log", "i18n", "format", "color", "versionsort")
-REJECTED_KEYS = ("program", "command", "driver", "path")
+# Sections that include other files, alias commands or exist to run programs; keys that name a program, a path or
+# an object/ref lookup source. Everything else (pager, editor, user, color, pack, gc, remotes, ...) is accepted.
+REJECTED_SECTIONS = frozenset(("extensions", "include", "includeif", "alias", "credential", "filter", "uploadpack",
+                               "gpg"))
+REJECTED_KEYS = frozenset(("program", "command", "driver", "path", "helper", "hookspath", "fsmonitor", "sshcommand",
+                           "gitproxy", "askpass", "alternaterefscommand", "alternaterefsprefixes", "worktree"))
 TRUE_VALUES = ("true", "yes", "on", "1")
 REF_PREFIXES = ("refs/heads", "refs/tags")
 REPLACE_PREFIX = "refs/replace/"
@@ -510,21 +501,20 @@ def parse_config_list(data: bytes) -> list[tuple[str, str | None]]:
 
 
 def key_problem(key: str) -> str | None:
+    """Denylist: a rejected section or a rejected final key name is a problem; any other key is accepted."""
     section, _, rest = key.partition(".")
-    subsection, _, name = rest.rpartition(".")
-    if not name or name in REJECTED_KEYS or rest.startswith("."):
-        return f"{key} is not an allowed key"
-    if section in NAMED_SECTIONS:
-        return None if subsection and name in NAMED_SECTIONS[section] else f"{key} is not an allowed key"
-    if section in PLAIN_SECTIONS:
-        return None if "." not in rest and name in PLAIN_SECTIONS[section] else f"{key} is not an allowed key"
-    if section in OPEN_SECTIONS:
-        return None
-    return f"{key} is not in an allowed section"
+    name = rest.rpartition(".")[2].lower()
+    if not name:
+        return f"{key} is not a valid key"
+    if section.lower() in REJECTED_SECTIONS:
+        return f"{key} is in the rejected section {section.lower()}"
+    if name in REJECTED_KEYS:
+        return f"{key} sets the rejected key {name}"
+    return None
 
 
 def config_problems(entries: list[tuple[str, str | None]]) -> list[str]:
-    """Every key must be on the allowlist; core.repositoryformatversion must be 0 and core.bare true, wherever set."""
+    """No key may be on the denylist; core.repositoryformatversion must be 0 and core.bare true, wherever set."""
     problems = [problem for problem in (key_problem(key) for key, _ in entries) if problem]
     versions = [value for key, value in entries if key == "core.repositoryformatversion"]
     bare = [value for key, value in entries if key == "core.bare"]
@@ -544,7 +534,7 @@ def config_problems(entries: list[tuple[str, str | None]]) -> list[str]:
 
 
 def validate_config(repo: str) -> dict:
-    """Parse the submitted config with git, as checker and away from every repository, and hold it to the allowlist."""
+    """Parse the submitted config with git, as checker and away from every repository, and hold it to the denylist."""
     result = {"bytes": 0, "run": None, "keys": [], "key_count": 0, "problems": [], "error": None}
     path = os.path.join(repo, "config")
     try:
