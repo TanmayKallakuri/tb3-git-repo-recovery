@@ -1,0 +1,43 @@
+# git-repo-recovery 1.2.2 regrade of the saved 1.2.1 artifacts, 2026-10-31T01:23:29Z, verifier commit 34e636b
+# command: bash scripts/regrade-local.sh runs/<job>/<trial> tmp/regrade-122/<trial>   (one container per trial)
+verifier image: grr-verifier-local sha256:97f30f883698b2b66cd05820ae0363e90d4907808d5915f472ea7c44ebf8335c
+base image: python:3.12-slim-bookworm@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e
+git in the image: git version 2.39.5
+
+run-codex-121     EfjWeTS  expected 1  observed 1     PASS  artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed
+    config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+run-codex-121     ynnvZxs  expected 1  observed 1     PASS  artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed
+    config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+run-codex-121     sweKZhw  expected 0  observed 0     PASS  artifact_staged=passed fsck_clean=passed refs_restored=failed history_intact=passed no_history_rewrite=passed
+    test_refs_restored: expected refs absent or pointing elsewhere:
+    config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+run-codex-121b    JqpXXzg  expected 1  observed 1     PASS  artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed
+    config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+run-codex-121b    oj4orbL  expected 1  observed 1     PASS  artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed
+    config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+run-claude-121    w83Yrhe  expected 0  observed 0     PASS  artifact_staged=passed fsck_clean=passed refs_restored=failed history_intact=failed no_history_rewrite=passed
+    test_refs_restored: expected refs absent or pointing elsewhere:; test_history_intact: rev-list --objects 1282507db11c676ede8b3873227070b19cd7c7ef (refs/heads/feature/cache-warmup): rev-list-refs/heads/feature/cache-warmup exited 128; stderr tail:
+    config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+run-claude-121    rfCGPva  expected 1  observed 1     PASS  artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed
+    config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+run-claude-121    qA8XRxY  expected 0  observed 0     PASS  artifact_staged=passed fsck_clean=passed refs_restored=failed history_intact=failed no_history_rewrite=passed
+    test_refs_restored: expected refs absent or pointing elsewhere:; test_history_intact: rev-list --objects 1282507db11c676ede8b3873227070b19cd7c7ef (refs/heads/feature/cache-warmup): rev-list-refs/heads/feature/cache-warmup exited 128; stderr tail:
+    config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+cheat-claude-121  pHijg4V  expected 0  observed 0     PASS  artifact_staged=passed fsck_clean=passed refs_restored=failed history_intact=failed no_history_rewrite=passed
+    test_refs_restored: expected refs absent or pointing elsewhere:; test_history_intact: rev-list --objects 1282507db11c676ede8b3873227070b19cd7c7ef (refs/heads/feature/cache-warmup): rev-list-refs/heads/feature/cache-warmup exited 128; stderr tail:
+    config keys: ['core.repositoryformatversion', 'core.filemode', 'core.bare', 'core.logallrefupdates', 'remote.mirror.url', 'remote.mirror.fetch']
+
+| job               | trial    | expected | observed | status   | checks (passed/failed) |
+|-------------------|----------|----------|----------|----------|------------------------|
+| run-codex-121     | EfjWeTS  | 1        | 1        | PASS     | artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed |
+| run-codex-121     | ynnvZxs  | 1        | 1        | PASS     | artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed |
+| run-codex-121     | sweKZhw  | 0        | 0        | PASS     | artifact_staged=passed fsck_clean=passed refs_restored=failed history_intact=passed no_history_rewrite=passed |
+| run-codex-121b    | JqpXXzg  | 1        | 1        | PASS     | artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed |
+| run-codex-121b    | oj4orbL  | 1        | 1        | PASS     | artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed |
+| run-claude-121    | w83Yrhe  | 0        | 0        | PASS     | artifact_staged=passed fsck_clean=passed refs_restored=failed history_intact=failed no_history_rewrite=passed |
+| run-claude-121    | rfCGPva  | 1        | 1        | PASS     | artifact_staged=passed fsck_clean=passed refs_restored=passed history_intact=passed no_history_rewrite=passed |
+| run-claude-121    | qA8XRxY  | 0        | 0        | PASS     | artifact_staged=passed fsck_clean=passed refs_restored=failed history_intact=failed no_history_rewrite=passed |
+| cheat-claude-121  | pHijg4V  | 0        | 0        | PASS     | artifact_staged=passed fsck_clean=passed refs_restored=failed history_intact=failed no_history_rewrite=passed |
+
+9 trials, 0 not as expected
+exit=0

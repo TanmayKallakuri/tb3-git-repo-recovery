@@ -1,0 +1,74 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-10-31T01:23:44.013512+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1793409822563,
+            "stop": 1793409824005
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_artifact_staged",
+                "status": "passed",
+                "duration": 1400,
+                "start": 1793409822587,
+                "stop": 1793409823987,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_fsck_clean",
+                "status": "passed",
+                "duration": 2,
+                "start": 1793409823988,
+                "stop": 1793409823990,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_refs_restored",
+                "status": "passed",
+                "duration": 2,
+                "start": 1793409823990,
+                "stop": 1793409823992,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_history_intact",
+                "status": "passed",
+                "duration": 2,
+                "start": 1793409823992,
+                "stop": 1793409823994,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_no_history_rewrite",
+                "status": "passed",
+                "duration": 2,
+                "start": 1793409823996,
+                "stop": 1793409823998,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}
