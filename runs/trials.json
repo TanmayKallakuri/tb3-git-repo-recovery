@@ -1,0 +1,822 @@
+{
+  "trials": [
+    {
+      "job": "calib-codex-1",
+      "trial": "git-repo-recovery__fMzUFjy",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "2c15b58e5d368111ee664aaccc2270cc2f8f4497663cf7e191a72156d5998cee",
+      "started_at": "2026-10-29T19:28:01.245217Z",
+      "finished_at": "2026-10-29T19:36:44.220365Z",
+      "agent_minutes": 5.75,
+      "path": "runs/calib-codex-1/git-repo-recovery__fMzUFjy"
+    },
+    {
+      "job": "cheat-claude-121",
+      "trial": "git-repo-recovery__pHijg4V",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T20:19:49.708178Z",
+      "finished_at": "2026-10-30T20:55:16.357823Z",
+      "agent_minutes": 32.04,
+      "path": "runs/cheat-claude-121/git-repo-recovery__pHijg4V"
+    },
+    {
+      "job": "cheat-claude-2",
+      "trial": "git-repo-recovery__N2vu4vc",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "77d1068831f2c8890300503112affa89cd3687e860ac0f6f4c6f34943aa7169c",
+      "started_at": "2026-10-30T03:44:24.701819Z",
+      "finished_at": "2026-10-30T03:49:14.757397Z",
+      "agent_minutes": 1.9,
+      "path": "runs/cheat-claude-2/git-repo-recovery__N2vu4vc"
+    },
+    {
+      "job": "cheat-claude-h",
+      "trial": "git-repo-recovery__AZor9ML",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "017dbc4b9abbf215da870f0d17148cc72eee01e3282c3560913841f427f9badf",
+      "started_at": "2026-10-30T11:46:25.668494Z",
+      "finished_at": "2026-10-30T11:50:42.182165Z",
+      "agent_minutes": 1.18,
+      "path": "runs/cheat-claude-h/git-repo-recovery__AZor9ML"
+    },
+    {
+      "job": "cheat-codex-121",
+      "trial": "git-repo-recovery__LzQEsGz",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 0.0,
+      "exception_type": "NonZeroAgentExitCodeError",
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T20:55:21.988521Z",
+      "finished_at": "2026-10-30T20:58:06.810622Z",
+      "agent_minutes": 0.12,
+      "path": "runs/cheat-codex-121/git-repo-recovery__LzQEsGz"
+    },
+    {
+      "job": "cheat-codex-121b",
+      "trial": "git-repo-recovery__bRiK3UE",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 0.0,
+      "exception_type": "AgentSafetyRefusalError",
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T23:08:05.040045Z",
+      "finished_at": "2026-10-30T23:11:41.440792Z",
+      "agent_minutes": 0.34,
+      "path": "runs/cheat-codex-121b/git-repo-recovery__bRiK3UE"
+    },
+    {
+      "job": "cheat-codex-121b",
+      "trial": "git-repo-recovery__8vNBzqi",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 0.0,
+      "exception_type": "AgentSafetyRefusalError",
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T23:08:05.046204Z",
+      "finished_at": "2026-10-30T23:11:43.287095Z",
+      "agent_minutes": 0.29,
+      "path": "runs/cheat-codex-121b/git-repo-recovery__8vNBzqi"
+    },
+    {
+      "job": "cheat-codex-2",
+      "trial": "git-repo-recovery__BiNxcMH",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 0.0,
+      "exception_type": "AgentSafetyRefusalError",
+      "task_checksum": "77d1068831f2c8890300503112affa89cd3687e860ac0f6f4c6f34943aa7169c",
+      "started_at": "2026-10-30T03:49:20.318657Z",
+      "finished_at": "2026-10-30T03:52:28.124502Z",
+      "agent_minutes": 0.3,
+      "path": "runs/cheat-codex-2/git-repo-recovery__BiNxcMH"
+    },
+    {
+      "job": "cheat-codex-h",
+      "trial": "git-repo-recovery__TBSMyN8",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 0.0,
+      "exception_type": "AgentSafetyRefusalError",
+      "task_checksum": "ac2d1d8e4f493ed5203c3cbc9849cf2fa51046432fd8dd5672d08ec6585f952c",
+      "started_at": "2026-10-30T11:50:48.169604Z",
+      "finished_at": "2026-10-30T11:53:18.777634Z",
+      "agent_minutes": 0.24,
+      "path": "runs/cheat-codex-h/git-repo-recovery__TBSMyN8"
+    },
+    {
+      "job": "gate-nop-120",
+      "trial": "git-repo-recovery__U9GXjPd",
+      "agent": "nop",
+      "model": null,
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "67506e05603210459b5c544b699579bdf116b1e7365872e7620e2f4f54a361a5",
+      "started_at": "2026-10-30T18:03:36.383914Z",
+      "finished_at": "2026-10-30T18:04:19.131773Z",
+      "agent_minutes": 0.0,
+      "path": "runs/gate-nop-120/git-repo-recovery__U9GXjPd"
+    },
+    {
+      "job": "gate-nop-121",
+      "trial": "git-repo-recovery__6t5shvv",
+      "agent": "nop",
+      "model": null,
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T18:16:26.548614Z",
+      "finished_at": "2026-10-30T18:17:05.696900Z",
+      "agent_minutes": 0.0,
+      "path": "runs/gate-nop-121/git-repo-recovery__6t5shvv"
+    },
+    {
+      "job": "gate-nop-122",
+      "trial": "git-repo-recovery__vqHKuDH",
+      "agent": "nop",
+      "model": null,
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "9d1d97de1ec5efabbe31d72d1f7398256fde07d05bae0732f51f9aea362bb34c",
+      "started_at": "2026-10-31T01:23:09.845657Z",
+      "finished_at": "2026-10-31T01:23:44.420360Z",
+      "agent_minutes": 0.0,
+      "path": "runs/gate-nop-122/git-repo-recovery__vqHKuDH"
+    },
+    {
+      "job": "gate-nop-2",
+      "trial": "git-repo-recovery__Xqe8i2w",
+      "agent": "nop",
+      "model": null,
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "2c15b58e5d368111ee664aaccc2270cc2f8f4497663cf7e191a72156d5998cee",
+      "started_at": "2026-10-29T19:28:28.366351Z",
+      "finished_at": "2026-10-29T19:29:10.266569Z",
+      "agent_minutes": 0.0,
+      "path": "runs/gate-nop-2/git-repo-recovery__Xqe8i2w"
+    },
+    {
+      "job": "gate-nop-3",
+      "trial": "git-repo-recovery__Xd8qmr2",
+      "agent": "nop",
+      "model": null,
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "2d554f2958d70d541d9f2a38970c938db98775eaeb38fe232ab56821f28ec8f0",
+      "started_at": "2026-10-30T02:52:41.807640Z",
+      "finished_at": "2026-10-30T02:53:16.081932Z",
+      "agent_minutes": 0.0,
+      "path": "runs/gate-nop-3/git-repo-recovery__Xd8qmr2"
+    },
+    {
+      "job": "gate-nop-h",
+      "trial": "git-repo-recovery__ASmMsCy",
+      "agent": "nop",
+      "model": null,
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "d57fab03b99161e50fd944632427b05c5d79945de949cfe9868212f1142379fa",
+      "started_at": "2026-10-30T09:16:44.388656Z",
+      "finished_at": "2026-10-30T09:17:20.707594Z",
+      "agent_minutes": 0.0,
+      "path": "runs/gate-nop-h/git-repo-recovery__ASmMsCy"
+    },
+    {
+      "job": "gate-nop-h3",
+      "trial": "git-repo-recovery__rQutkJh",
+      "agent": "nop",
+      "model": null,
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "ac2d1d8e4f493ed5203c3cbc9849cf2fa51046432fd8dd5672d08ec6585f952c",
+      "started_at": "2026-10-30T11:49:22.037741Z",
+      "finished_at": "2026-10-30T11:50:06.458665Z",
+      "agent_minutes": 0.0,
+      "path": "runs/gate-nop-h3/git-repo-recovery__rQutkJh"
+    },
+    {
+      "job": "gate-oracle-120",
+      "trial": "git-repo-recovery__S9xwza4",
+      "agent": "oracle",
+      "model": null,
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "67506e05603210459b5c544b699579bdf116b1e7365872e7620e2f4f54a361a5",
+      "started_at": "2026-10-30T18:03:36.487502Z",
+      "finished_at": "2026-10-30T18:04:24.920962Z",
+      "agent_minutes": 0.07,
+      "path": "runs/gate-oracle-120/git-repo-recovery__S9xwza4"
+    },
+    {
+      "job": "gate-oracle-121",
+      "trial": "git-repo-recovery__WW7WwAX",
+      "agent": "oracle",
+      "model": null,
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T18:16:26.705558Z",
+      "finished_at": "2026-10-30T18:17:09.994156Z",
+      "agent_minutes": 0.07,
+      "path": "runs/gate-oracle-121/git-repo-recovery__WW7WwAX"
+    },
+    {
+      "job": "gate-oracle-122",
+      "trial": "git-repo-recovery__ErZoPcR",
+      "agent": "oracle",
+      "model": null,
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "9d1d97de1ec5efabbe31d72d1f7398256fde07d05bae0732f51f9aea362bb34c",
+      "started_at": "2026-10-31T01:23:09.960277Z",
+      "finished_at": "2026-10-31T01:23:49.574233Z",
+      "agent_minutes": 0.06,
+      "path": "runs/gate-oracle-122/git-repo-recovery__ErZoPcR"
+    },
+    {
+      "job": "gate-oracle-2",
+      "trial": "git-repo-recovery__RJLMpZQ",
+      "agent": "oracle",
+      "model": null,
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "2c15b58e5d368111ee664aaccc2270cc2f8f4497663cf7e191a72156d5998cee",
+      "started_at": "2026-10-29T19:27:32.594201Z",
+      "finished_at": "2026-10-29T19:28:10.252163Z",
+      "agent_minutes": 0.05,
+      "path": "runs/gate-oracle-2/git-repo-recovery__RJLMpZQ"
+    },
+    {
+      "job": "gate-oracle-h",
+      "trial": "git-repo-recovery__T5RFqnC",
+      "agent": "oracle",
+      "model": null,
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "d57fab03b99161e50fd944632427b05c5d79945de949cfe9868212f1142379fa",
+      "started_at": "2026-10-30T09:15:43.366280Z",
+      "finished_at": "2026-10-30T09:16:24.253449Z",
+      "agent_minutes": 0.06,
+      "path": "runs/gate-oracle-h/git-repo-recovery__T5RFqnC"
+    },
+    {
+      "job": "gate-oracle-h2",
+      "trial": "git-repo-recovery__u8q8U2r",
+      "agent": "oracle",
+      "model": null,
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "017dbc4b9abbf215da870f0d17148cc72eee01e3282c3560913841f427f9badf",
+      "started_at": "2026-10-30T09:31:09.750461Z",
+      "finished_at": "2026-10-30T09:31:45.424937Z",
+      "agent_minutes": 0.06,
+      "path": "runs/gate-oracle-h2/git-repo-recovery__u8q8U2r"
+    },
+    {
+      "job": "gate-oracle-h3",
+      "trial": "git-repo-recovery__ZBVUAoo",
+      "agent": "oracle",
+      "model": null,
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "ac2d1d8e4f493ed5203c3cbc9849cf2fa51046432fd8dd5672d08ec6585f952c",
+      "started_at": "2026-10-30T11:49:22.132451Z",
+      "finished_at": "2026-10-30T11:50:09.513021Z",
+      "agent_minutes": 0.08,
+      "path": "runs/gate-oracle-h3/git-repo-recovery__ZBVUAoo"
+    },
+    {
+      "job": "pilot-claude-h",
+      "trial": "git-repo-recovery__w2hS6QT",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "27f829c1855e6a0f9eafa3ed99726219c93c33199d0be40586fbda0569077edb",
+      "started_at": "2026-10-30T09:18:27.053481Z",
+      "finished_at": "2026-10-30T09:45:09.549134Z",
+      "agent_minutes": 22.93,
+      "path": "runs/pilot-claude-h/git-repo-recovery__w2hS6QT"
+    },
+    {
+      "job": "pilot-codex-120",
+      "trial": "git-repo-recovery__myvwxLc",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "67506e05603210459b5c544b699579bdf116b1e7365872e7620e2f4f54a361a5",
+      "started_at": "2026-10-30T18:03:36.398837Z",
+      "finished_at": "2026-10-30T18:12:50.240418Z",
+      "agent_minutes": 6.25,
+      "path": "runs/pilot-codex-120/git-repo-recovery__myvwxLc"
+    },
+    {
+      "job": "pilot-codex-h",
+      "trial": "git-repo-recovery__m9wqtVr",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "27f829c1855e6a0f9eafa3ed99726219c93c33199d0be40586fbda0569077edb",
+      "started_at": "2026-10-30T09:18:26.955376Z",
+      "finished_at": "2026-10-30T09:29:12.923102Z",
+      "agent_minutes": 7.36,
+      "path": "runs/pilot-codex-h/git-repo-recovery__m9wqtVr"
+    },
+    {
+      "job": "run-claude-1",
+      "trial": "git-repo-recovery__BUGpUS9",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": null,
+      "exception_type": "EnvironmentStartTimeoutError",
+      "task_checksum": "2d554f2958d70d541d9f2a38970c938db98775eaeb38fe232ab56821f28ec8f0",
+      "started_at": "2026-10-29T21:45:17.694396Z",
+      "finished_at": "2026-10-29T22:00:22.147664Z",
+      "agent_minutes": null,
+      "path": "runs/run-claude-1/git-repo-recovery__BUGpUS9"
+    },
+    {
+      "job": "run-claude-121",
+      "trial": "git-repo-recovery__w83Yrhe",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T18:17:26.816725Z",
+      "finished_at": "2026-10-30T19:10:13.502128Z",
+      "agent_minutes": 49.6,
+      "path": "runs/run-claude-121/git-repo-recovery__w83Yrhe"
+    },
+    {
+      "job": "run-claude-121",
+      "trial": "git-repo-recovery__rfCGPva",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T19:10:14.263533Z",
+      "finished_at": "2026-10-30T19:55:09.816341Z",
+      "agent_minutes": 42.22,
+      "path": "runs/run-claude-121/git-repo-recovery__rfCGPva"
+    },
+    {
+      "job": "run-claude-121",
+      "trial": "git-repo-recovery__qA8XRxY",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T19:55:10.519594Z",
+      "finished_at": "2026-10-30T20:19:42.595733Z",
+      "agent_minutes": 21.72,
+      "path": "runs/run-claude-121/git-repo-recovery__qA8XRxY"
+    },
+    {
+      "job": "run-claude-3",
+      "trial": "git-repo-recovery__TpwXpFT",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "2d554f2958d70d541d9f2a38970c938db98775eaeb38fe232ab56821f28ec8f0",
+      "started_at": "2026-10-30T02:54:07.989218Z",
+      "finished_at": "2026-10-30T03:19:48.987880Z",
+      "agent_minutes": 22.5,
+      "path": "runs/run-claude-3/git-repo-recovery__TpwXpFT"
+    },
+    {
+      "job": "run-claude-3",
+      "trial": "git-repo-recovery__ThewbT7",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "77d1068831f2c8890300503112affa89cd3687e860ac0f6f4c6f34943aa7169c",
+      "started_at": "2026-10-30T03:19:49.628381Z",
+      "finished_at": "2026-10-30T03:44:19.013677Z",
+      "agent_minutes": 21.54,
+      "path": "runs/run-claude-3/git-repo-recovery__ThewbT7"
+    },
+    {
+      "job": "run-claude-h",
+      "trial": "git-repo-recovery__CMQWEQW",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 0.0,
+      "exception_type": null,
+      "task_checksum": "017dbc4b9abbf215da870f0d17148cc72eee01e3282c3560913841f427f9badf",
+      "started_at": "2026-10-30T10:11:59.254017Z",
+      "finished_at": "2026-10-30T10:40:48.118444Z",
+      "agent_minutes": 25.05,
+      "path": "runs/run-claude-h/git-repo-recovery__CMQWEQW"
+    },
+    {
+      "job": "run-claude-h",
+      "trial": "git-repo-recovery__kLSoSqt",
+      "agent": "claude-code",
+      "model": "anthropic/claude-fable-5-1",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "017dbc4b9abbf215da870f0d17148cc72eee01e3282c3560913841f427f9badf",
+      "started_at": "2026-10-30T10:40:48.814883Z",
+      "finished_at": "2026-10-30T11:08:04.194580Z",
+      "agent_minutes": 24.8,
+      "path": "runs/run-claude-h/git-repo-recovery__kLSoSqt"
+    },
+    {
+      "job": "run-codex-1",
+      "trial": "git-repo-recovery__Wp8KWG7",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": null,
+      "exception_type": "EnvironmentStartTimeoutError",
+      "task_checksum": "2d554f2958d70d541d9f2a38970c938db98775eaeb38fe232ab56821f28ec8f0",
+      "started_at": "2026-10-29T21:45:16.480938Z",
+      "finished_at": "2026-10-29T22:00:21.785187Z",
+      "agent_minutes": null,
+      "path": "runs/run-codex-1/git-repo-recovery__Wp8KWG7"
+    },
+    {
+      "job": "run-codex-121",
+      "trial": "git-repo-recovery__EfjWeTS",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T18:17:26.738942Z",
+      "finished_at": "2026-10-30T18:26:26.606647Z",
+      "agent_minutes": 5.68,
+      "path": "runs/run-codex-121/git-repo-recovery__EfjWeTS"
+    },
+    {
+      "job": "run-codex-121",
+      "trial": "git-repo-recovery__ynnvZxs",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T18:26:27.290320Z",
+      "finished_at": "2026-10-30T18:35:50.122482Z",
+      "agent_minutes": 6.7,
+      "path": "runs/run-codex-121/git-repo-recovery__ynnvZxs"
+    },
+    {
+      "job": "run-codex-121",
+      "trial": "git-repo-recovery__sweKZhw",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 0.0,
+      "exception_type": "NonZeroAgentExitCodeError",
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T18:35:50.743447Z",
+      "finished_at": "2026-10-30T18:43:15.833057Z",
+      "agent_minutes": 4.83,
+      "path": "runs/run-codex-121/git-repo-recovery__sweKZhw"
+    },
+    {
+      "job": "run-codex-121b",
+      "trial": "git-repo-recovery__oj4orbL",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T23:11:58.944423Z",
+      "finished_at": "2026-10-30T23:21:31.801233Z",
+      "agent_minutes": 6.26,
+      "path": "runs/run-codex-121b/git-repo-recovery__oj4orbL"
+    },
+    {
+      "job": "run-codex-121b",
+      "trial": "git-repo-recovery__JqpXXzg",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "4f2c199cfd3fae2d89eae398f20ae43a659e7223356dfacba6d04d9c24dc1278",
+      "started_at": "2026-10-30T23:11:58.948344Z",
+      "finished_at": "2026-10-30T23:21:12.239906Z",
+      "agent_minutes": 5.91,
+      "path": "runs/run-codex-121b/git-repo-recovery__JqpXXzg"
+    },
+    {
+      "job": "run-codex-h",
+      "trial": "git-repo-recovery__FDY3d3q",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "017dbc4b9abbf215da870f0d17148cc72eee01e3282c3560913841f427f9badf",
+      "started_at": "2026-10-30T10:11:59.222261Z",
+      "finished_at": "2026-10-30T10:23:00.042548Z",
+      "agent_minutes": 7.09,
+      "path": "runs/run-codex-h/git-repo-recovery__FDY3d3q"
+    },
+    {
+      "job": "run-codex-h",
+      "trial": "git-repo-recovery__wjs6dMz",
+      "agent": "codex",
+      "model": "openai/gpt-6-astra",
+      "reward": 1.0,
+      "exception_type": null,
+      "task_checksum": "017dbc4b9abbf215da870f0d17148cc72eee01e3282c3560913841f427f9badf",
+      "started_at": "2026-10-30T10:23:00.665566Z",
+      "finished_at": "2026-10-30T10:31:19.668426Z",
+      "agent_minutes": 5.6,
+      "path": "runs/run-codex-h/git-repo-recovery__wjs6dMz"
+    }
+  ],
+  "job_summaries": [
+    {
+      "job": "calib-codex-1",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "cheat-claude-1",
+      "job_result_trials": 1,
+      "trial_directories": 0,
+      "mismatch": true
+    },
+    {
+      "job": "cheat-claude-121",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "cheat-claude-2",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "cheat-claude-h",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "cheat-codex-1",
+      "job_result_trials": 1,
+      "trial_directories": 0,
+      "mismatch": true
+    },
+    {
+      "job": "cheat-codex-121",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "cheat-codex-121b",
+      "job_result_trials": 1,
+      "trial_directories": 2,
+      "mismatch": true
+    },
+    {
+      "job": "cheat-codex-2",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "cheat-codex-h",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-nop-120",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-nop-121",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-nop-122",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-nop-2",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-nop-3",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-nop-h",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-nop-h3",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-oracle-120",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-oracle-121",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-oracle-122",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-oracle-2",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-oracle-h",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-oracle-h2",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "gate-oracle-h3",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "pilot-claude-h",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "pilot-codex-120",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "pilot-codex-h",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "rubric-review-1",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "rubric-review-121",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "rubric-review-122",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "rubric-review-2",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "rubric-review-3",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "rubric-review-h",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "rubric-review-h2",
+      "job_result_trials": 1,
+      "trial_directories": 1,
+      "mismatch": false
+    },
+    {
+      "job": "run-claude-1",
+      "job_result_trials": 3,
+      "trial_directories": 1,
+      "mismatch": true
+    },
+    {
+      "job": "run-claude-121",
+      "job_result_trials": 3,
+      "trial_directories": 3,
+      "mismatch": false
+    },
+    {
+      "job": "run-claude-2",
+      "job_result_trials": 3,
+      "trial_directories": 0,
+      "mismatch": true
+    },
+    {
+      "job": "run-claude-3",
+      "job_result_trials": 2,
+      "trial_directories": 2,
+      "mismatch": false
+    },
+    {
+      "job": "run-claude-h",
+      "job_result_trials": 2,
+      "trial_directories": 2,
+      "mismatch": false
+    },
+    {
+      "job": "run-codex-1",
+      "job_result_trials": 2,
+      "trial_directories": 1,
+      "mismatch": true
+    },
+    {
+      "job": "run-codex-121",
+      "job_result_trials": 3,
+      "trial_directories": 3,
+      "mismatch": false
+    },
+    {
+      "job": "run-codex-121b",
+      "job_result_trials": 1,
+      "trial_directories": 2,
+      "mismatch": true
+    },
+    {
+      "job": "run-codex-2",
+      "job_result_trials": 2,
+      "trial_directories": 0,
+      "mismatch": true
+    },
+    {
+      "job": "run-codex-3",
+      "job_result_trials": 1,
+      "trial_directories": 0,
+      "mismatch": true
+    },
+    {
+      "job": "run-codex-h",
+      "job_result_trials": 2,
+      "trial_directories": 2,
+      "mismatch": false
+    }
+  ]
+}
