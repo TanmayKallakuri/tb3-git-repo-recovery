@@ -5,9 +5,11 @@ built end to end during the week; each cleared the CI gates, and each was
 measured against the frontier models before the decision to keep or
 replace it. The last three are versions of the git recovery task in this
 repository: 1.0.0 is the third design, its 1.1.0 hardening the fourth,
-and 1.2.0 with its 1.2.1 follow-up the fifth, which ships as 1.2.1. The first two live in their own repositories with the same layout (SPEC,
-RESULTS, trimmed runs) and are available on request; their numbers below
-are copied from their RESULTS files.
+and 1.2.0 with its 1.2.1 and 1.2.2 follow-ups the fifth, which was
+measured as 1.2.1 and ships as 1.2.2. The first two live in their own
+repositories with the same layout (SPEC, RESULTS, trimmed runs) and are
+available on request; their numbers below are copied from their RESULTS
+files.
 
 ## Design 1: `model-scanner-hardening` (Security)
 
@@ -114,8 +116,9 @@ the task cannot be solved by scanning for ids alone.
 - Every timestamp before the tail of the history is frozen, so both
   packfiles and the D1, D2, D4, D5 and D6 victims are unchanged from
   1.0.0; the oracle gained the series route and the release-replay route;
-  the verifier gained the config allowlist, the pre-clean ref inventory
-  and the full ref-name comparison (`verifier-fixtures.md`).
+  the verifier gained the config allowlist (a denylist since 1.2.2), the
+  pre-clean ref inventory and the full ref-name comparison
+  (`verifier-fixtures.md`).
 
 What the red-team review of the design predicted, before any trial. The
 review read the design text before the generator was changed (its T1 and
@@ -160,7 +163,7 @@ attempt 2 the release script and the point-release versions as well) and
 decided against acting on it, while codex, and claude-code on its third
 attempt, treated the same evidence as instructions.
 
-## Design 5: `git-repo-recovery` 1.2.0 and 1.2.1, the sibling patterns inverted (shipped as 1.2.1)
+## Design 5: `git-repo-recovery` 1.2.0 to 1.2.2, the sibling patterns inverted (measured as 1.2.1, shipped as 1.2.2)
 
 The 1.1.0 trials showed codex passing every attempt and claude-code
 failing two of three by stopping once fsck was clean. The hypothesis for
@@ -215,6 +218,18 @@ verifiable pattern points at a wrong answer that passes fsck.
   1.2.0 facts and made the oracle raise before fsck if any route is
   skipped. The repository bytes, the verifier and the damage did not
   change.
+- 1.2.2 changed the verifier only, after the second external review (70
+  of 100, verdict unmet). The 1.2.1 config check was an allowlist and
+  failed a correct repair with `core.pager` set, although the instruction
+  sets no config constraint and grading replaces the config. 1.2.2
+  rejects only settings that can redirect lookup, run code or change the
+  repository format, and keeps the format-version, bare, size and parse
+  checks. The instruction, the generator and the damaged repository are
+  byte-identical to 1.2.1, so the agent-facing task did not change. What
+  it proves is narrow: the check now accepts four benign configs and
+  still rejects all six config mutations, and the regrade of the saved
+  1.2.1 artifacts shows that it moves no recorded grade. It says nothing
+  new about difficulty.
 
 | Gate or trial | Result |
 |---|---|
@@ -228,6 +243,10 @@ verifiable pattern points at a wrong answer that passes fsck.
 | 1.2.1 claude-code attempts (`run-claude-121`, `w83Yrhe`, `rfCGPva`, `qA8XRxY`) | **0.0, 1.0 and 0.0** in 49.6, 42.2 and 21.7 minutes; attempt 1 restored `feature/cache-warmup` at the mirror's value and rebuilt `v1.4.0` exactly; attempt 3 stopped at a clean fsck with 13 of 18 refs |
 | 1.2.1 claude-code cheat trial (`cheat-claude-121`, `pHijg4V`) | **0.0**; a safety classifier stopped one response, the agent declined the cheat instruction and did an ordinary partial repair that missed both feature branches |
 | 1.2.1 codex cheat trial | the first run (`cheat-codex-121`, `LzQEsGz`) hit the closed usage window before any tool call and is not valid; replacements (`cheat-codex-121b`, `8vNBzqi`, `bRiK3UE`; two, for the same reason): **0.0 and 0.0**, the provider's safeguard rejected the turn before any tool call both times |
+| 1.2.2 static checks, oracle, nop | 29 of 29 at task commit `34e636b`, 1.0, 0.0 |
+| 1.2.2 verifier fixtures | 25 of 25 as expected: the 19 earlier cases with the same failed checks, four benign configs at 1, two more rejected settings at 0 |
+| 1.2.2 regrade of the saved 1.2.1 artifacts | the eight attempts and the claude-code cheat trial: every reward and every check identical to the recorded ones |
+| 1.2.2 rubric | 34 pass, 0 fail, 3 not applicable |
 
 What it taught. Claude-code's first 1.2.1 attempt took the mirror's pair,
 the answer every check on surviving data confirms, which is the failure
@@ -252,6 +271,28 @@ went into evidence and the write-up rather than another redesign. The
 brief's central requirement is not met, for the third version in a row,
 and the write-up says so.
 
+What the second review taught. Two things, neither about difficulty.
+First, a check on a file that grading replaces should name what is
+dangerous rather than list what is allowed. The allowlist was written to
+catch hooks, includes and format changes that the replaced config would
+otherwise hide, and it also failed a correct repair that set a pager, a
+cost no fixture measured because both legitimate cases left the config as
+generated. The 1.2.2 fixtures include benign configs that must score 1, so
+the check is now tested from both sides. Second, the pipeline that
+produces the evidence needs the same discipline as the verifier. A stage
+that logs a failure without stopping, or a launcher that can run twice
+into the same job names, leaves a record a reviewer has to reconcile by
+hand. The pipeline now stops at the first failed stage and reports every
+stage, the replacement launcher refuses a second instance, and
+`runs/trials.json` reconciles every trial-level result with Harbor's job
+aggregates. The central criterion is unchanged by any of this. Codex at
+the prescribed configuration still has no genuine failure, and the
+review's suggestion to prioritize a different difficulty mechanism was not
+pursued for this task, for the reason above: on three hardened versions
+codex passed eight times, each in 5.6 to 7.4 minutes of agent time, by
+reading and replaying whatever recovery rule the repository lets it
+inspect.
+
 ## The rule that made the iteration affordable, applied again
 
 Design 4 followed the same rule: one codex attempt and one claude-code
@@ -261,4 +302,6 @@ once the pilots had shown the task survives contact.
 Design 5 applied it to 1.2.0 with a single codex pilot. It passed in 6.3
 minutes, as fast as codex had solved 1.1.0, so no further 1.2.0 trial
 was spent. The full set ran once, on 1.2.1, to measure claude-code and to
-ship a version with every measurement on one commit.
+ship a version with every measurement on one commit. 1.2.2 then changed
+the verifier only and was checked by regrading the saved 1.2.1 artifacts,
+not by new trials.

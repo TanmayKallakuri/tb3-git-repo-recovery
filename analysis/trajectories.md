@@ -4,12 +4,15 @@ The brief asks for three attempts per agent that genuinely fail. Version
 1.0.0 stopped neither model: every completed attempt repaired the
 repository exactly. Version 1.1.0 (two losses with no local oracle, the
 witnesses out of the instruction) stopped claude-code in two of its three
-attempts and codex in none. Version 1.2.1 ships the 1.2.0 design, in
+attempts and codex in none. Version 1.2.1 carries the 1.2.0 design, in
 which the sibling patterns point the wrong way for both losses, with one
 added instruction clause. It stopped claude-code in two of three attempts
 again; both completed codex attempts passed, the third was cut by the
 subscription's usage window, and its replacement, run twice because the
-replacement script was launched twice, passed both times.
+replacement script was launched twice, passed both times. The shipped
+version, 1.2.2, changes only the verifier's config check, and it grades
+the eight 1.2.1 attempts and the claude-code cheat trial exactly as
+recorded (RESULTS.md, "Version 1.2.2 (shipped)").
 
 This file records the 1.2.1 trajectories first: the six attempts, the
 two interruptions and the two replacement attempts, then the 1.2.0 codex

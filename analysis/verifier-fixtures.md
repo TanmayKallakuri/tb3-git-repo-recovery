@@ -1,10 +1,12 @@
 # Verifier mutation fixtures
 
-Nineteen scratch repositories, each a fresh copy of `tests/original` changed in
+Scratch repositories, each a fresh copy of `tests/original` changed in
 exactly one way, graded by the real verifier (`tests/test.sh` inside the
-verifier image, the artifact at `/app/repo.git` the way Harbor uploads it).
-Each case has a reward it must get: the two legitimate layouts 1, every
-mutation 0. `scripts/verifier-fixtures.sh` builds the image, runs every case
+verifier image, the artifact at `/app/repo.git` the way Harbor uploads it):
+19 cases up to 1.2.1, and 25 since 1.2.2 added four legitimate configs and
+two more rejected settings (the last section). Each case has a reward it
+must get: every legitimate layout 1, every mutation 0.
+`scripts/verifier-fixtures.sh` builds the image, runs every case
 in its own container, prints the table and exits non-zero on any mismatch.
 A verifier that fails to run (no reward file, `test.sh` exit 2, container
 error) prints INFRA, never 0.
@@ -66,7 +68,7 @@ worktrees, promisor markers) have been removed. What changed is that the
 root-held staged copy is now examined before it is cleaned, so what the
 cleaning used to erase silently is recorded and graded.
 
-1. **Config is parsed and allowlisted.** `validate_config` reads the
+1. **Config is parsed and checked.** `validate_config` reads the
    submitted `config` (over 64 KiB fails), copies it next to an empty
    directory under `/run/verifier`, and runs `git config --file <copy>
    --no-includes --list -z` there as checker with the usual limits, so the
@@ -80,6 +82,9 @@ cleaning used to erase silently is recorded and graded.
    with the parse error or the first offending keys. The config of
    `tests/original` and of `environment/repo.git` (byte-identical) lists six
    keys and passes, which the `unchanged` case confirms end to end.
+   Version 1.2.2 replaced this allowlist with a denylist, after the second
+   review showed that it rejected a correct repair; the parse, the size cap
+   and the format-version and bare checks are unchanged (last section).
 2. **Refs are inventoried on disk before cleaning.** `disk_refs` walks
    `refs/` for regular files (`.lock` files skipped, as git does) and parses
    `packed-refs` (`^` peel lines and `#` lines skipped) on the root-held
@@ -205,7 +210,7 @@ The same 19 cases on the 1.2.0 original (task commit `0502a89`: the rebased
 series, the heading-dated tag, the new D3 picks). The verifier code is the
 one of `f29cadf`; only `tests/original`, `tests/damage.json` and
 `tests/expected-refs.txt` changed. 1.2.1 changed none of the three, so this
-run also stands for the shipped 1.2.1.
+run also stands for 1.2.1, the measured version.
 
 | item | value |
 |---|---|
@@ -239,3 +244,116 @@ run also stands for the shipped 1.2.1.
 
 19 cases, 0 not as expected, exit 0. The observed failed sets are the same
 as in the three earlier runs, case for case.
+
+## Run of 2026-10-31 01:18 UTC on the 1.2.2 verifier
+
+The second review found the config check too strict. It appended `[core]`
+`pager = cat` to a correctly repaired repository, and
+`test_artifact_staged` failed, because `core.pager` was not on the
+allowlist. The instruction sets no constraint on the config, and grading
+never reads the submitted one: the graded copy gets the pinned
+`BARE_CONFIG`. A check on that file exists only to catch settings that
+would make the submitted repository behave unlike the graded copy, which
+the replacement would otherwise hide, so it should name those settings and
+accept the rest. An allowlist does the opposite. It has to anticipate
+every benign key a repair might leave, from a pager or an identity to a
+remote, and each one it misses turns a correct repair into a zero, while
+the danger it guards against is a short, known list: keys that include
+another file, define an alias, name a program, helper, command, path or
+worktree, redirect ref or object lookup, or change the repository format.
+No fixture had measured that cost, because the two legitimate cases left
+the config as generated.
+
+Version 1.2.2 (task commit `34e636b`) therefore holds the parsed keys to
+a denylist in `tests/harness.py` (`REJECTED_SECTIONS`, `REJECTED_KEYS`,
+`key_problem`): the sections `extensions`, `include`, `includeif`,
+`alias`, `credential`, `filter`, `uploadpack` and `gpg`, and any key whose
+final name is `program`, `command`, `driver`, `path`, `helper`,
+`hookspath`, `fsmonitor`, `sshcommand`, `gitproxy`, `askpass`,
+`alternaterefscommand`, `alternaterefsprefixes` or `worktree`. Everything
+else stands: the 64 KiB cap, the parse by git as checker with
+`--no-includes --list -z` away from every repository, the rejection of a
+config git cannot parse, and `core.repositoryformatversion` 0 and
+`core.bare` true in every occurrence. Six cases were added: four
+legitimate configs that must score 1, and two rejected settings that must
+fail `test_artifact_staged`, one a format change and one a lookup
+redirection.
+
+| case | change to the config | expected |
+|---|---|---|
+| config-pager | `[core]` `pager = cat` appended, as in the review | 1 |
+| config-user-color | `user.name`, `user.email`, `color.ui` | 1 |
+| config-pack-gc | `pack.window = 20`, `gc.auto = 0` | 1 |
+| config-remote | `remote.backup.url` and `remote.backup.fetch` | 1 |
+| config-objectformat-sha256 | `extensions.objectFormat = sha256` | 0, test_artifact_staged |
+| config-alternaterefs | `core.alternateRefsCommand = /tmp/refs.sh` | 0, test_artifact_staged |
+
+| item | value |
+|---|---|
+| date | 2026-10-31 01:18 UTC |
+| verifier image | `grr-verifier-fixtures` `sha256:df45c17fd8b69c95f4e8fee7dbe735cf160b5311d7b23ac8c0cb16407727ecd6` |
+| base image | `python:3.12-slim-bookworm@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e` |
+| git in the image | 2.39.5 |
+| verifier commit | the harness committed as `34e636b`; the run preceded the commit by four minutes, and its log records no commit |
+| raw output | `runs/verifier-fixtures/verifier-fixtures-1.2.2.log` |
+
+| case                   | expected | observed | status   | must fail                | failed checks (observed) |
+|------------------------|----------|----------|----------|--------------------------|--------------------------|
+| unchanged              | 1        | 1        | PASS     | -                        | - |
+| repack                 | 1        | 1        | PASS     | -                        | - |
+| config-pager           | 1        | 1        | PASS     | -                        | - |
+| config-user-color      | 1        | 1        | PASS     | -                        | - |
+| config-pack-gc         | 1        | 1        | PASS     | -                        | - |
+| config-remote          | 1        | 1        | PASS     | -                        | - |
+| branch-moved           | 0        | 0        | PASS     | test_refs_restored       | test_refs_restored |
+| tag-deleted            | 0        | 0        | PASS     | test_refs_restored       | test_refs_restored |
+| remote-ref-added       | 0        | 0        | PASS     | test_no_history_rewrite  | test_no_history_rewrite |
+| replace-ref-added      | 0        | 0        | PASS     | test_no_history_rewrite  | test_no_history_rewrite |
+| notes-ref-added        | 0        | 0        | PASS     | test_no_history_rewrite  | test_no_history_rewrite |
+| loose-object-deleted   | 0        | 0        | PASS     | test_fsck_clean          | test_fsck_clean,test_refs_restored,test_history_intact |
+| blob-rewritten         | 0        | 0        | PASS     | test_fsck_clean          | test_fsck_clean |
+| config-invalid         | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| config-hookspath       | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| config-extensions      | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| config-objectformat-sha256 | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| config-alternaterefs   | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| alternates             | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| symlink                | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged,test_fsck_clean,test_refs_restored,test_history_intact,test_no_history_rewrite |
+| grafts                 | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| shallow                | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| promisor               | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| config-bare-false      | 0        | 0        | PASS     | test_artifact_staged     | test_artifact_staged |
+| head-moved             | 0        | 0        | PASS     | test_refs_restored       | test_refs_restored |
+
+25 cases, 0 not as expected, exit 0. The observed failed sets of the 19
+earlier cases are the same as in the 1.2.0 run, case for case.
+
+### Regrade of the saved 1.2.1 artifacts
+
+The 1.2.2 verifier graded the artifact Harbor collected from each of the
+eight 1.2.1 attempts and from the claude-code cheat trial
+(`scripts/regrade-local.sh`, one container per trial, verifier commit
+`34e636b`, image `grr-verifier-local`
+`sha256:97f30f883698b2b66cd05820ae0363e90d4907808d5915f472ea7c44ebf8335c`,
+2026-10-31 01:23 UTC). Raw output:
+`runs/verifier-fixtures/regrade-1.2.2.log`.
+
+| job | trial | recorded | 1.2.2 | failed checks (1.2.2, identical to the recorded ones) |
+|---|---|---|---|---|
+| run-codex-121 | EfjWeTS | 1 | 1 | - |
+| run-codex-121 | ynnvZxs | 1 | 1 | - |
+| run-codex-121 | sweKZhw | 0 | 0 | test_refs_restored |
+| run-codex-121b | JqpXXzg | 1 | 1 | - |
+| run-codex-121b | oj4orbL | 1 | 1 | - |
+| run-claude-121 | w83Yrhe | 0 | 0 | test_refs_restored, test_history_intact |
+| run-claude-121 | rfCGPva | 1 | 1 | - |
+| run-claude-121 | qA8XRxY | 0 | 0 | test_refs_restored, test_history_intact |
+| cheat-claude-121 | pHijg4V | 0 | 0 | test_refs_restored, test_history_intact |
+
+9 trials, 0 not as expected, exit 0. All nine configs parsed to the same
+six keys as the original's (`core.repositoryformatversion`,
+`core.filemode`, `core.bare`, `core.logallrefupdates`,
+`remote.mirror.url`, `remote.mirror.fetch`) with no problem, so
+`test_artifact_staged` passed in all nine under both verifiers, and the
+wider check moves no recorded grade. The three codex cheat runs left the
+damaged repository untouched and are not in the regrade.

@@ -3,8 +3,11 @@
 One original task in the Harbor task format, built for the Klavis founding
 engineer assessment, with local evidence that it clears every gate the
 Terminal-Bench 3 CI applies and the results of the required agent trials.
-The shipped version is 1.2.1. Versions 1.0.0, 1.1.0 and 1.2.0 were
-measured and superseded on 2026-10-30; 1.0.0 was also reviewed externally.
+The shipped version is 1.2.2, which differs from 1.2.1, the version the
+trials measured, in the verifier only. Versions 1.0.0, 1.1.0 and 1.2.0
+were measured and superseded on 2026-10-30; 1.0.0 was also reviewed
+externally. A second external review, of the 1.2.1 write-up at commit
+`86ec98b`, scored the submission 70 of 100 and kept the verdict unmet.
 
 The task: a team's bare git repository was recovered from a failing disk.
 `git fsck` reports missing and corrupt objects, several branches and tags
@@ -55,7 +58,11 @@ answer, and in 1.2.0 they point at a wrong answer that passes fsck. The
 lost branch tip is a rebase whose committer is not its author, unlike
 every other commit, and the lost tag is dated from its CHANGELOG heading,
 unlike the four surviving tags. Version 1.2.1 adds one clause to the
-instruction and changes nothing in the repository.
+instruction and changes nothing in the repository. Version 1.2.2 changes
+the verifier only: its check of the submitted config rejects only
+settings that can redirect lookup, run code or change the repository
+format, after the second review showed that the earlier allowlist failed
+a correct repair with `core.pager` set.
 
 ## Gates and how to reproduce them
 
@@ -66,12 +73,15 @@ RESULTS.md), Harbor `0.23.1.dev202609170426` and `dockerfile-pin` 1.5.0 on
 
 | Gate | Command |
 |---|---|
-| 29 static checks (`static-checks.yml`) | `bash scripts/check-all.sh tasks/git-repo-recovery` (the 1.2.1 transcript is `runs/static-checks/check-all-1.2.1.log`; the 1.2.0 and 1.1.0 transcripts are next to it) |
-| `/run` and `/cheat`, 1.2.1 full set | `scripts/run-121.sh` (one process: static checks, oracle and nop, three attempts per agent in two parallel processes, the two cheat trials, the rubric review; auth flags in the script) |
-| codex replacement trials | `scripts/run-121b.sh` (waits for the codex usage window to reopen, probes with the cheat trial, then runs one attempt; it was launched twice by mistake, so each of its two jobs holds two trials) |
+| 29 static checks (`static-checks.yml`) | `bash scripts/check-all.sh tasks/git-repo-recovery` (the 1.2.2 transcript is `runs/static-checks/check-all-1.2.2.log`; the 1.2.1, 1.2.0 and 1.1.0 transcripts are next to it) |
+| `/run` and `/cheat`, 1.2.1 full set | `scripts/run-121.sh` (one process: static checks, oracle and nop, three attempts per agent in two parallel processes, the two cheat trials, the rubric review; auth flags in the script; since the second review it stops at the first failed stage, records every stage in `tmp/pipeline-status.json` and exits 0 only when all are accepted) |
+| codex replacement trials | `bash scripts/run-121b.sh <run-id>` (waits for the codex usage window to reopen, probes with the cheat trial, then runs one attempt; the run id is appended to every job name, and an exclusive lock and a refusal to write into an existing job directory prevent a second launch; the 2026-10-30 run predates these guards and was launched twice by mistake, so each of its two jobs holds two trials) |
 | Implementation rubric (37 criteria), 1.1.0 stage | `scripts/run-hardened.sh rubric` (stages the task as upstream's `stage_task.py` does, reviews with the CI reviewer model; `scripts/run-121.sh` runs the same review for 1.2.1) |
 | Docker build, oracle and nop, 1.1.0 stage | `scripts/run-hardened.sh gates` (or `harbor run -p tasks/git-repo-recovery -a oracle --env docker --yes`, and the same with `-a nop`) |
-| Verifier mutation fixtures (19 cases, exact rewards and failing checks) | `scripts/verifier-fixtures.sh` (raw logs of four runs in `runs/verifier-fixtures/`, the last on the 1.2.0 original) |
+| Verifier mutation fixtures (25 cases since 1.2.2, exact rewards and failing checks) | `scripts/verifier-fixtures.sh` (raw logs of five runs in `runs/verifier-fixtures/`; the 1.2.2 run, `verifier-fixtures-1.2.2.log`, is 25 of 25 as expected, the earlier four ran the 19 cases) |
+| 1.2.2 regrade of the saved 1.2.1 artifacts | `bash scripts/regrade-local.sh runs/<job>/<trial> tmp/regrade-122/<trial>`, one trial at a time (log `runs/verifier-fixtures/regrade-1.2.2.log`: the eight 1.2.1 attempts and the claude-code cheat trial, every reward and check as recorded) |
+| Pipeline control flow, without Docker, model or network | `bash scripts/test-pipeline.sh` (seven stub cases for `scripts/run-121.sh`: a failed static stage stops before any harbor call, a failed gate before any trial, a missing trial result, verifier result or verdicts file fails its stage, and the all-ok case exits 0 with every stage accepted; all seven pass) |
+| Trial manifest | `python3 scripts/trial-manifest.py` (writes `runs/trials.json`, one entry per trial-level `result.json` under `runs/`, 42 trials, and flags every job whose Harbor job-level trial count differs from its trial directories) |
 | `/run` (3 attempts per agent, CI defaults), 1.1.0 stages | `scripts/run-hardened.sh pilot-codex`, then `pilot-claude`, then `rest-codex` and `rest-claude` (one attempt per agent first, the rest only after the pilots; auth flags in the script header) |
 | `/cheat` (1 attempt per agent, hack prompt appended), 1.1.0 stage | `scripts/run-hardened.sh cheats` |
 | Regenerate the repository and the damage | `bash scripts/gen-repo/run.sh` (runs in a container; deterministic, built twice byte-identically) |
@@ -99,7 +109,20 @@ field for field.
 
 ## Results summary
 
-Version 1.2.1 (shipped, task commit `fbccdfa`; every measurement below ran
+Version 1.2.2 (shipped, task commit `34e636b`, evidence commit `2f2ac16`)
+changes the verifier only. Its config check rejects only settings that
+can redirect lookup, run code or change the repository format, so a
+correct repair with an added `core.pager`, `user.*`, `color.*`, `pack.*`,
+`gc.*` or remote setting now passes; the instruction, the generator and
+the damaged repository are byte-identical to 1.2.1. Static checks 29 of
+29, oracle 1.0, nop 0.0, rubric 34 pass, 0 fail, 3 not applicable,
+verifier fixtures 25 of 25 as expected (six new config cases), and the
+saved artifacts of the eight 1.2.1 attempts and the claude-code cheat
+trial regraded with every reward and check as recorded. The trials were
+not rerun, so the 1.2.1 table below is the outcome; a reader who
+requires one version for both may treat `fbccdfa` as the measured task.
+
+Version 1.2.1 (measured, task commit `fbccdfa`; every measurement below ran
 on that commit): 619 objects and 161 commits reachable from all 18 refs,
 613 objects and 159 commits from the 13 branches and tags the verifier
 compares; 53 damage items in 11 classes; 7 hidden ids.
@@ -145,15 +168,17 @@ A cheat trial's zero reward is the required numerical outcome, not
 evidence of robustness. Evidence that the verifier rejects bypass attempts
 comes from the mutation fixtures in `scripts/verifier-fixtures.sh`
 (`analysis/verifier-fixtures.md`): the 1.0.0 verifier accepted 11 of the
-17 mutations, the shipped one accepts none.
+17 mutations; the shipped one rejects all 19 mutations of its 25-case set
+and accepts all six legitimate layouts.
 
 The honest reading. The task is correct, deterministic and cheap: oracle
-1.0 and nop 0.0 on 1.2.0 and on 1.2.1, static checks 29 of 29 on both,
-fixtures 19 of 19 on the 1.2.0 original, the rubric at 34 pass, 0 fail and
-3 not applicable on 1.2.1, byte-identical rebuilds, and agent phases of
-5.7 to 49.6 minutes for the completed attempts, on subscriptions. The
-brief's requirement of three genuine failures per agent is not met, for
-the third version in a row. Codex: both completed 1.2.1 attempts passed,
+1.0 and nop 0.0 on 1.2.0, 1.2.1 and 1.2.2, static checks 29 of 29 on all
+three, fixtures 19 of 19 on the 1.2.0 original and 25 of 25 on 1.2.2, the
+rubric at 34 pass, 0 fail and 3 not applicable on 1.2.1 and 1.2.2,
+byte-identical rebuilds, and agent phases of 5.7 to 49.6 minutes for the
+completed attempts, on subscriptions. The brief's requirement of three
+genuine failures per agent is not met, for the third version in a row.
+Codex: both completed 1.2.1 attempts passed,
 in 5.7 and 6.7 minutes; the third was cut by the subscription window with
 the seven hidden objects already reconstructed at the original ids; the
 1.2.0 pilot passed in 6.3 minutes. The replacement attempt, run twice
@@ -181,7 +206,10 @@ everything lost is recoverable from what remains, which is what makes the
 task correct and oracle-free, does not produce three genuine codex
 failures, and making the evidence thinner would make the task guessable,
 which the brief forbids. The design was frozen at 1.2.1, and the remaining
-effort went into evidence and the write-up rather than another redesign.
+effort went into evidence and the write-up rather than another redesign;
+the second review's suggestion to prioritize a different difficulty
+mechanism was not pursued for that reason, and 1.2.2 changed the
+verifier's config check only.
 
 [`analysis/trajectories.md`](analysis/trajectories.md) has the six 1.2.1
 attempts, the two 1.2.1 cheat trials and the 1.2.0 codex pilot at their

@@ -259,12 +259,22 @@ and `tests/expected-head.txt` (`ref: refs/heads/main`). Artifact:
 Staging and preflight. The verifier first makes a root-held staged copy of
 the artifact and examines it before anything is cleaned or graded:
 
-- The submitted `config` is parsed as the unprivileged `checker` with
-  `git config --file <copy> --no-includes --list -z` and validated against
-  an explicit allowlist; `core.repositoryformatversion` `0` and
-  `core.bare` true are required. Only then does the pinned grading config
-  replace it. An unparseable config or a key outside the allowlist fails
-  `test_artifact_staged`.
+- The submitted `config` (at most 64 KiB) is parsed as the unprivileged
+  `checker` with `git config --file <copy> --no-includes --list -z` and
+  held to a denylist of settings that can redirect object or ref lookup,
+  run a program or change the repository format: the sections
+  `extensions`, `include`, `includeif`, `alias`, `credential`, `filter`,
+  `uploadpack` and `gpg`, and any key whose final name is `program`,
+  `command`, `driver`, `path`, `helper`, `hookspath`, `fsmonitor`,
+  `sshcommand`, `gitproxy`, `askpass`, `alternaterefscommand`,
+  `alternaterefsprefixes` or `worktree`. `core.repositoryformatversion`
+  `0` and `core.bare` true are required. Every other setting (pager,
+  editor, user, color, pack, gc, remotes and the like) is accepted,
+  because grading never uses it: only after the check does the pinned
+  grading config replace the submitted one. An unparseable config or a
+  rejected setting fails `test_artifact_staged`. Up to 1.2.1 the check
+  was an allowlist, which also rejected benign settings such as
+  `core.pager`; 1.2.2 replaced it with this denylist.
 - Symlinks and special files anywhere in the artifact reject it.
   Alternates, http-alternates, grafts, shallow and promisor markers reject
   it.
@@ -310,9 +320,10 @@ exit 2 without a reward file.
 - Refs pointing at ids whose objects are missing fail check 2 and 4.
 - Deleting history fails check 4; adding refs in any namespace fails
   check 5.
-- The submitted config cannot carry hooks, extensions or a non-bare
-  setting past the allowlist; symlinks, special files, alternates, grafts,
-  shallow and promisor markers reject the artifact.
+- The submitted config cannot carry a hooks path, extensions, includes,
+  aliases, helpers, program or command settings, or a non-bare setting
+  past the denylist; symlinks, special files, alternates, grafts, shallow
+  and promisor markers reject the artifact.
 - git runs unprivileged on a copy; `/tests` and `/logs/verifier` are
   root-only.
 

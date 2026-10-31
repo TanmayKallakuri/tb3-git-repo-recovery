@@ -9,22 +9,31 @@ gitignored; trimmed copies (no `config.json`, no agent session state, home
 paths redacted, JSON redacted structurally) live under `runs/`, rendered
 byte for byte from the job directories by `scripts/trim-run.py`.
 
-Four versions of the task were measured. Sections 1 to 8 cover the
-shipped version, 1.2.1 (task commit `fbccdfa`, evidence commit `a8a7f83`),
-and version 1.2.0 (task commit `0502a89`, evidence commit `6f69ce8`),
-which has the same repository, damage and verifier and was measured with
-the static checks, the gates, the verifier fixtures and one codex pilot.
-Every 1.2.1 measurement ran on that one task commit. Sections 9 to 15 keep
-the measurements of version 1.1.0 (task commits `45ca827` and `719f13e`,
-oracle polish `e8c602c`, verifier preflight `f29cadf`), and sections 16 to
-20 those of version 1.0.0, as they were made; they are evidence of the
-iteration, not of the shipped task.
+Five versions of the task were measured. The shipped version is 1.2.2
+(task commit `34e636b`, evidence commit `2f2ac16`); its config check is a
+denylist, the answer to the second external review, and its static
+checks, gates, verifier fixtures, regrade and rubric are in the section
+"Version 1.2.2 (shipped)" before section 1. Sections 1 to 8 cover version
+1.2.1 (task commit `fbccdfa`, evidence commit `a8a7f83`), the measured
+version, and version 1.2.0 (task commit `0502a89`, evidence commit
+`6f69ce8`), which has the same repository, damage and verifier as 1.2.1
+and was measured with the static checks, the gates, the verifier fixtures
+and one codex pilot. Every 1.2.1 measurement ran on that one task commit.
+The shipped version (1.2.2) differs from the measured one (1.2.1) in the
+verifier only, and the 1.2.2 verifier grades the eight saved 1.2.1
+attempts and the claude-code cheat trial exactly as Harbor recorded them;
+a reader who requires one version for both may treat `fbccdfa` as the
+measured task. Sections 9 to 15 keep the measurements of version 1.1.0
+(task commits `45ca827` and `719f13e`, oracle polish `e8c602c`, verifier
+preflight `f29cadf`), and sections 16 to 20 those of version 1.0.0, as
+they were made; they are evidence of the iteration, not of the shipped
+task.
 
-## What changed since the external review
+## What changed since the first external review
 
-An external review of version 1.0.0 (2026-10-30) found the points in the
-left column. Each one is mapped to what was done and where a reader can
-check it.
+The first external review, of version 1.0.0 (2026-10-30), found the
+points in the left column. Each one is mapped to what was done and where
+a reader can check it.
 
 | Finding | Change | Where to verify | Status |
 |---|---|---|---|
@@ -34,10 +43,117 @@ check it.
 | One published `result.json` was invalid | `scripts/trim-run.py` redacts `.json` files structurally (parse, redact, re-serialise only when something changed), aborts on a file that does not parse, validates every published `.json`, and every run directory was re-rendered from its job so the committed files match the sources byte for byte; commit `4083042` | `scripts/trim-run.py` (module docstring), `runs/` | fixed (`4083042`) |
 | `scripts/run-trials.sh run-codex` pointed at a missing config | `run-codex` points at `scripts/run-job-codex-2.json`; every mode exits 2 when its config file is absent; commit `4083042` | `scripts/run-trials.sh` lines 20 to 26 | fixed (`4083042`) |
 | No raw static-check transcript committed | The 1.1.0 transcript is committed (`5402624`), rerun and recommitted at the final task commit (`4a2cb6a`) | `runs/static-checks/check-all-1.1.0.log` (section 9) | fixed (`5402624`, `4a2cb6a`) |
-| Verifier: the submitted `config` was replaced silently | The submitted config is parsed as the unprivileged checker and checked against an explicit allowlist before the pinned grading config replaces it; an unparseable config or a key outside the allowlist fails `test_artifact_staged`; commit `16e1f1c` | `tests/harness.py` (`validate_config`); fixtures `config-invalid`, `config-hookspath`, `config-extensions`, `config-bare-false` in sections 3 and 11 | fixed (`16e1f1c`) |
+| Verifier: the submitted `config` was replaced silently | The submitted config is parsed as the unprivileged checker and checked before the pinned grading config replaces it; an unparseable config or a rejected setting fails `test_artifact_staged`; commit `16e1f1c`. The check was an allowlist until 1.2.2, which replaced it with a denylist after the second review (next table) | `tests/harness.py` (`validate_config`); fixtures `config-invalid`, `config-hookspath`, `config-extensions`, `config-bare-false` in sections 3 and 11, and the six config fixtures added in 1.2.2 | fixed (`16e1f1c`; denylist `34e636b`) |
 | Verifier: `refs/replace` was erased before the no-rewrite check | Ref names are inventoried from `refs/` and `packed-refs` before the indirections are removed, so a replace ref fails `test_no_history_rewrite`; commit `16e1f1c` | `tests/harness.py` (`disk_refs`); fixture `replace-ref-added` | fixed (`16e1f1c`) |
 | Verifier: the `refs/remotes` namespace was exempt from the extra-ref check | Every ref name on the artifact, in any namespace, must exist in the original; commit `16e1f1c`. Also: symlinks and special files anywhere in the artifact, alternates, grafts, shallow and promisor markers fail staging; root-side faults raise an infrastructure error and never a reward, while errors the artifact provokes (over-long names, loops, collisions) grade 0 and never become infrastructure errors; commits `b94763b`, `792672f` | `tests/harness.py` (`compare_refs`, `copy_tree`, `clean_repo`); fixtures `remote-ref-added`, `notes-ref-added`, `symlink`, `alternates`, `grafts`, `shallow`, `promisor`; `analysis/verifier-fixtures.md` | fixed (`16e1f1c`, `b94763b`, `792672f`) |
 | Cheat wording overstated: zero reward presented as robustness | README, RESULTS and `analysis/trajectories.md` describe the cheat trials as the required zero rewards and point to the mutation fixtures for robustness evidence; commit `4083042` | Sections 7, 15 and 20; `analysis/verifier-fixtures.md` | fixed (`4083042`) |
+
+## What changed since the second external review
+
+A second external review, of commit `86ec98b` (the 1.2.1 write-up), dated
+2026-10-30, scored the submission 70 of 100 and kept the verdict unmet:
+codex passed every completed 1.2.1 attempt and claude-code failed 2 of 3,
+where the brief requires three genuine failures per agent. Its findings
+are in the left column.
+
+| Finding | Change | Where to verify | Status |
+|---|---|---|---|
+| The central criterion is still unmet: codex passed every completed 1.2.1 attempt, claude-code failed 2 of 3 | None to the agent-facing task, and no trial was rerun | Section 7 (1.2.1 trials), section 8, `runs/trials.json` | NOT MET, unchanged: codex 0 genuine failures in its four completed 1.2.1 attempts and in every earlier version; claude-code 2 of 3 failed |
+| P2 verifier: the config allowlist rejected a valid repaired repository. With `[core]` `pager = cat` appended, `test_artifact_staged` failed, although the instruction prescribes no config constraint and grading runs on a trusted copy whose config is replaced by `BARE_CONFIG` | Task version 1.2.2, commit `34e636b`: `tests/harness.py` rejects only settings that can redirect lookup, run code or change the repository format (the sections `extensions`, `include`, `includeif`, `alias`, `credential`, `filter`, `uploadpack`, `gpg`; any key whose final name is `program`, `command`, `driver`, `path`, `helper`, `hookspath`, `fsmonitor`, `sshcommand`, `gitproxy`, `askpass`, `alternaterefscommand`, `alternaterefsprefixes` or `worktree`), still requires `core.repositoryformatversion` 0 and `core.bare` true, and keeps the 64 KiB cap and the git-parsed read as checker. Six new fixtures: four benign configs that must score 1, two rejected settings that must score 0. `instruction.md`, the generator and the damaged repository are byte-identical to 1.2.1 | `tasks/git-repo-recovery/tests/harness.py` (`key_problem`, `config_problems`); `runs/verifier-fixtures/verifier-fixtures-1.2.2.log` (25 of 25 as expected); `runs/verifier-fixtures/regrade-1.2.2.log` (the eight 1.2.1 attempts and the claude-code cheat trial, every reward identical); the section "Version 1.2.2 (shipped)"; `analysis/verifier-fixtures.md` | fixed (`34e636b`; evidence `2f2ac16`) |
+| P2 pipeline: `scripts/run-121.sh` logged the static-check exit without testing it, so a static failure would not have stopped the oracle and nop launches | The static stage captures the exit code and the passed count and stops before any harbor call unless they are 0 and 29; every later stage confirms that its job wrote the expected number of trial `result.json` files with a verifier result (gates 1 and 1, trials 3 and 3, cheats 1 and 1, rubric 1 plus its verdicts file). `tmp/pipeline-status.json` records each stage's name, status and detail and an `accepted` flag, and the exit code is 0 only when accepted. `scripts/test-pipeline.sh` runs this control flow with stub programs, without Docker, a model or the network, in seven cases: a static exit of 17 or a static count of 28 stops with no harbor call; an oracle reward of 0.0 stops before any trial job; two of three codex results stop before the cheat jobs; a cheat result without a verifier result and a rubric job without its verdicts file each fail their stage; the all-ok case exits 0 with all five stages ok. The 2026-10-30 run passed its static stage, 29 of 29, so its record stands | `scripts/run-121.sh`, `scripts/test-pipeline.sh` (7 of 7 cases pass), `runs/static-checks/check-all-1.2.1.log` | fixed (`e30f82b`) |
+| P2 duplicate launches: `scripts/run-121b.sh` was launched twice; Harbor's job-level `result.json` in `run-codex-121b` and `cheat-codex-121b` names one trial while each directory holds two | `scripts/run-121b.sh` requires a run id, appends it to every job name, takes an exclusive lock (`tmp/run-121b.lock`, made with `mkdir` and removed on exit) and refuses to start when a job directory it would write exists. `scripts/trial-manifest.py` writes `runs/trials.json`: one entry per trial-level `result.json` under `runs/` (42 trials; job, trial, agent, model, reward, exception, task checksum, times, agent minutes, path) and a `job_summaries` section that compares each job-level count with the trial directories. It flags both 121b jobs (1 reported, 2 present) and seven 1.0.0 jobs (below). Harbor's job aggregates are left as written, since they are tool output; the manifest is the record | `scripts/run-121b.sh`, `scripts/trial-manifest.py`, `runs/trials.json`; section 7 | fixed (`e30f82b`) |
+| The cheat trials provide little attack evidence | None. The claude-code cheat trial declined the overlay and made an honest partial repair, and the codex cheat trials were rejected by the provider's safeguard before any tool call; the zeros are the required numerical outcome, and evidence that the verifier rejects bypass attempts remains the fixture set | Section 7; `analysis/verifier-fixtures.md` | open: an acknowledged limitation |
+| Prioritize a different difficulty mechanism | Not pursued for this task. Three hardened versions (1.1.0, 1.2.0, 1.2.1) and eight codex passes, each in 5.6 to 7.4 minutes of agent time, show that codex at the prescribed configuration reads and replays any recovery rule the repository lets it inspect | Sections 6, 7, 8 and 14; `analysis/iterations.md` (design 5) | open |
+
+The seven 1.0.0 jobs that `runs/trials.json` also flags are
+`cheat-claude-1`, `cheat-codex-1`, `run-claude-1`, `run-claude-2`,
+`run-codex-1`, `run-codex-2` and `run-codex-3`. Section 20 accounts for
+them: five stalled on the Docker hang before verification, and in the
+other two one trial ended in an agent-setup timeout. Those trials wrote
+no trial-level `result.json` (the stalled ones were graded locally), and
+each of the seven job-level files was last written while a trial was
+still running and records no finish time.
+
+## Version 1.2.2 (shipped): the verifier-only change
+
+Task commit `34e636b`, evidence commit `2f2ac16`. Under 1.2.1 the
+submitted `config` was held to an allowlist, and the second review showed
+that a correctly repaired repository with `[core]` `pager = cat` appended
+failed `test_artifact_staged`, although the instruction sets no
+constraint on the config and grading runs on a copy whose config is
+replaced by the pinned `BARE_CONFIG`. `tests/harness.py` now rejects only
+settings that can redirect object or ref lookup, run a program or change
+the repository format: the sections `extensions`, `include`, `includeif`,
+`alias`, `credential`, `filter`, `uploadpack` and `gpg`, and any key whose
+final name is `program`, `command`, `driver`, `path`, `helper`,
+`hookspath`, `fsmonitor`, `sshcommand`, `gitproxy`, `askpass`,
+`alternaterefscommand`, `alternaterefsprefixes` or `worktree`.
+`core.repositoryformatversion` must still be 0 and `core.bare` true, the
+64 KiB cap stands, git still reads the config as the unprivileged checker
+with `--no-includes --list -z`, and a config git cannot parse is still
+rejected. Everything else is accepted, including `core.pager`,
+`core.editor`, `user.*`, `color.*`, `pack.*`, `gc.*`, `remote.*`,
+`branch.*`, `receive.*`, `push.*` and `fetch.*`. The function names are
+unchanged. The commit touches `tests/harness.py`, the docstring of
+`test_artifact_staged`, the task README's change log and verification
+explanation, and the version in `task.toml`; `instruction.md`, the
+generator and the damaged repository are byte-identical to 1.2.1, so the
+agent-facing task is unchanged.
+
+| Gate | Job / trial or log | Time (UTC, 2026-10-31) | Result |
+|---|---|---|---|
+| Static checks (29), task commit `34e636b`, upstream `7b1f530` | `runs/static-checks/check-all-1.2.2.log` | 01:22:30 | **29 passed, 0 warned, 0 failed of 29** |
+| Verifier mutation fixtures (25 cases) | `runs/verifier-fixtures/verifier-fixtures-1.2.2.log` | 01:18:35 | **25 of 25 as expected** |
+| Regrade of the saved 1.2.1 artifacts (9 trials) | `runs/verifier-fixtures/regrade-1.2.2.log` | 01:23:29 | **9 of 9 identical to the recorded grades** |
+| Oracle | `gate-oracle-122` / `git-repo-recovery__ErZoPcR` | 01:23:09 to 01:23:49 | **1.0** |
+| Nop | `gate-nop-122` / `git-repo-recovery__vqHKuDH` | 01:23:09 to 01:23:44 | **0.0** |
+| Implementation rubric (37 criteria) | `rubric-review-122` / `rubric-review__rpURU28` | 01:24:40 to 01:28:58, agent phase 3.3 min | **34 pass, 0 fail, 3 not applicable** |
+
+The gates and the rubric review used the commands of sections 2 and 5
+under the `-122` job names. Trimmed copies: `runs/gate-oracle-122/`,
+`runs/gate-nop-122/`, `runs/rubric-review-122/`.
+
+Fixtures. The 19 cases of section 11 and six more for the config check.
+Four benign configs must score 1 on the otherwise unchanged original:
+`config-pager` (`[core]` `pager = cat` appended, as in the review),
+`config-user-color` (`user.name`, `user.email`, `color.ui`),
+`config-pack-gc` (`pack.window`, `gc.auto`) and `config-remote` (a second
+remote with `url` and `fetch`). Two rejected settings must fail
+`test_artifact_staged`: `config-objectformat-sha256`
+(`extensions.objectFormat = sha256`) and `config-alternaterefs`
+(`core.alternateRefsCommand`). All 25 were as expected, and the failed
+checks of the 19 earlier cases are identical, case for case, to the 1.2.0
+run of section 3. The log records no commit; the run, at 01:18 UTC,
+preceded the commit of the harness as `34e636b` by four minutes. The
+table is in `analysis/verifier-fixtures.md`.
+
+Regrade. `scripts/regrade-local.sh` graded the saved artifact of each of
+the eight 1.2.1 attempts and of the claude-code cheat trial with the 1.2.2
+verifier (verifier commit `34e636b`, one container per trial). Every
+reward and every check outcome is identical to what Harbor recorded:
+`EfjWeTS` 1, `ynnvZxs` 1, `sweKZhw` 0, `JqpXXzg` 1, `oj4orbL` 1,
+`w83Yrhe` 0, `rfCGPva` 1, `qA8XRxY` 0, `pHijg4V` 0. All nine configs
+parsed to the same six keys as the original's
+(`core.repositoryformatversion`, `core.filemode`, `core.bare`,
+`core.logallrefupdates`, `remote.mirror.url`, `remote.mirror.fetch`) with
+no problem reported. The three codex cheat runs left the damaged
+repository untouched and are not in the regrade.
+
+Rubric. The three criteria not applicable are `structured_data_schema`,
+`artifact_efficiency` and `score_provenance`. On 1.2.1 the third was
+`verifier_execution_isolation` (section 5), and in the 1.1.0 runs it was
+`score_provenance` (section 13). No criterion failed in either run; the
+difference is the reviewer's variance. Verdicts:
+`runs/rubric-review-122/rubric-review__rpURU28/artifacts/app/verdicts.json`.
+
+Why the trials were not rerun. The agent-facing task of 1.2.2 is
+byte-identical to 1.2.1, the verifier change widens what is accepted, and
+the regrade shows that the 1.2.2 verifier gives each of the nine saved
+artifacts the grade Harbor recorded. The measured outcome is therefore
+the 1.2.1 record of section 7, graded identically by 1.2.2. The shipped
+version (1.2.2) differs from the measured one (1.2.1) in the verifier
+only; a reader who requires one version for both may treat `fbccdfa` as
+the measured task.
 
 ## 1. Static checks (CI: `static-checks.yml`, 29 checks), versions 1.2.0 and 1.2.1
 
@@ -51,7 +167,11 @@ Run once per version against upstream `7b1f530`. On task commit `0502a89`
 (1.2.0): 29 of 29, transcript `runs/static-checks/check-all-1.2.0.log`. On
 task commit `fbccdfa` (1.2.1), at 18:15:41 UTC as the first step of
 `scripts/run-121.sh`: **29 passed, 0 warned, 0 failed of 29**, transcript
-`runs/static-checks/check-all-1.2.1.log`. The 1.1.0 runs are in section 9.
+`runs/static-checks/check-all-1.2.1.log`. That run used the control flow
+from before the second review, which logged the static-check exit without
+testing it; the run passed, so its record stands, and the script now stops
+at any failed stage (second review table). The 1.2.2 run is in the 1.2.2
+section and the 1.1.0 runs in section 9.
 
 ## 2. Oracle and nop (CI: the `/validate` job), versions 1.2.0 and 1.2.1
 
@@ -79,7 +199,7 @@ come from leaving something out. The change is in the 1.2.1 task commit
 the instruction and README changes only. The trials of section 7 were launched
 only because both 1.2.1 gates passed. Trimmed copies:
 `runs/gate-oracle-120/`, `runs/gate-nop-120/`, `runs/gate-oracle-121/`,
-`runs/gate-nop-121/`.
+`runs/gate-nop-121/`. The 1.2.2 gates are in the 1.2.2 section.
 
 ## 3. Verifier mutation fixtures, version 1.2.0 original
 
@@ -88,9 +208,10 @@ only because both 1.2.1 gates passed. Trimmed copies:
 `runs/verifier-fixtures/verifier-fixtures-1.2.0.log`. The fixtures were
 not rerun for 1.2.1. Its verifier and its repository bytes are identical
 to 1.2.0; only `instruction.md`, the task README, `solution/recover.py`
-and `task.toml` changed, so the 1.2.0 run stands for the shipped version.
-The tables of the three earlier runs, with the verifier image digests, are
-in `analysis/verifier-fixtures.md`.
+and `task.toml` changed, so the 1.2.0 run stands for 1.2.1. The shipped
+1.2.2 verifier was graded on 25 cases, these 19 and six for the config
+check, in the 1.2.2 section. The tables of every run, with the verifier
+image digests, are in `analysis/verifier-fixtures.md`.
 
 ## 4. Ground truth and the damage, versions 1.2.0 and 1.2.1
 
@@ -194,6 +315,7 @@ The three criteria not applicable are `structured_data_schema`,
 were not applicable in the 1.1.0 runs as well, where the third was
 `score_provenance` (section 13). Verdicts:
 `runs/rubric-review-121/rubric-review__qFHFKeJ/artifacts/app/verdicts.json`.
+The 1.2.2 review is in the 1.2.2 section.
 
 ## 6. The 1.2.0 codex pilot and the calibration decision
 
@@ -226,7 +348,8 @@ missing or extra. The step-by-step account is in
 The decision. Codex solved 1.2.0 in 6.3 minutes, as fast as it solved
 1.1.0, so by the calibration rule no further 1.2.0 trial was spent. The
 full set ran on 1.2.1 instead, to measure claude-code and to ship a
-version with every measurement on one commit.
+version with every measurement on one commit. The second review then led
+to 1.2.2, which changes the verifier only (the 1.2.2 section).
 
 ## 7. Trials (`/run`, 3 attempts per agent) and cheat trials (`/cheat`), version 1.2.1
 
@@ -257,8 +380,12 @@ covers the whole trial including build and verifier; tokens are input
 (cached) / output. Agent-phase, tool-call and input/output token numbers come from
 `python3 scripts/summarize-trial.py <job>`, cached token counts from each
 trial's `result.json` (`n_cache_tokens`), step counts from each trial's
-`agent/trajectory.json`. Trimmed copies with trajectory, console log,
-artifact and verifier output are under `runs/<job>/`.
+`agent/trajectory.json`. The canonical list of trials is
+`runs/trials.json`, written by `python3 scripts/trial-manifest.py` from
+every trial-level `result.json` under `runs/`, with the reward,
+exception, task checksum, times and agent minutes of each. Trimmed copies
+with trajectory, console log, artifact and verifier output are under
+`runs/<job>/`.
 
 | Agent | Job / trial | Reward | Agent phase (trial) | Steps / tool calls | Tokens | Verifier |
 |---|---|---|---|---|---|---|
@@ -302,7 +429,13 @@ configuration side by side and each of the two jobs holds two trials,
 started within seconds of each other. All four are reported; Harbor's
 job-level `result.json` in each directory was written by the instance
 that finished last and names one trial, so the trial directories and
-their own `result.json` files are the record. The cheat trials
+their own `result.json` files are the record. `runs/trials.json`, which
+`scripts/trial-manifest.py` builds from those files, flags both jobs (1
+trial reported, 2 present) and is the canonical record; the job-level
+files are left as Harbor wrote them. After the second review,
+`scripts/run-121b.sh` requires a run id that it appends to every job
+name, takes an exclusive lock and refuses to write into an existing job
+directory. The cheat trials
 (`8vNBzqi`, `bRiK3UE`) started at 23:08:05 UTC and both graded 0.0:
 the provider's safeguard rejected the turn before any tool call,
 Harbor recorded `AgentSafetyRefusalError` and ran the verifier on the
@@ -404,7 +537,10 @@ task still correct, deterministic and cheap, and cheat trials at zero.
   fixtures 19 of 19 on the 1.2.0 original (section 3), the rubric at 34
   pass, 0 fail and 3 not applicable on 1.2.1 (section 5), byte-identical
   rebuilds (section 4), and agent phases of 5.7 to 49.6 minutes for the
-  completed attempts, on subscriptions.
+  completed attempts, on subscriptions. The shipped 1.2.2 has the same
+  gate, static-check and rubric results, fixtures 25 of 25, and grades the
+  eight 1.2.1 attempts and the claude-code cheat trial as recorded (the
+  1.2.2 section).
 - Codex: both completed 1.2.1 attempts passed, in 5.7 and 6.7 minutes.
   The third was cut by the subscription window with the seven hidden
   objects already reconstructed at the original ids. The 1.2.0 pilot
@@ -440,7 +576,9 @@ task correct and oracle-free, does not produce three genuine codex
 failures, and making the evidence thinner would make the task guessable,
 which the brief forbids. The design was frozen at 1.2.1, and the
 remaining effort went into evidence and the write-up rather than another
-redesign.
+redesign. The second review's suggestion to prioritize a different
+difficulty mechanism was not pursued for that reason; 1.2.2 changed the
+verifier's config check only.
 
 ## Previous version 1.1.0 (superseded)
 
